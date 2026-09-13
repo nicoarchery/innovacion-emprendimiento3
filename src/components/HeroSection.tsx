@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowDown, Building2, MapPinned, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -40,15 +41,15 @@ export function HeroSection() {
           </p>
 
           <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild>
-              <a href="#mapa-ciudadano">
-                <MapPinned />
-                Explorar Mapa de Obras en mi Municipio
-              </a>
+            <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white" asChild>
+              <Link href="/explorador">
+                <MapPinned className="h-4 w-4" />
+                Explorador de Obras en Vivo (MVP)
+              </Link>
             </Button>
             <Button size="lg" variant="secondary" asChild>
               <a href="#lead-b2b">
-                <Building2 />
+                <Building2 className="h-4 w-4" />
                 Solicitar Reporte Competitivo ESG
               </a>
             </Button>

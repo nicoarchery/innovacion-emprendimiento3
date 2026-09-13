@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { label: "Mapa de Obras", href: "#mapa-ciudadano" },
-  { label: "Benchmark ESG", href: "#lead-b2b" },
-  { label: "Cómo funciona", href: "#como-funciona" },
+  { label: "Explorador en Vivo (MVP)", href: "/explorador", isBadge: true },
+  { label: "Mapa de Obras", href: "/#mapa-ciudadano" },
+  { label: "Benchmark ESG", href: "/#lead-b2b" },
+  { label: "Cómo funciona", href: "/#como-funciona" },
 ];
 
 export function NavBar() {
@@ -18,7 +19,7 @@ export function NavBar() {
   return (
     <header className="sticky top-0 z-40 border-b bg-slate-50/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <a href="#inicio" className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700 text-emerald-50">
             <ArrowDown className="h-5 w-5 -rotate-90" />
           </span>
@@ -32,13 +33,21 @@ export function NavBar() {
           </span>
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 md:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-emerald-700"
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-emerald-700",
+                link.isBadge
+                  ? "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold"
+                  : "text-slate-600"
+              )}
             >
+              {link.isBadge && (
+                <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse" />
+              )}
               {link.label}
             </a>
           ))}
