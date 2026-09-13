@@ -40,18 +40,28 @@ Aunque LinkedIn Ads es el canal natural B2B, Meta Ads funciona para capturar la 
 
 ---
 
+---
+
+## Experimentos Complementarios de Validación
+
+> 1. **Venta en Frío con MVP "Espejo" (Lado B2B):** Mapear manualmente 3 proyectos reales de una empresa de infraestructura/energía (ej. Enel o Ecopetrol en Meta) consumiendo datos de SECOP II y ANLA. Presentar este dashboard pre-armado al Director de Sostenibilidad para medir su disposición de pago real antes de desarrollar la automatización.
+> 2. **Prototipar Protocolo de Resolución de Disputas (Lado Gobernanza):** Evaluar con 2 veedurías y 1 empresa piloto la aceptación de las reglas de moderación (alertas de paralización requiriendo mínimo 3 reportes o revisión neutra) para validar que no ahuyenten a las empresas ni desincentiven a los ciudadanos.
+
+---
+
 ## Mapeo de la Campaña para la Universidad
 
-| Elemento del Experimento    | Configuración para tu Proyecto                                                                           |
-| --------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Público Objetivo A (H2)    | Residentes de municipios objetivo + Intereses en Veeduría, Noticias Locales, Liderazgo Comunitario.      |
-| Público Objetivo B (H7/H9) | Profesionales en Colombia + Intereses en ESG, Sostenibilidad, Desarrollo Sostenible, Normas ISO.          |
-| Presupuesto Mínimo         | $5 a $10 USD diarios durante 5 a 7 días.                                                                 |
-| Landing Page / Destino      | Una página sencilla en Carrd.co, Framer o Webflow conectada a Google Analytics / Meta Pixel.             |
-| Criterio de Éxito          | Ciudadanos: +500 clics y +50 registros en la zona. B2B: +5 leads calificados con correo corporativo real. |
+| Elemento del Experimento | Configuración para tu Proyecto |
+| :--- | :--- |
+| **Público Objetivo A (H2)** | Residentes de municipios objetivo + Intereses en Veeduría, Noticias Locales, Liderazgo Comunitario. |
+| **Público Objetivo B (H7/H9)** | Profesionales en Colombia + Intereses en ESG, Sostenibilidad, Desarrollo Sostenible, Normas ISO. |
+| **Experimento Directo (B2B)** | Presentación de MVP "Espejo" a directivos de sostenibilidad (Venta en frío). |
+| **Presupuesto Mínimo** | $5 a $10 USD diarios durante 5 a 7 días. |
+| **Landing Page / Destino** | Página construida en Next.js (Smoke Test) conectada a Google Analytics / Meta Pixel. |
+| **Criterio de Éxito** | Ciudadanos: +500 clics y +50 registros en la zona. B2B: +5 leads calificados con correo corporativo real y 2 reuniones agendadas con MVP Espejo. |
 
 ---
 
 ## Argumento para Defenderlo ante tu Profesor
 
-> "A diferencia de un e-commerce B2C que busca la venta directa de un producto físico, en una plataforma B2B/B2G de impacto territorial utilizamos Meta Ads como un Smoke Test de Doble Vía: por un lado medimos el costo de adquisición de tráfico comunitario (demanda de información) mediante geofencing, y por el otro evaluamos la tasa de conversión de leads B2B mediante la descarga de informes de benchmarking sectorial."
+> "A diferencia de un e-commerce B2C que busca la venta directa de un producto físico, en una plataforma B2B/B2G de impacto territorial utilizamos Meta Ads como un Smoke Test de Doble Vía: por un lado medimos el costo de adquisición de tráfico comunitario (demanda de información) mediante geofencing, y por el otro evaluamos la tasa de conversión de leads B2B mediante la descarga de informes de benchmarking sectorial y la validación en frío de un MVP Espejo pre-armado."

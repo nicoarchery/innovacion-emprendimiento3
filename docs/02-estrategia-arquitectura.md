@@ -185,3 +185,31 @@ El valor del sistema radica en calcular la desviación entre tres fuentes de ver
 - **Nivel 3 (Evidencia de Campo)**: datos capturados mediante fotografías geotagueadas por inspectores o veedurías acreditadas con la App offline.
 
 Si la brecha entre el % de Ejecución Registrada y la Evidencia Físicamente Validada supera un umbral definido (ej. **> 15%**), el sistema activa una **Alerta de Riesgo Territorial**, permitiendo a la gerencia intervenir antes de que se genere un conflicto comunitario o una sanción regulatoria.
+
+#### Verificación Asimétrica (Control de Costos de Operación)
+
+Para garantizar la rentabilidad del modelo SaaS y evitar que el costo operativo de la verificación asfixie los márgenes:
+
+1. **Verificación Base (Automatizada / Bajo Costo)**: disponible en todos los planes. Utiliza ingesta de APIs públicas (SECOP II, SIIPO), análisis satelital y validación de metadatos EXIF (GPS y marcas de tiempo) en fotografías enviadas por la comunidad.
+2. **Verificación Premium (Auditoría Profunda / Alto Valor)**: reservada para contratos corporativos o proyectos de alta fricción social. Incluye auditorías físicas en terreno, encuestas de percepción comunitaria y concertación con veedurías regionales.
+
+#### Protocolo de Gobernanza y Resolución de Disputas (Moderación)
+
+Para proteger la neutralidad de la plataforma y evitar la cooptación política o disputas sindicales locales:
+
+- **Mecanismo de Desescalamiento**: Si una veeduría reporta la paralización de una obra pero la empresa presenta actas de interventoría vigentes, la obra entra en estado de *"Bajo Revisión Neutra"*.
+- **Evidencia Cruzada**: La alerta de paralización solo se hace pública en el mapa si cuenta con al menos 3 reportes independientes geolocalizados en un radio < 500m o si transcurren 5 días hábiles sin descargos formales de la empresa.
+
+---
+
+### 6.4 Ejemplo de Referencia: Proyecto Obras por Impuestos (OxI)
+
+**Proyecto Modelo:** Pavimentación de Vía Terciaria en Guamal (Meta) – Ejecutado por Ecopetrol (Código BPIN).
+
+| Categoría de Datos | Dato Específico a Obtener | Plataforma / Fuente de Origen | Mecanismo de Ingesta Técnico |
+| :--- | :--- | :--- | :--- |
+| **Geolocalización** | Coordenadas trayecto (Lat/Lon), polígono y municipio. | **SIT (ART)** / **Visor DNP** / datos.gov.co | Consumo de API SODA filtrando por BPIN $\rightarrow$ Descarga GeoJSON. |
+| **Ejecución y Costos** | Presupuesto ($12.500M COP), % avance financiero, contratista, fechas. | **SECOP II** (`6qex-kahp`) y **SIIPO** | Consultas a API REST de SECOP II por NIT de Ecopetrol / Código de contrato. |
+| **Métricas ESG / GRI** | Beneficiarios (4.500 hab.), empleos locales generados, toneladas CO2. | **ERP Ecopetrol (SAP)** / **Ficha ART** | Integración B2B vía Webhooks / Ingesta de fichas técnicas de la ART. |
+| **Trazabilidad Ambiental** | Licencia ambiental, actas de compensación ecológica. | **VITAL (ANLA)** | Web Scraping automatizado en VITAL sobre resoluciones en PDF. |
+| **Verificación Ciudadana** | Fotografías con EXIF, reportes de estado físico, alertas. | **Plataforma / Bot WhatsApp** | Captura comunitaria mediante bot de WhatsApp $\rightarrow$ Extracción de EXIF (GPS/Fecha). |
