@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#047857" />
+    <title>Inteligencia Territorial | Transparencia ESG y Obras Verificadas en Colombia</title>
+    <meta
+      name="description"
+      content="La plataforma de inteligencia territorial que conecta la inversión corporativa con la realidad de las comunidades en Colombia. Transparencia verificada entre datos de SECOP II, reportes ESG y evidencias en campo."
+    />
+    
+
+    <!--
+    ════════════════════════════════════════════════════════════════════════
+    LANDING PAGE DE SMOKE TEST
+    ════════════════════════════════════════════════════════════════════════
+
+    ESTADO DE CONFIGURACIÓN:
+    ✓ Meta Pixel ACTIVO — snippet canónico de Meta en el <head>, ID
+      1269570742913278 (no editar). Eventos enviados: PageView (auto),
+      Contact (clic en botones WhatsApp: footer/B2B/ciudadano), Lead
+      (formulario B2B válido) y CompleteRegistration (alerta ciudadana
+      válida).
+    ✗ Google Analytics 4: placeholder G-XXXXXXXXXX inactivo (no se usa).
+    ✗ WhatsApp: número placeholder 573000000000 a propósito — se miden solo
+      los CLICS de los botones vía evento Contact. Si más adelante defines
+      una línea real, cámbiala en WHATSAPP_NUMBER (solo dígitos, sin "+").
+
+    VALIDACIÓN (Events Manager → Test Events): con la página abierta pulsa
+    cada botón y confirma que llegan Contact, Lead y CompleteRegistration.
+    Luego configura la campaña en Meta Ads usando esos eventos como
+    objetivo (Optimización → Conversión).
+
+    NOTA: Los leads también se registran en el navegador (localStorage) y en
+    la consola (F12 → Console) para revisar la intención sin necesidad de
+    backend. Quedan guardados por dispositivo/navegador (localStorage).
+    ════════════════════════════════════════════════════════════════════════
+    -->
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1269570742913278');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1269570742913278&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+      section[id] {
+        scroll-margin-top: 80px;
+      }
+      .ping-ring {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen flex flex-col">
+    <!-- ══════════ NAVBAR ══════════ -->
+    <header class="sticky top-0 z-40 border-b bg-slate-50/80 backdrop-blur">
+      <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <a href="#inicio" class="flex items-center gap-2">
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700 text-emerald-50">
+            <svg class="h-5 w-5 -rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+          </span>
+          <span class="flex flex-col leading-tight">
+            <span class="text-sm font-bold text-slate-900">Inteligencia Territorial</span>
+            <span class="text-[10px] font-medium uppercase tracking-widest text-emerald-700">Impacto Verificado</span>
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-8 md:flex">
+          <a href="#mapa-ciudadano" class="text-sm font-medium text-slate-600 transition-colors hover:text-emerald-700">Mapa de Obras</a>
+          <a href="#lead-b2b" class="text-sm font-medium text-slate-600 transition-colors hover:text-emerald-700">Benchmark ESG</a>
+          <a href="#como-funciona" class="text-sm font-medium text-slate-600 transition-colors hover:text-emerald-700">Cómo funciona</a>
+        </nav>
+
+        <div class="hidden md:block">
+          <a href="#lead-b2b" class="inline-flex h-9 items-center justify-center rounded-md bg-emerald-700 px-4 text-sm font-medium text-emerald-50 shadow transition-colors hover:bg-emerald-800">Solicitar Reporte ESG</a>
+        </div>
+
+        <button id="menu-toggle" class="flex h-10 w-10 items-center justify-center rounded-md text-slate-700 hover:bg-slate-100 md:hidden" aria-label="Abrir menú">
+          <svg id="menu-icon-open" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+          <svg id="menu-icon-close" class="hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+
+      <div id="mobile-menu" class="hidden border-t bg-slate-50 md:hidden">
+        <nav class="flex flex-col gap-1 px-4 py-3">
+          <a href="#mapa-ciudadano" class="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">Mapa de Obras</a>
+          <a href="#lead-b2b" class="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">Benchmark ESG</a>
+          <a href="#como-funciona" class="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">Cómo funciona</a>
+          <div class="pt-2">
+            <a href="#lead-b2b" class="inline-flex h-10 w-full items-center justify-center rounded-md bg-emerald-700 px-4 text-sm font-medium text-emerald-50 transition-colors hover:bg-emerald-800">Solicitar Reporte ESG</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex flex-1 flex-col">
+      <!-- ══════════ HERO ══════════ -->
+      <section id="inicio" class="relative overflow-hidden bg-slate-50">
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-emerald-50 to-transparent" aria-hidden="true"></div>
+
+        <div class="relative mx-auto max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pt-24">
+          <div class="mx-auto max-w-3xl text-center">
+            <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-800">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+              Transparencia verificada · SECOP II + Evidencias en campo
+            </span>
+
+            <h1 class="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+              La plataforma de inteligencia territorial que conecta la
+              <span class="text-emerald-700">inversión corporativa</span> con la
+              realidad de las <span class="text-emerald-700">comunidades</span> en Colombia.
+            </h1>
+
+            <p class="mx-auto mt-5 max-w-2xl text-lg text-slate-500">
+              Transparencia verificada entre datos de SECOP II, reportes ESG y evidencias en campo. Inversión con licencia social real.
+            </p>
+
+            <div class="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
+              <a href="#mapa-ciudadano" class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-emerald-700 px-8 text-base font-medium text-emerald-50 shadow transition-colors hover:bg-emerald-800 sm:w-auto">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"></path><circle cx="12" cy="8" r="2"></circle><path d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712"></path></svg>
+                Explorar Mapa de Obras en mi Municipio
+              </a>
+              <a href="#lead-b2b" class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-indigo-950 px-8 text-base font-medium text-indigo-50 shadow-sm transition-colors hover:bg-indigo-900 sm:w-auto">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12h4"></path><path d="M10 8h4"></path><path d="M14 21v-3a2 2 0 0 0-4 0v3"></path><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"></path><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"></path></svg>
+                Solicitar Reporte Competitivo ESG
+              </a>
+            </div>
+          </div>
+
+          <dl class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="rounded-xl border bg-white p-5 text-center shadow-sm">
+              <dt class="order-last mt-1 text-sm text-slate-500">COP invertidos al año en proyectos de impacto</dt>
+              <dd class="text-2xl font-extrabold text-emerald-700">$19B+</dd>
+            </div>
+            <div class="rounded-xl border bg-white p-5 text-center shadow-sm">
+              <dt class="order-last mt-1 text-sm text-slate-500">API de contratación pública auditable</dt>
+              <dd class="text-2xl font-extrabold text-emerald-700">SECOP II</dd>
+            </div>
+            <div class="rounded-xl border bg-white p-5 text-center shadow-sm">
+              <dt class="order-last mt-1 text-sm text-slate-500">Evidencias georreferenciadas en campo</dt>
+              <dd class="text-2xl font-extrabold text-emerald-700">100%</dd>
+            </div>
+          </dl>
+
+          <div class="mt-10 flex justify-center">
+            <a href="#mapa-ciudadano" class="inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-emerald-700">
+              <svg class="h-4 w-4 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+              Descubre las obras cerca de ti
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- ══════════ MAPA CIUDADANO (H2) ══════════ -->
+      <section id="mapa-ciudadano" class="bg-slate-50 py-16 sm:py-20">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6">
+          <div class="mx-auto max-w-2xl text-center">
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald-700">Mapa ciudadano</span>
+            <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">¿Sabes en qué se están invirtiendo los fondos en tu municipio?</h2>
+            <p class="mt-4 text-slate-500">Consulta el mapa abierto de proyectos verificados y compara la ejecución registrada en SECOP II con la evidencia física en campo.</p>
+          </div>
+
+          <div id="muni-chips" class="mt-8 flex flex-wrap items-center justify-center gap-2"></div>
+
+          <div class="mt-10 grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
+            <div class="rounded-xl border bg-white p-4 shadow-sm sm:p-6">
+              <svg viewBox="0 0 320 280" role="img" aria-label="Mapa de Colombia con proyectos ubicados por municipio" class="h-auto w-full">
+                <defs>
+                  <linearGradient id="colombia-shape" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#d1fae5"></stop>
+                    <stop offset="100%" stop-color="#f0fdf4"></stop>
+                  </linearGradient>
+                </defs>
+
+                <path
+                  d="M 108 28
+                     C 128 12, 168 8, 198 12
+                     C 226 16, 252 18, 278 38
+                     C 300 54, 318 76, 314 104
+                     C 310 132, 296 148, 288 168
+                     C 282 184, 262 206, 246 218
+                     C 236 226, 224 240, 208 238
+                     C 190 236, 178 224, 162 214
+                     C 144 202, 128 196, 108 188
+                     C 86 178, 78 156, 74 132
+                     C 70 108, 78 86, 88 68
+                     C 96 52, 100 38, 108 28 Z"
+                  fill="url(#colombia-shape)"
+                  stroke="#a7f3d0"
+                  stroke-width="2"
+                ></path>
+
+                <g id="pins"></g>
+              </svg>
+              <p class="mt-4 flex items-start gap-2 text-xs text-slate-500">
+                <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"></path><circle cx="12" cy="8" r="2"></circle><path d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712"></path></svg>
+                Haz clic en un pin para ver el estado de ejecución vs. la evidencia en campo de cada obra.
+              </p>
+            </div>
+
+            <div class="space-y-4">
+              <h3 class="flex items-center gap-2 text-lg font-bold text-slate-900">
+                <svg class="h-5 w-5 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"></path><circle cx="12" cy="8" r="2"></circle><path d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712"></path></svg>
+                <span id="projects-heading-label">Obras en Puerto Gaitán</span>
+              </h3>
+              <div id="project-list" class="space-y-4"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ══════════ LEAD MAGNET B2B (H7/H9) ══════════ -->
+      <section id="lead-b2b" class="bg-white py-16 sm:py-20">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6">
+          <div class="mx-auto max-w-2xl text-center">
+            <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-700">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12h4"></path><path d="M10 8h4"></path><path d="M14 21v-3a2 2 0 0 0-4 0v3"></path><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"></path><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"></path></svg>
+              Para equipos de sostenibilidad y asuntos corporativos
+            </span>
+            <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">Descarga el Informe de Transparencia e Impacto Territorial 2026</h2>
+            <p class="mt-4 text-slate-500">Descubre cómo se comparan las inversiones sociales de tu sector en Colombia con datos verificados de SECOP II y evidencia en campo.</p>
+          </div>
+
+          <div class="mt-12 grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
+            <div class="rounded-xl border bg-white text-slate-900 shadow-sm">
+              <div class="flex flex-col space-y-1.5 p-6">
+                <h3 class="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                  <svg class="h-5 w-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path><path d="m16 9-5.5 5.5L8 12"></path></svg>
+                  Benchmarking Sectorial (extracto)
+                </h3>
+                <p class="text-sm text-slate-500">Inversión social declarada vs. porcentaje físicamente verificado por empresa del sector energético.</p>
+              </div>
+              <div class="p-6 pt-0">
+                <div id="benchmark-chart" class="space-y-5"></div>
+                <p class="mt-4 text-xs text-slate-500">Benchmarking anónimo ilustrativo de inversión social en el sector energético colombiano (cifras en millones de COP).</p>
+              </div>
+            </div>
+
+            <div class="rounded-xl border bg-slate-50 text-slate-900 shadow-sm">
+              <div class="flex flex-col space-y-1.5 p-6">
+                <h3 class="text-lg font-semibold text-slate-900">Solicita tu copia gratuita</h3>
+                <p class="text-sm text-slate-500">Déjanos tus datos corporativos y recibe el informe por WhatsApp.</p>
+              </div>
+              <div class="p-6 pt-0">
+                <form id="b2b-form" class="space-y-4" novalidate>
+                  <div class="space-y-1.5">
+                    <label for="b2b-name" class="text-sm font-medium text-slate-900">Nombre completo</label>
+                    <input id="b2b-name" type="text" placeholder="Ana María López" class="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-600" />
+                    <p id="err-name" class="hidden text-xs font-medium text-red-600"></p>
+                  </div>
+
+                  <div class="space-y-1.5">
+                    <label for="b2b-email" class="text-sm font-medium text-slate-900">Correo corporativo</label>
+                    <input id="b2b-email" type="email" placeholder="ana.lopez@empresa.com" class="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-600" />
+                    <p id="err-email" class="hidden text-xs font-medium text-red-600"></p>
+                  </div>
+
+                  <div class="space-y-1.5">
+                    <label for="b2b-company" class="text-sm font-medium text-slate-900">Nombre de la empresa</label>
+                    <input id="b2b-company" type="text" placeholder="Grupo Empresarial XYZ" class="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-600" />
+                    <p id="err-company" class="hidden text-xs font-medium text-red-600"></p>
+                  </div>
+
+                  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="space-y-1.5">
+                      <label for="b2b-role" class="text-sm font-medium text-slate-900">Cargo</label>
+                      <select id="b2b-role" class="flex h-10 w-full appearance-none rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition-colors focus:ring-2 focus:ring-emerald-600"><option value="">Selecciona...</option></select>
+                      <p id="err-role" class="hidden text-xs font-medium text-red-600"></p>
+                    </div>
+                    <div class="space-y-1.5">
+                      <label for="b2b-sector" class="text-sm font-medium text-slate-900">Sector industrial</label>
+                      <select id="b2b-sector" class="flex h-10 w-full appearance-none rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition-colors focus:ring-2 focus:ring-emerald-600"><option value="">Selecciona...</option></select>
+                      <p id="err-sector" class="hidden text-xs font-medium text-red-600"></p>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#25D366] px-4 text-sm font-medium text-white shadow transition-colors hover:bg-[#1eb958]">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
+                    Descargar Informe 2026 (PDF)
+                  </button>
+
+                  <p class="flex items-center justify-center gap-1.5 text-center text-xs text-slate-500">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>
+                    Solo usamos tu correo corporativo para validar el acceso.
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 flex justify-center">
+            <a href="#como-funciona" class="inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-emerald-700">
+              <svg class="h-4 w-4 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+              Conoce cómo verificamos las evidencias
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- ══════════ CÓMO FUNCIONA ══════════ -->
+      <section id="como-funciona" class="bg-white py-16 sm:py-20">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6">
+          <div class="mx-auto max-w-2xl text-center">
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald-700">Cómo funciona</span>
+            <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">Un motor de brechas con tres fuentes de verdad</h2>
+            <p class="mt-4 text-slate-500">Cruzamos el dato oficial, el reporte empresarial y la evidencia de campo para revelar la diferencia entre lo que se dice y lo que realmente se ejecuta.</p>
+          </div>
+
+          <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div class="relative overflow-hidden rounded-xl border bg-white text-slate-900 shadow-sm">
+              <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                  <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-700 text-emerald-50">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 15 21.84"></path><path d="M21 5V8"></path><path d="M21 12L18 17H22L19 22"></path><path d="M3 12A9 3 0 0 0 14.59 14.87"></path></svg>
+                  </span>
+                  <span class="text-4xl font-extrabold text-emerald-100">01</span>
+                </div>
+                <h3 class="pt-4 text-lg font-semibold text-slate-900">Ingesta Pública (SECOP II)</h3>
+              </div>
+              <div class="p-6 pt-0">
+                <p class="text-sm leading-relaxed text-slate-500">Sincronización continua con la API abierta de datos.gov.co (SODA) para auditar contratos de infraestructura, presupuestos y cronogramas oficiales de proyectos de impacto.</p>
+              </div>
+            </div>
+
+            <div class="relative overflow-hidden rounded-xl border bg-white text-slate-900 shadow-sm">
+              <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                  <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-700 text-emerald-50">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13.5 6.5-3.148-3.148a1.205 1.205 0 0 0-1.704 0L6.352 5.648a1.205 1.205 0 0 0 0 1.704L9.5 10.5"></path><path d="M16.5 7.5 19 5"></path><path d="m17.5 10.5 3.148 3.148a1.205 1.205 0 0 1 0 1.704l-2.296 2.296a1.205 1.205 0 0 1-1.704 0L13.5 14.5"></path><path d="M9 21a6 6 0 0 0-6-6"></path><path d="M9.352 10.648a1.205 1.205 0 0 0 0 1.704l2.296 2.296a1.205 1.205 0 0 0 1.704 0l4.296-4.296a1.205 1.205 0 0 0 0-1.704l-2.296-2.296a1.205 1.205 0 0 0-1.704 0z"></path></svg>
+                  </span>
+                  <span class="text-4xl font-extrabold text-emerald-100">02</span>
+                </div>
+                <h3 class="pt-4 text-lg font-semibold text-slate-900">Auditoría Territorial (App Offline)</h3>
+              </div>
+              <div class="p-6 pt-0">
+                <p class="text-sm leading-relaxed text-slate-500">Captura de evidencia física con fotografías georreferenciadas, metadatos EXIF y marcas de tiempo, procesada por veedurías y comunidades incluso sin conexión a internet.</p>
+              </div>
+            </div>
+
+            <div class="relative overflow-hidden rounded-xl border bg-white text-slate-900 shadow-sm">
+              <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                  <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-700 text-emerald-50">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v2"></path><path d="M12 2v2"></path><path d="M17 20v2"></path><path d="M17 2v2"></path><path d="M2 12h2"></path><path d="M2 17h2"></path><path d="M2 7h2"></path><path d="M20 12h2"></path><path d="M20 17h2"></path><path d="M20 7h2"></path><path d="M7 20v2"></path><path d="M7 2v2"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="8" y="8" width="8" height="8" rx="1"></rect></svg>
+                  </span>
+                  <span class="text-4xl font-extrabold text-emerald-100">03</span>
+                </div>
+                <h3 class="pt-4 text-lg font-semibold text-slate-900">Motor de Brecha (Gap Analysis)</h3>
+              </div>
+              <div class="p-6 pt-0">
+                <p class="text-sm leading-relaxed text-slate-500">Cálcula la desviación entre la ejecución registrada en SECOP II y la evidencia físicamente validada. Si supera el 15%, se activa una alerta de riesgo territorial.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer class="border-t bg-slate-900 py-10 text-slate-300">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 sm:flex-row sm:px-6">
+        <div class="text-center sm:text-left">
+          <p class="text-sm font-semibold text-white">Inteligencia Territorial</p>
+          <p class="mt-1 max-w-sm text-xs text-slate-400">Plataforma de trazabilidad de impacto RSC/ESG. Datos y obras mostrados con fines de demostración.</p>
+        </div>
+        <a id="footer-wa" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1eb958]">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path></svg>
+          Escríbenos por WhatsApp
+        </a>
+      </div>
+      <p class="mt-8 text-center text-xs text-slate-500">© 2026 · Validación de mercado · Smoke Test</p>
+    </footer>
+
+    <!-- ══════════ MODAL (detalle de obra + alerta ciudadana) ══════════ -->
+    <div id="modal" class="fixed inset-0 z-50 hidden">
+      <div id="modal-backdrop" class="fixed inset-0 bg-black/80"></div>
+      <div class="fixed left-1/2 top-1/2 z-10 max-h-[90vh] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto border bg-white p-6 shadow-lg sm:rounded-lg">
+        <button id="modal-close" class="absolute right-4 top-4 rounded-sm p-1 text-slate-500 opacity-70 transition-opacity hover:opacity-100" aria-label="Cerrar">×</button>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ TOAST ══════════ -->
+    <div id="toast" class="fixed left-1/2 top-4 z-[100] hidden w-[calc(100%-2rem)] max-w-md -translate-x-1/2">
+      <div id="toast-content" class="relative rounded-md border border-emerald-200 bg-emerald-50 p-4 pr-8 text-emerald-900 shadow-lg">
+        <p id="toast-title" class="text-sm font-semibold"></p>
+        <p id="toast-desc" class="mt-0.5 text-sm opacity-90"></p>
+        <button id="toast-close" class="absolute right-2 top-2 rounded-md p-1 text-emerald-900/50 hover:text-emerald-900" aria-label="Cerrar">×</button>
+      </div>
+    </div>
+    <style>
+      @keyframes pin-pulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        70% { transform: scale(2.4); opacity: 0; }
+        100% { transform: scale(2.4); opacity: 0; }
+      }
+      .pin-pulse {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: pin-pulse 2s ease-out infinite;
+      }
+      .pin-active .pin-core { filter: drop-shadow(0 0 4px rgba(4,120,87,0.8)); }
+    </style>
+
+    <script>
+      // ──────────────────────────────────────────────────────────────
+      // CONFIGURACIÓN — reemplaza los placeholders antes de lanzar ads
+      // ──────────────────────────────────────────────────────────────
+      var META_PIXEL_ID = "1269570742913278";
+      var GA4_ID = "G-XXXXXXXXXX";
+      var WHATSAPP_NUMBER = "573000000000";
+      var BUSINESS_NAME = "Inteligencia Territorial";
+
+      // ──────────────────────────────────────────────────────────────
+      // ANALÍTICA (Meta Pixel + GA4) — se inyectan SOLO con IDs reales
+      // ──────────────────────────────────────────────────────────────
+      function track(event, params) {
+        params = params || {};
+        console.log("[track]", event, params);
+        if (META_PIXEL_ID !== "000000000000000" && window.fbq) {
+          window.fbq("track", event, params);
+        }
+        if (GA4_ID !== "G-XXXXXXXXXX" && window.gtag) {
+          window.gtag("event", event, params);
+        }
+      }
+
+      (function initAnalytics() {
+        console.log("[pixel] Meta Pixel hardcodeado en <head> con ID:", META_PIXEL_ID, "— fbq cargado:", typeof window.fbq !== "undefined");
+
+        if (GA4_ID !== "G-XXXXXXXXXX") {
+          var gs = document.createElement("script");
+          gs.async = true;
+          gs.src = "https://www.googletagmanager.com/gtag/js?id=" + GA4_ID;
+          document.head.appendChild(gs);
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag("js", new Date());
+          window.gtag("config", GA4_ID);
+          console.log("[analytics] GA4 activo:", GA4_ID);
+        } else {
+          console.warn("[analytics] GA4_ID placeholder. Reemplázalo para activar Google Analytics.");
+        }
+      })();
+
+      // ──────────────────────────────────────────────────────────────
+      // DATOS MOCK (misma fuente que src/lib/data.ts)
+      // ──────────────────────────────────────────────────────────────
+      var MUNICIPALITIES = ["Cali", "Puerto Gaitán", "Montelíbano", "Yumbo", "Cartagena"];
+
+      var MAP_POSITIONS = {
+        Cali: { x: 155, y: 210 },
+        "Puerto Gaitán": { x: 225, y: 130 },
+        Montelíbano: { x: 210, y: 80 },
+        Yumbo: { x: 140, y: 200 },
+        Cartagena: { x: 195, y: 100 }
+      };
+
+      var MOCK_PROJECTS = [
+        { id: "p1", name: "Placa Huella Vía Rural", municipality: "Puerto Gaitán", description: "Construcción de 4.2 km de vía de conexión rural que beneficia directamente a 1.200 habitantes de veredas aisladas.", secopPct: 72, fieldPct: 45 },
+        { id: "p2", name: "Centro de Salud Comunitario", municipality: "Montelíbano", description: "Edificación de un centro de salud con atención primaria, odontología y sala de urgencias para comunidades rurales.", secopPct: 90, fieldPct: 58 },
+        { id: "p3", name: "Acueducto Veredal El Aroma", municipality: "Cali", description: "Sistema de acueducto que abastece de agua potable a 340 familias en zona periurbana del norte del Valle del Cauca.", secopPct: 65, fieldPct: 62 },
+        { id: "p4", name: "Sistema de Alumbrado Público", municipality: "Yumbo", description: "Instalación de 180 luminarias LED en vías principales del corregimiento de La Paila, mejorando seguridad vial.", secopPct: 100, fieldPct: 100 },
+        { id: "p5", name: "Parque Metropolitano", municipality: "Cartagena", description: "Intervención paisajística y equipamiento deportivo en 3 hectáreas de zona verde urbana en el corregimiento de Arrozal.", secopPct: 80, fieldPct: 38 },
+        { id: "p6", name: "Centro Comunitario Nueva Vida", municipality: "Puerto Gaitán", description: "Construcción de polideportivo y espacio cultural con capacidad para 400 personas en el barrio Nueva Vida.", secopPct: 55, fieldPct: 20 },
+        { id: "p7", name: "Red de Alcantarillado", municipality: "Montelíbano", description: "Ampliación de la red de alcantarillado con 2.8 km de tubería que cubre 6 barrios históricamente sin saneamiento.", secopPct: 40, fieldPct: 15 },
+        { id: "p8", name: "Sede Administrativa Municipal", municipality: "Cali", description: "Remodelación integral de la sede administrativa del corregimiento de La Cumbre para centralizar servicios públicos.", secopPct: 85, fieldPct: 70 }
+      ];
+
+      var BENCHMARK_DATA = [
+        { company: "Empresa A", sector: "Energía", investment: 4200, verification: 3100, projects: 12 },
+        { company: "Empresa B", sector: "Minería", investment: 5800, verification: 4700, projects: 18 },
+        { company: "Empresa C", sector: "Concesiones Viales", investment: 3100, verification: 2600, projects: 9 }
+      ];
+
+      var ROLE_OPTIONS = ["Gerente de Sostenibilidad", "Director de Asuntos Corporativos", "Jefe de RSE", "Consultor ESG", "Otro"];
+      var SECTOR_OPTIONS = ["Energía", "Minería", "Hidrocarburos", "Concesiones Viales", "Construcción", "Agroindustria", "Otro"];
+
+      var BLOCKED_DOMAINS = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com", "icloud.com", "aol.com", "live.com", "msn.com"];
+
+      var GAP_THRESHOLD = 15;
+
+      function projectsByMunicipality() {
+        var map = {};
+        MOCK_PROJECTS.forEach(function (p) {
+          if (!map[p.municipality]) map[p.municipality] = [];
+          map[p.municipality].push(p);
+        });
+        return map;
+      }
+
+      function getGap(p) { return p.secopPct - p.fieldPct; }
+      function isCorporateEmail(email) {
+        var parts = email.split("@");
+        if (parts.length !== 2 || !parts[1]) return false;
+        return BLOCKED_DOMAINS.indexOf(parts[1].toLowerCase()) === -1;
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // HELPERS
+      // ──────────────────────────────────────────────────────────────
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      function waLink(msg) {
+        return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
+      }
+
+      function openWhatsApp(msg) {
+        window.open(waLink(msg), "_blank", "noopener");
+      }
+
+      function storeLead(type, data) {
+        try {
+          var key = "landing_leads_v1";
+          var list = [];
+          var raw = localStorage.getItem(key);
+          if (raw) list = JSON.parse(raw);
+          list.push({ type: type, data: data, ts: new Date().toISOString() });
+          localStorage.setItem(key, JSON.stringify(list));
+          console.log("[lead]", type, data, "→ guardado en localStorage");
+        } catch (err) {
+          console.warn("[lead] No se pudo guardar en localStorage:", err);
+        }
+      }
+
+      var toastTimer = null;
+      function showToast(title, desc) {
+        document.getElementById("toast-title").textContent = title;
+        document.getElementById("toast-desc").textContent = desc;
+        var toast = document.getElementById("toast");
+        toast.classList.remove("hidden");
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(hideToast, 5000);
+      }
+      function hideToast() {
+        document.getElementById("toast").classList.add("hidden");
+      }
+
+      function openModal() {
+        document.getElementById("modal").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+      function closeModal() {
+        document.getElementById("modal").classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // RENDER
+      // ──────────────────────────────────────────────────────────────
+      var selectedMun = "Puerto Gaitán";
+      var selectedForDialog = "Puerto Gaitán";
+      var municipalityProjects = projectsByMunicipality();
+
+      function renderChips() {
+        var container = document.getElementById("muni-chips");
+        var html = "";
+        var labels = ["Todos"].concat(MUNICIPALITIES);
+        labels.forEach(function (mun) {
+          var active = mun === selectedMun;
+          var classes = active
+            ? "inline-flex h-9 items-center rounded-full bg-emerald-700 px-4 text-sm font-medium text-emerald-50 shadow transition-colors"
+            : "inline-flex h-9 items-center rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-600 transition-colors hover:border-emerald-300 hover:text-emerald-700";
+          var count = mun === "Todos" ? MOCK_PROJECTS.length : (municipalityProjects[mun] || []).length;
+          html += '<button type="button" data-mun="' + esc(mun) + '" class="' + classes + '">' + esc(mun) + ' <span class="ml-1 text-xs opacity-70">' + count + "</span></button>";
+        });
+        container.innerHTML = html;
+        container.querySelectorAll("[data-mun]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            selectedMun = btn.getAttribute("data-mun");
+            renderChips();
+            renderPins();
+            renderProjectList();
+          });
+        });
+      }
+
+      function renderPins() {
+        var container = document.getElementById("pins");
+        var html = "";
+        MUNICIPALITIES.forEach(function (mun) {
+          var pos = MAP_POSITIONS[mun];
+          var active = mun === selectedMun;
+          var coreFill = active ? "#047857" : "#059669";
+          var labelFill = active ? "#047857" : "#475569";
+          var ring = active
+            ? '<circle r="12" class="pin-pulse" fill="#059669"></circle>'
+            : '<circle r="11" fill="#ffffff" opacity="0"></circle>';
+          html +=
+            '<g class="pin-group" data-mun="' + esc(mun) + '" transform="translate(' + pos.x + "," + pos.y + ')" style="cursor:pointer">' +
+            ring +
+            '<circle class="pin-core" r="6" fill="' + coreFill + '" stroke="#ffffff" stroke-width="1.5"></circle>' +
+            '<text x="0" y="-14" text-anchor="middle" font-size="10.5" font-weight="700" fill="' + labelFill + '" style="user-select:none">' + esc(mun) + "</text>" +
+            "</g>";
+        });
+        container.innerHTML = html;
+        container.querySelectorAll(".pin-group").forEach(function (g) {
+          g.addEventListener("click", function () {
+            selectedMun = g.getAttribute("data-mun");
+            selectedForDialog = selectedMun;
+            renderChips();
+            renderPins();
+            renderProjectList();
+            renderModalBody();
+            openModal();
+          });
+        });
+      }
+
+      function projectGapBars(p) {
+        var gap = getGap(p);
+        var atRisk = gap > GAP_THRESHOLD;
+        var fieldColor = atRisk ? "bg-amber-500" : "bg-emerald-600";
+        var badge = atRisk
+          ? '<span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 ring-1 ring-inset ring-amber-200">Brecha del ' + gap + '% · Alerta de Riesgo Territorial</span>'
+          : '<span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">Brecha del ' + gap + '% · Ejecución en línea</span>';
+        return (
+          '<div class="space-y-3">' +
+          '<div><div class="mb-1 flex items-center justify-between text-xs"><span class="font-medium text-slate-500">Ejecución SECOP II</span><span class="font-semibold text-slate-700">' + p.secopPct + "%</span></div>" +
+          '<div class="h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-indigo-600" style="width:' + p.secopPct + '%"></div></div></div>' +
+          '<div><div class="mb-1 flex items-center justify-between text-xs"><span class="font-medium text-slate-500">Evidencia Física en Campo</span><span class="font-semibold text-slate-700">' + p.fieldPct + "%</span></div>" +
+          '<div class="h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full ' + fieldColor + '" style="width:' + p.fieldPct + '%"></div></div></div>' +
+          badge +
+          "</div>"
+        );
+      }
+
+      function projectCard(p) {
+        var gap = getGap(p);
+        var atRisk = gap > GAP_THRESHOLD;
+        var badge = atRisk
+          ? '<span class="shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-800">Riesgo</span>'
+          : '<span class="shrink-0 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-800">En línea</span>';
+        return (
+          '<div class="rounded-xl border bg-white text-slate-900 shadow-sm">' +
+          '<div class="p-6"><div class="flex items-start justify-between gap-3"><h4 class="text-base font-semibold">' + esc(p.name) + "</h4>" + badge + "</div>" +
+          '<div class="mt-3">' + projectGapBars(p) + "</div>" +
+          '<button type="button" class="btn-detail mt-4 inline-flex h-8 items-center justify-center rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50" data-mun="' + esc(p.municipality) + '">Ver detalle y recibir alertas</button>' +
+          "</div></div>"
+        );
+      }
+
+      function renderProjectList() {
+        var container = document.getElementById("project-list");
+        var heading = document.getElementById("projects-heading-label");
+        heading.textContent = "Obras en " + selectedMun;
+        var projects = selectedMun === "Todos" ? MOCK_PROJECTS : (municipalityProjects[selectedMun] || []);
+        if (projects.length === 0) {
+          container.innerHTML = '<p class="text-sm text-slate-500">Selecciona un municipio para ver sus proyectos.</p>';
+          return;
+        }
+        container.innerHTML = projects.map(projectCard).join("");
+        container.querySelectorAll(".btn-detail").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            selectedForDialog = btn.getAttribute("data-mun");
+            renderModalBody();
+            openModal();
+          });
+        });
+      }
+
+      function renderBenchmark() {
+        var maxInv = 1;
+        BENCHMARK_DATA.forEach(function (d) { if (d.investment > maxInv) maxInv = d.investment; });
+        var html = "";
+        BENCHMARK_DATA.forEach(function (d) {
+          html +=
+            '<div class="space-y-1.5">' +
+            '<div class="flex items-center justify-between text-sm"><span class="font-semibold text-slate-700">' + esc(d.company) + "</span>" +
+            '<span class="text-xs text-slate-500">' + esc(d.sector) + " · " + d.projects + " obras</span></div>" +
+            '<div class="flex items-center gap-2 text-xs"><span class="w-28 shrink-0 text-slate-500">Inversión social</span>' +
+            '<div class="h-3 flex-1 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-indigo-600" style="width:' + Math.round((d.investment / maxInv) * 100) + '%"></div></div>' +
+            '<span class="w-16 shrink-0 text-right font-semibold text-slate-700">$' + d.investment + "M</span></div>" +
+            '<div class="flex items-center gap-2 text-xs"><span class="w-28 shrink-0 text-slate-500">Verificada en campo</span>' +
+            '<div class="h-3 flex-1 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-emerald-600" style="width:' + Math.round((d.verification / maxInv) * 100) + '%"></div></div>' +
+            '<span class="w-16 shrink-0 text-right font-semibold text-emerald-700">$' + d.verification + "M</span></div>" +
+            "</div>";
+        });
+        document.getElementById("benchmark-chart").innerHTML = html;
+      }
+
+      function fillSelect(id, options) {
+        var sel = document.getElementById(id);
+        var html = '<option value="">Selecciona...</option>';
+        options.forEach(function (o) { html += '<option value="' + esc(o) + '">' + esc(o) + "</option>"; });
+        sel.innerHTML = html;
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // MODAL (detalle + alerta ciudadana)
+      // ──────────────────────────────────────────────────────────────
+      function renderModalBody() {
+        var projects = municipalityProjects[selectedForDialog] || [];
+        var cards = "";
+        projects.forEach(function (p) {
+          cards +=
+            '<div class="rounded-lg border bg-slate-50 p-4">' +
+            '<p class="font-semibold text-slate-900">' + esc(p.name) + "</p>" +
+            '<p class="mt-1 text-sm text-slate-500">' + esc(p.description) + "</p>" +
+            '<div class="mt-3">' + projectGapBars(p) + "</div>" +
+            "</div>";
+        });
+        document.getElementById("modal-body").innerHTML =
+          '<h3 class="text-lg font-semibold text-slate-900">Obras de impacto en ' + esc(selectedForDialog) + "</h3>" +
+          '<p class="mt-1 text-sm text-slate-500">Compará la ejecución oficial con la evidencia física reportada en campo.</p>' +
+          '<div class="mt-5 space-y-3">' + cards + "</div>" +
+          '<form id="citizen-form" class="mt-5 space-y-3 rounded-lg border border-emerald-200 bg-emerald-50/50 p-4" novalidate>' +
+          '<div class="flex items-center gap-2 font-semibold text-emerald-900">' +
+          '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>' +
+          "¿Vives cerca? Recibe alertas sobre estas obras</div>" +
+          '<div class="space-y-1.5"><label for="citizen-contact" class="text-sm font-medium text-slate-900">Correo o WhatsApp</label>' +
+          '<input id="citizen-contact" type="text" placeholder="ej. 3001234567 o tu@correo.com" class="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-600" />' +
+          '<p id="err-citizen" class="hidden text-xs font-medium text-red-600"></p></div>' +
+          '<button type="submit" class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#25D366] px-4 text-sm font-medium text-white shadow transition-colors hover:bg-[#1eb958]">' +
+          '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path></svg>' +
+          "Suscribirme por WhatsApp</button></form>";
+        document.getElementById("citizen-form").addEventListener("submit", handleCitizenSubmit);
+      }
+
+      function handleCitizenSubmit(e) {
+        e.preventDefault();
+        track("Contact", { content_name: "WhatsApp_Click_Citizen" });
+        var contact = document.getElementById("citizen-contact").value.trim();
+        var errEl = document.getElementById("err-citizen");
+        if (!contact) {
+          errEl.textContent = "Ingresa tu correo o WhatsApp.";
+          errEl.classList.remove("hidden");
+          return;
+        }
+        errEl.classList.add("hidden");
+
+        var projects = municipalityProjects[selectedForDialog] || [];
+        var message =
+          "Hola 👋 Vivo cerca de " + selectedForDialog + " y quiero recibir alertas sobre estas obras de impacto:\n" +
+          projects.map(function (p) { return "• " + p.name; }).join("\n") +
+          "\n\nMi contacto: " + contact;
+
+        track("CompleteRegistration", {
+          content_name: "Alerts_Citizen",
+          content_category: "Citizen_Alert",
+          municipality: selectedForDialog
+        });
+        storeLead("citizen", { contact: contact, municipality: selectedForDialog });
+
+        openWhatsApp(message);
+        showToast("¡Listo! Estamos abriendo WhatsApp", "Te envía una solicitud de alerta para las obras de " + selectedForDialog + ".");
+        document.getElementById("citizen-contact").value = "";
+        closeModal();
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // FORMULARIO B2B
+      // ──────────────────────────────────────────────────────────────
+      function b2bError(id, msg) {
+        var el = document.getElementById(id);
+        if (msg) {
+          el.textContent = msg;
+          el.classList.remove("hidden");
+        } else {
+          el.textContent = "";
+          el.classList.add("hidden");
+        }
+      }
+
+      function handleB2bSubmit(e) {
+        e.preventDefault();
+        track("Contact", { content_name: "WhatsApp_Click_B2B" });
+        var name = document.getElementById("b2b-name").value.trim();
+        var email = document.getElementById("b2b-email").value.trim();
+        var company = document.getElementById("b2b-company").value.trim();
+        var role = document.getElementById("b2b-role").value;
+        var sector = document.getElementById("b2b-sector").value;
+
+        var errs = {};
+        if (!name) errs.name = "Ingresa tu nombre completo.";
+        if (!company) errs.company = "Ingresa el nombre de la empresa.";
+        if (!role) errs.role = "Selecciona tu cargo.";
+        if (!sector) errs.sector = "Selecciona el sector industrial.";
+        if (!email) {
+          errs.email = "Ingresa tu correo corporativo.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          errs.email = "El formato del correo no es válido.";
+        } else if (!isCorporateEmail(email)) {
+          errs.email = "Usa tu correo corporativo (ej. nombre@empresa.com).";
+        }
+
+        b2bError("err-name", errs.name || "");
+        b2bError("err-email", errs.email || "");
+        b2bError("err-company", errs.company || "");
+        b2bError("err-role", errs.role || "");
+        b2bError("err-sector", errs.sector || "");
+
+        if (Object.keys(errs).length > 0) return;
+
+        var message =
+          'Hola 👋 Solicito el "Informe de Transparencia e Impacto Territorial 2026".\n\n' +
+          "• Nombre: " + name + "\n" +
+          "• Correo corporativo: " + email + "\n" +
+          "• Empresa: " + company + "\n" +
+          "• Cargo: " + role + "\n" +
+          "• Sector: " + sector + "\n\n" +
+          "Agradezco me envíen el PDF por este canal.";
+
+        track("Lead", { content_category: "B2B_Report_Download" });
+        storeLead("b2b", { name: name, email: email, company: company, role: role, sector: sector });
+
+        openWhatsApp(message);
+        showToast("Solicitud recibida", "Estamos abriendo WhatsApp para enviarte el Informe de Transparencia e Impacto Territorial 2026.");
+
+        document.getElementById("b2b-form").reset();
+        fillSelect("b2b-role", ROLE_OPTIONS);
+        fillSelect("b2b-sector", SECTOR_OPTIONS);
+        b2bError("err-name", "");
+        b2bError("err-email", "");
+        b2bError("err-company", "");
+        b2bError("err-role", "");
+        b2bError("err-sector", "");
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // INIT
+      // ──────────────────────────────────────────────────────────────
+      document.addEventListener("DOMContentLoaded", function () {
+        fillSelect("b2b-role", ROLE_OPTIONS);
+        fillSelect("b2b-sector", SECTOR_OPTIONS);
+        renderChips();
+        renderPins();
+        renderProjectList();
+        renderBenchmark();
+
+        document.getElementById("footer-wa").setAttribute("href", waLink("Hola 👋 Quiero información sobre la plataforma " + BUSINESS_NAME + "."));
+        document.getElementById("footer-wa").addEventListener("click", function () {
+          track("Contact", { content_name: "WhatsApp_Click_Footer" });
+        });
+
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+          var menu = document.getElementById("mobile-menu");
+          menu.classList.toggle("hidden");
+          document.getElementById("menu-icon-open").classList.toggle("hidden");
+          document.getElementById("menu-icon-close").classList.toggle("hidden");
+        });
+
+        document.getElementById("modal-close").addEventListener("click", closeModal);
+        document.getElementById("modal-backdrop").addEventListener("click", closeModal);
+        document.getElementById("toast-close").addEventListener("click", hideToast);
+        document.getElementById("b2b-form").addEventListener("submit", handleB2bSubmit);
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeModal();
+        });
+      });
+    </script>
+  </body>
+</html>
