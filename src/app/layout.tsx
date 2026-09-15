@@ -4,6 +4,8 @@ import Script from "next/script";
 
 import "./globals.css";
 
+import { PrototypeNotice } from "@/components/PrototypeNotice";
+
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],
@@ -77,7 +79,10 @@ gtag('js',new Date());gtag('config','${gaId}');`}
           </>
         ) : null}
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <PrototypeNotice />
+        {children}
+      </body>
     </html>
   );
 }
