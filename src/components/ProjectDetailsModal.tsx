@@ -44,8 +44,8 @@ export function ProjectDetailsModal({
 
   const handleDownloadPdf = () => {
     toast({
-      title: "Generando Ficha Ejecutiva (PDF)",
-      description: `Se compiló el reporte de trazabilidad y métricas ESG para el contrato ${project.reference}.`,
+      title: "Ficha en preparación",
+      description: `Reunimos contrato, avance y reportes del contrato ${project.reference} en un PDF.`,
     });
   };
 
@@ -69,7 +69,7 @@ export function ProjectDetailsModal({
                   : "bg-emerald-100 text-emerald-800"
               }`}
             >
-              {project.atRisk ? `Alerta de Brecha: ${project.gap}%` : "En línea"}
+              {project.atRisk ? `Difiere ${project.gap}%` : "Al día"}
             </span>
           </div>
 
@@ -82,20 +82,20 @@ export function ProjectDetailsModal({
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
-          {/* Ficha Financiera y Territorial */}
+          {/* Ficha del contrato */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-lg border border-slate-200 p-3 bg-slate-50 space-y-2 text-xs">
               <div className="flex items-center gap-1.5 font-bold text-slate-800">
                 <Building2 className="h-4 w-4 text-indigo-600" />
-                <span>Entidad y Contratista</span>
+                <span>Entidad y contratista</span>
               </div>
               <div>
-                <p className="text-slate-500">Entidad Compradora:</p>
+                <p className="text-slate-500">Entidad:</p>
                 <p className="font-semibold text-slate-900">{project.entityName}</p>
                 <p className="text-[11px] text-slate-500">NIT: {project.entityNit}</p>
               </div>
               <div className="pt-1 border-t border-slate-200">
-                <p className="text-slate-500">Contratista Ejecutor:</p>
+                <p className="text-slate-500">Contratista:</p>
                 <p className="font-semibold text-slate-900">{project.contractorName}</p>
                 <p className="text-[11px] text-slate-500">Doc: {project.contractorDoc}</p>
               </div>
@@ -104,10 +104,10 @@ export function ProjectDetailsModal({
             <div className="rounded-lg border border-slate-200 p-3 bg-slate-50 space-y-2 text-xs">
               <div className="flex items-center gap-1.5 font-bold text-slate-800">
                 <DollarSign className="h-4 w-4 text-emerald-600" />
-                <span>Presupuesto y Tiempos</span>
+                <span>Valor y plazos</span>
               </div>
               <div>
-                <p className="text-slate-500">Valor Adjudicado:</p>
+                <p className="text-slate-500">Valor adjudicado:</p>
                 <p className="text-base font-extrabold text-emerald-700">
                   {formatCOP(project.contractValue)}
                 </p>
@@ -121,7 +121,7 @@ export function ProjectDetailsModal({
                   </p>
                 </div>
                 <div>
-                  <p className="text-slate-500">Entrega Estimada:</p>
+                  <p className="text-slate-500">Entrega prevista:</p>
                   <p className="font-medium text-slate-800 flex items-center gap-1">
                     <Calendar className="h-3 w-3 text-slate-400" />
                     {project.endDate}
@@ -131,22 +131,22 @@ export function ProjectDetailsModal({
             </div>
           </div>
 
-          {/* Motor de Brechas: Comparativa gráfica */}
+          {/* Comparativa SECOP II frente a terreno */}
           <div className="rounded-lg border border-slate-200 p-4 bg-white shadow-xs">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-1.5">
               <FileCheck2 className="h-4 w-4 text-indigo-600" />
-              Auditoría de Brecha Territorial (Gap Analysis)
+              SECOP II frente a terreno
             </h4>
 
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="p-3 bg-indigo-50/60 rounded-lg border border-indigo-100">
                 <span className="text-xs text-indigo-800 font-medium block">
-                  Reporte Jurídico SECOP II
+                  Registro SECOP II
                 </span>
                 <span className="text-2xl font-black text-indigo-700 mt-1 block">
                   {project.secopPct}%
                 </span>
-                <span className="text-[11px] text-indigo-600">Avance contractual / pagos</span>
+                <span className="text-[11px] text-indigo-600">Avance contractual</span>
               </div>
 
               <div
@@ -161,7 +161,7 @@ export function ProjectDetailsModal({
                     project.atRisk ? "text-amber-800" : "text-emerald-800"
                   }`}
                 >
-                  Evidencia Física en Campo
+                  Avance en terreno
                 </span>
                 <span
                   className={`text-2xl font-black mt-1 block ${
@@ -175,7 +175,7 @@ export function ProjectDetailsModal({
                     project.atRisk ? "text-amber-600" : "text-emerald-600"
                   }`}
                 >
-                  {project.verifiedCount} validaciones comunitarias
+                  {project.verifiedCount} reportes ciudadanos
                 </span>
               </div>
             </div>
@@ -183,7 +183,7 @@ export function ProjectDetailsModal({
             {project.lastReportObservation && (
               <div className="mt-3 text-xs bg-slate-50 p-2.5 rounded border border-slate-200">
                 <span className="font-semibold text-slate-800 block">
-                  Última Observación de Veeduría ({project.lastReportDate || "Reciente"}):
+                  Último reporte ciudadano ({project.lastReportDate || "reciente"}):
                 </span>
                 <p className="text-slate-600 italic mt-0.5">
                   &ldquo;{project.lastReportObservation}&rdquo;
@@ -192,22 +192,22 @@ export function ProjectDetailsModal({
             )}
           </div>
 
-          {/* Métricas Estimadas de Impacto ESG */}
+          {/* Alcance estimado */}
           <div className="rounded-lg border border-slate-200 p-3.5 bg-slate-50">
             <h4 className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5">
               <Users className="h-4 w-4 text-emerald-600" />
-              Impacto Social y Gobernanza (Estándares GRI / ISSB S1)
+              Alcance estimado de la obra
             </h4>
             <div className="grid grid-cols-3 gap-2 text-center text-xs">
               <div className="bg-white p-2 rounded border border-slate-200">
-                <span className="text-[11px] text-slate-500 block">Beneficiarios</span>
+                <span className="text-[11px] text-slate-500 block">Cobertura aprox.</span>
                 <span className="font-bold text-slate-800">
                   +{estimatedBeneficiaries.toLocaleString("es-CO")} hab.
                 </span>
               </div>
               <div className="bg-white p-2 rounded border border-slate-200">
-                <span className="text-[11px] text-slate-500 block">Empleo Local</span>
-                <span className="font-bold text-slate-800">~{estimatedJobs} plazas</span>
+                <span className="text-[11px] text-slate-500 block">Empleo aprox.</span>
+                <span className="font-bold text-slate-800">~{estimatedJobs} puestos</span>
               </div>
               <div className="bg-white p-2 rounded border border-slate-200">
                 <span className="text-[11px] text-slate-500 block">Ubicación</span>
@@ -228,7 +228,7 @@ export function ProjectDetailsModal({
             className="gap-1.5 text-xs"
           >
             <Download className="h-3.5 w-3.5" />
-            Descargar Ficha Ejecutiva (PDF)
+            Descargar ficha (PDF)
           </Button>
 
           <div className="flex items-center gap-2">
@@ -258,7 +258,7 @@ export function ProjectDetailsModal({
               }}
               className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs"
             >
-              Auditar / Enviar Evidencia
+              Reportar avance
             </Button>
           </div>
         </DialogFooter>

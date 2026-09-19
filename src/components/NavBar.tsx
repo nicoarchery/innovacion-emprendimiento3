@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { label: "Explorador en Vivo (MVP)", href: "/explorador", isBadge: true },
-  { label: "Mapa de Obras", href: "/mapa" },
-  { label: "Benchmark ESG", href: "/#lead-b2b" },
+  { label: "Mapa de Cali", href: "/mapa" },
+  { label: "Explorador", href: "/explorador", isBadge: true },
   { label: "Cómo funciona", href: "/#como-funciona" },
+  { label: "Para organizaciones", href: "/#para-organizaciones" },
 ];
 
 export function NavBar() {
@@ -25,10 +25,10 @@ export function NavBar() {
           </span>
           <span className="flex flex-col leading-tight">
             <span className="text-sm font-bold text-slate-900">
-              Inteligencia Territorial
+              Obras a la Vista
             </span>
             <span className="text-[10px] font-medium uppercase tracking-widest text-emerald-700">
-              Impacto Verificado
+              Consulta ciudadana · Cali
             </span>
           </span>
         </a>
@@ -55,7 +55,7 @@ export function NavBar() {
 
         <div className="hidden md:block">
           <Button size="sm" asChild>
-            <a href="#lead-b2b">Solicitar Reporte ESG</a>
+            <a href="/mapa">Consultar obras</a>
           </Button>
         </div>
 
@@ -89,7 +89,7 @@ export function NavBar() {
           ))}
           <div className="pt-2">
             <Button asChild>
-              <a href="#lead-b2b">Solicitar Reporte ESG</a>
+              <a href="/mapa">Consultar obras</a>
             </Button>
           </div>
         </nav>

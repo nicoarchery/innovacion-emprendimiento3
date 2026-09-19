@@ -15,23 +15,21 @@ const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 const gaId = process.env.NEXT_PUBLIC_GA4_ID;
 
 export const metadata: Metadata = {
-  title:
-    "Inteligencia Territorial | Transparencia ESG y Obras Verificadas en Colombia",
+  title: "Obras de Cali a la vista | Consulta ciudadana y reconocimiento",
   description:
-    "La plataforma de inteligencia territorial que conecta la inversión corporativa con la realidad de las comunidades en Colombia. Transparencia verificada entre datos de SECOP II, reportes ESG y evidencias en campo.",
+    "Consulta contratos de obra de Cali desde SECOP II en un mapa. Revisa valor, contratista y avance, confirma en terreno y reconoce a las entidades que cumplen.",
   keywords: [
-    "ESG",
+    "obras Cali",
     "SECOP II",
-    "transparencia",
-    "obras por impuestos",
+    "consulta ciudadana",
+    "veeduría",
+    "contratación pública",
     "Colombia",
-    "responsabilidad social",
-    "geolocalización",
   ],
   openGraph: {
-    title: "Inteligencia Territorial | Transparencia ESG Verificada",
+    title: "Obras de Cali a la vista | Consulta ciudadana",
     description:
-      "Consulta el mapa abierto de proyectos de infraestructura verificados en tu municipio. Transparencia entre SECOP II, reportes ESG y evidencias en campo.",
+      "Revisa contratos de obra de Cali en un mapa. Compara el registro SECOP II con el avance en terreno y reconoce a quien cumple.",
     type: "website",
     locale: "es_CO",
   },

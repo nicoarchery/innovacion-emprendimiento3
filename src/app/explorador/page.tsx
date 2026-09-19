@@ -7,9 +7,9 @@ import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Explorador Territorial de Contratos | Impacto Territorial",
+  title: "Explorador de contratos de obra | Consulta ciudadana",
   description:
-    "Auditoría en tiempo real de contratos de obra pública e infraestructura desde SECOP II vs. evidencias de campo y veedurías ciudadanas.",
+    "Busca contratos de obra desde SECOP II y compara el registro oficial con el reporte en terreno.",
 };
 
 export default function ExploradorPage() {
@@ -29,7 +29,7 @@ export default function ExploradorPage() {
           </Link>
           <span>/</span>
           <span className="font-semibold text-slate-800">
-            Explorador Territorial MVP
+            Explorador
           </span>
         </div>
 
@@ -38,13 +38,14 @@ export default function ExploradorPage() {
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 mb-2">
               <MapPinned className="h-3.5 w-3.5" />
-              <span>Plataforma de Inteligencia Territorial</span>
+              <span>Consulta SECOP II</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Explorador y Auditoría de Obras en Tiempo Real
+              Explorador de contratos de obra
             </h1>
             <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-              Monitorea el cumplimiento físico de los contratos de obra pública (SECOP II) y proyectos de Obras por Impuestos (OxI). Cruza la promesa jurídica del Estado con el avance real certificado por comunidades y veedurías en territorio.
+              Busca contratos por departamento, estado y contratista. Revisa
+              valor, fechas y diferencia con el reporte en terreno.
             </p>
           </div>
         </div>

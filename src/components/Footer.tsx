@@ -4,7 +4,7 @@ import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export function Footer() {
   const whatsappLink = buildWhatsAppLink(
-    "Hola 👋 Quiero conocer más sobre la plataforma de trazabilidad de impacto territorial."
+    "Quiero conocer la plataforma de consulta de obras de Cali."
   );
 
   return (
@@ -12,11 +12,11 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 sm:flex-row sm:px-6">
         <div className="text-center sm:text-left">
           <p className="text-sm font-semibold text-white">
-            Inteligencia Territorial
+            Obras a la Vista · Cali
           </p>
           <p className="mt-1 max-w-sm text-xs text-slate-400">
-            Plataforma de trazabilidad de impacto RSC/ESG. Datos y obras
-            mostrados con fines de demostración.
+            Consulta contratos SECOP II y reconoce a las entidades que cumplen.
+            Ubicaciones aproximadas.
           </p>
         </div>
 
@@ -31,7 +31,7 @@ export function Footer() {
         </a>
       </div>
       <p className="mt-8 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} · Validación de mercado · Smoke Test
+        © {new Date().getFullYear()} · Prototipo en validación
       </p>
     </footer>
   );

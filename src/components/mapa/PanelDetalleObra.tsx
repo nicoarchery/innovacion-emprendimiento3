@@ -16,11 +16,11 @@ function confianzaLabel(c: string | null): string {
 }
 
 function fuenteLabel(fuente: string | null): string {
-  if (fuente === "nominatim") return "Geocodificación OSM / Nominatim (dirección de SECOP)";
-  if (fuente === "photon") return "Geocodificación Photon/OSM";
-  if (fuente === "texto-contrato") return "Dirección detectada en el objeto del contrato (SECOP)";
-  if (fuente === "barrio-objeto") return "Barrio detectado en el objeto del contrato (SECOP)";
-  if (fuente === "cache-ubicaciones") return "Coordenadas cacheadas de otra obra con la misma dirección";
+  if (fuente === "nominatim") return "OpenStreetMap, desde la dirección SECOP";
+  if (fuente === "photon") return "Photon/OSM, desde la dirección SECOP";
+  if (fuente === "texto-contrato") return "Dirección citada en el objeto del contrato";
+  if (fuente === "barrio-objeto") return "Barrio citado en el objeto del contrato";
+  if (fuente === "cache-ubicaciones") return "Misma dirección de otra obra ya ubicada";
   return fuente ?? "Sin dato";
 }
 
@@ -50,7 +50,7 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
       <div className="space-y-3 overflow-y-auto px-4 py-3">
         <section>
           <h4 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-indigo-700">
-            <FileText className="h-3.5 w-3.5" /> Información SECOP
+            <FileText className="h-3.5 w-3.5" /> Registro SECOP
           </h4>
           <dl className="space-y-1 text-[13px]">
             <div>
@@ -82,7 +82,7 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
               </div>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Contrato SECOP</dt>
+              <dt className="text-[11px] font-medium text-slate-400">Contrato</dt>
               <dd className="text-xs text-slate-500">{obra.id}</dd>
             </div>
           </dl>
@@ -93,19 +93,19 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
               rel="noopener noreferrer"
               className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-indigo-700 hover:underline"
             >
-              Ver registro en SECOP <ExternalLink className="h-3 w-3" />
+              Ver en SECOP <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}
         </section>
 
         <section className="rounded-lg bg-amber-50/60 p-3 ring-1 ring-amber-100">
           <h4 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-amber-800">
-            <MapPin className="h-3.5 w-3.5" /> Ubicación (procesada por la app)
+            <MapPin className="h-3.5 w-3.5" /> Ubicación calculada
           </h4>
           <dl className="space-y-1 text-[13px]">
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Dirección</dt>
-              <dd className="text-slate-800">{obra.direccion ?? "No disponible en SECOP"}</dd>
+              <dt className="text-[11px] font-medium text-slate-400">Dirección SECOP</dt>
+              <dd className="text-slate-800">{obra.direccion ?? "SECOP no la publica"}</dd>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -122,7 +122,7 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
               <dd className="font-mono text-xs text-slate-700">{coordenadas}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Fuente de ubicación</dt>
+              <dt className="text-[11px] font-medium text-slate-400">Cómo se ubicó</dt>
               <dd className="text-xs text-slate-600">{fuenteLabel(obra.geoFuente)}</dd>
             </div>
             <div>
@@ -132,8 +132,8 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
           </dl>
           <p className="mt-2 flex items-start gap-1 text-[11px] leading-snug text-amber-800/80">
             <Compass className="mt-0.5 h-3 w-3 shrink-0" />
-            Coordenadas generadas por geocodificación (OSM), no son oficiales ni aportadas por
-            SECOP; pueden tener imprecisión.
+            Coordenada aproximada. SECOP no publica coordenadas; la calculamos
+            con OpenStreetMap. Confírmala en terreno.
           </p>
         </section>
       </div>

@@ -16,23 +16,23 @@ const STEPS = [
   {
     icon: DatabaseZap,
     step: "01",
-    title: "Ingesta Pública (SECOP II)",
+    title: "Lee el contrato oficial",
     description:
-      "Sincronización continua con la API abierta de datos.gov.co (SODA) para auditar contratos de infraestructura, presupuestos y cronogramas oficiales de proyectos de impacto.",
+      "Traemos valor, contratista, fechas y estado desde SECOP II (datos.gov.co). Cada ficha cita su fuente.",
   },
   {
     icon: Satellite,
     step: "02",
-    title: "Auditoría Territorial (App Offline)",
+    title: "Confirma en terreno",
     description:
-      "Captura de evidencia física con fotografías georreferenciadas, metadatos EXIF y marcas de tiempo, procesada por veedurías y comunidades incluso sin conexión a internet.",
+      "Reportas el avance con foto, fecha y ubicación. Validamos tu reporte antes de publicarlo.",
   },
   {
     icon: Cpu,
     step: "03",
-    title: "Motor de Brecha (Gap Analysis)",
+    title: "Otorga el reconocimiento",
     description:
-      "Cálcula la desviación entre la ejecución registrada en SECOP II y la evidencia físicamente validada. Si supera el 15%, se activa una alerta de riesgo territorial.",
+      "Las obras al día muestran sello público. Las obras con diferencia mayor a 15% quedan marcadas para revisión.",
   },
 ];
 
@@ -45,12 +45,10 @@ export function VerificationSection() {
             Cómo funciona
           </span>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Un motor de brechas con tres fuentes de verdad
+            Tres pasos para reconocer con base verificable
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Cruzamos el dato oficial, el reporte empresarial y la evidencia de
-            campo para revelar la diferencia entre lo que se dice y lo que
-            realmente se ejecuta.
+            Tú consultas. La entidad publica. La comunidad confirma.
           </p>
         </div>
 

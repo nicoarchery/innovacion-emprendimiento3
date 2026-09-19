@@ -131,14 +131,14 @@ export function SecopExplorer() {
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Sincronización en Vivo
+                Datos de datos.gov.co
               </span>
               <span className="text-xs text-slate-400">
-                Portal Datos Abiertos Colombia (SODA API)
+                Contratos SECOP II con reporte ciudadano
               </span>
             </div>
             <h2 className="text-base font-bold text-white mt-0.5">
-              Auditoría y Trazabilidad de Contratos de Obra Pública
+              Contratos de obra pública a la vista
             </h2>
           </div>
         </div>
@@ -152,7 +152,7 @@ export function SecopExplorer() {
             className="border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs gap-1.5"
           >
             <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
-            {isLoading ? "Consultando..." : "Actualizar SECOP II"}
+            {isLoading ? "Consultando..." : "Actualizar datos"}
           </Button>
         </div>
       </div>
@@ -162,14 +162,14 @@ export function SecopExplorer() {
         <Card className="border-slate-200 shadow-xs">
           <CardContent className="p-4">
             <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
-              <span>Obras Auditadas</span>
+              <span>Obras listadas</span>
               <Layers className="h-4 w-4 text-indigo-600" />
             </div>
             <div className="text-2xl font-black text-slate-900 mt-1">
               {stats.total}
             </div>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              {selectedDept === "Todos" ? "Todo el territorio" : `Departamento: ${selectedDept}`}
+              {selectedDept === "Todos" ? "Todos los departamentos" : `Departamento: ${selectedDept}`}
             </p>
           </CardContent>
         </Card>
@@ -177,14 +177,14 @@ export function SecopExplorer() {
         <Card className="border-slate-200 shadow-xs">
           <CardContent className="p-4">
             <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
-              <span>Inversión Rastreada</span>
+              <span>Valor sumado</span>
               <DollarSign className="h-4 w-4 text-emerald-600" />
             </div>
             <div className="text-xl font-black text-emerald-700 mt-1 truncate">
               {formatCOP(stats.totalValue)}
             </div>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Fondos de obras y OxI
+              Suma de los contratos listados
             </p>
           </CardContent>
         </Card>
@@ -192,14 +192,14 @@ export function SecopExplorer() {
         <Card className="border-slate-200 shadow-xs">
           <CardContent className="p-4">
             <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
-              <span>Alertas de Brecha (&gt;15%)</span>
+              <span>Difieren más de 15%</span>
               <AlertTriangle className="h-4 w-4 text-amber-600" />
             </div>
             <div className="text-2xl font-black text-amber-700 mt-1">
               {stats.atRisk}
             </div>
             <p className="text-[11px] text-amber-600 font-medium mt-0.5">
-              Requieren intervención en campo
+              Requieren revisión en terreno
             </p>
           </CardContent>
         </Card>
@@ -207,14 +207,14 @@ export function SecopExplorer() {
         <Card className="border-slate-200 shadow-xs">
           <CardContent className="p-4">
             <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
-              <span>Validaciones Comunitarias</span>
+              <span>Reportes ciudadanos</span>
               <ShieldCheck className="h-4 w-4 text-indigo-600" />
             </div>
             <div className="text-2xl font-black text-slate-900 mt-1">
               {stats.totalVerifications}
             </div>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Evidencias ciudadanas y JAC
+              Confirmaciones desde el territorio
             </p>
           </CardContent>
         </Card>
@@ -226,7 +226,7 @@ export function SecopExplorer() {
           <div className="relative w-full md:max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
-              placeholder="Buscar por objeto, contratista, alcaldía o municipio..."
+              placeholder="Busca por obra, contratista, entidad o municipio..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9 text-xs"
@@ -252,7 +252,7 @@ export function SecopExplorer() {
                   statusFilter === "atRisk" ? "bg-amber-100 text-amber-900 shadow-xs" : "text-slate-600"
                 }`}
               >
-                Con Alerta (&gt;15%)
+                Requieren revisión
               </button>
               <button
                 type="button"
@@ -261,7 +261,7 @@ export function SecopExplorer() {
                   statusFilter === "onTrack" ? "bg-emerald-100 text-emerald-900 shadow-xs" : "text-slate-600"
                 }`}
               >
-                En Línea
+                Al día
               </button>
             </div>
 
@@ -273,9 +273,9 @@ export function SecopExplorer() {
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="bg-transparent border-0 text-slate-700 font-semibold focus:ring-0 text-xs cursor-pointer"
               >
-                <option value="gap">Mayor Brecha</option>
-                <option value="value">Mayor Presupuesto</option>
-                <option value="date">Más Recientes</option>
+                <option value="gap">Mayor diferencia</option>
+                <option value="value">Mayor valor</option>
+                <option value="date">Más recientes</option>
               </select>
             </div>
           </div>
@@ -307,10 +307,10 @@ export function SecopExplorer() {
         <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center bg-white">
           <FileSpreadsheet className="h-10 w-10 text-slate-300 mx-auto mb-2" />
           <h3 className="text-sm font-semibold text-slate-800">
-            No se encontraron contratos con los filtros aplicados
+            Sin resultados con estos filtros
           </h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Prueba cambiando el departamento o limpiando los términos en la barra de búsqueda.
+            Cambia de departamento o borra lo que escribiste en la búsqueda.
           </p>
           <Button
             variant="outline"
@@ -322,7 +322,7 @@ export function SecopExplorer() {
             }}
             className="mt-4 text-xs"
           >
-            Restablecer Filtros
+            Borrar filtros
           </Button>
         </div>
       ) : (
@@ -364,10 +364,10 @@ export function SecopExplorer() {
                   </div>
                 </div>
 
-                {/* Presupuesto y Motor de Brecha */}
+                {/* Presupuesto y comparativa */}
                 <div className="space-y-2 pt-2 border-t border-slate-100">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500 font-medium">Valor Contrato:</span>
+                    <span className="text-slate-500 font-medium">Valor del contrato:</span>
                     <span className="font-extrabold text-slate-900">
                       {formatCOP(project.contractValue)}
                     </span>
@@ -377,7 +377,7 @@ export function SecopExplorer() {
                   <div className="space-y-1.5">
                     <div>
                       <div className="flex justify-between text-[11px] mb-0.5">
-                        <span className="text-indigo-700 font-medium">SECOP II (Pagos)</span>
+                        <span className="text-indigo-700 font-medium">SECOP II</span>
                         <span className="font-bold text-slate-700">{project.secopPct}%</span>
                       </div>
                       <Progress value={project.secopPct} indicatorClassName="bg-indigo-600" />
@@ -386,7 +386,7 @@ export function SecopExplorer() {
                     <div>
                       <div className="flex justify-between text-[11px] mb-0.5">
                         <span className={project.atRisk ? "text-amber-700 font-medium" : "text-emerald-700 font-medium"}>
-                          Evidencia Campo
+                          Terreno
                         </span>
                         <span className="font-bold text-slate-700">{project.fieldPct}%</span>
                       </div>
@@ -397,7 +397,7 @@ export function SecopExplorer() {
                     </div>
                   </div>
 
-                  {/* Badge de Brecha */}
+                  {/* Badge de diferencia */}
                   <div
                     className={cn(
                       "w-full rounded-md py-1 px-2 text-center text-xs font-semibold flex items-center justify-center gap-1.5",
@@ -409,12 +409,12 @@ export function SecopExplorer() {
                     {project.atRisk ? (
                       <>
                         <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
-                        Brecha del {project.gap}% · Alerta Territorial
+                        Difiere {project.gap}% · Requiere revisión
                       </>
                     ) : (
                       <>
                         <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                        Brecha del {project.gap}% · Ejecución en Línea
+                        Difiere {project.gap}% · Al día
                       </>
                     )}
                   </div>
@@ -427,14 +427,14 @@ export function SecopExplorer() {
                       onClick={() => setDetailsModalProject(project)}
                       className="text-xs h-8"
                     >
-                      Ficha &amp; ESG
+                      Ver ficha
                     </Button>
                     <Button
                       size="sm"
                       onClick={() => setVerifyModalProject(project)}
                       className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs h-8"
                     >
-                      Auditar Obra
+                      Reportar avance
                     </Button>
                   </div>
                 </div>

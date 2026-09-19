@@ -1,6 +1,6 @@
-# Plataforma de Trazabilidad de Impacto Territorial y RSC
+# Obras a la Vista · Consulta ciudadana de obra pública en Cali
 
-> **Proyecto de Innovación 3**: Plataforma B2B/B2C para la verificación, georreferenciación y comparabilidad de inversiones de Responsabilidad Social Corporativa (RSC) y ESG en Colombia, cruzando datos de contratación pública (SECOP II) con evidencias de campo territoriales.
+> Prototipo en validación: consultas contratos de obra desde SECOP II en un mapa, confirmas el avance en terreno y otorgas reconocimiento público a las entidades que cumplen.
 
 ---
 
@@ -30,13 +30,13 @@
 
 ```bash
 # Instalar dependencias
-npm install
+bun install
 
 # Iniciar servidor de desarrollo
-npm run dev
+bun run dev
 
 # Compilar para producción
-npm run build
+bun run build
 ```
 
 ---

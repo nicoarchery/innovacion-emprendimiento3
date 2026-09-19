@@ -12,12 +12,9 @@ export function PrototypeNotice() {
           <span className="mr-1 inline-block rounded bg-amber-400 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-900">
             Prototipo
           </span>
-          Esta plataforma es un prototipo en fase de validación. Los contratos,
-          porcentajes de avance, evidencias de campo y alertas mostrados
-          provienen parcialmente de fuentes públicas (SECOP II) y parcialmente
-          de datos simulados o estimados con fines demostrativos. Esta
-          información NO constituye información oficial ni debe utilizarse para
-          tomar decisiones legales, contractuales o de inversión.
+          Prototipo en validación. Combinamos registros SECOP II con datos de
+          muestra. Verifica cada contrato en SECOP II antes de usarlo en
+          decisiones legales o de inversión.
         </p>
       </div>
     </div>

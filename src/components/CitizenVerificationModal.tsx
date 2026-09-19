@@ -69,8 +69,8 @@ export function CitizenVerificationModal({
       onClose();
 
       toast({
-        title: "Evidencia Territorial Registrada",
-        description: `Se actualizó el avance en campo al ${newFieldPct}%. La brecha contractual ahora es del ${newGap}%.`,
+        title: "Reporte publicado",
+        description: `Registramos ${newFieldPct}% de avance en terreno. La diferencia con SECOP II quedó en ${newGap}%.`,
       });
     }, 400);
   };
@@ -82,11 +82,11 @@ export function CitizenVerificationModal({
           <div className="flex items-center gap-2 text-emerald-700">
             <ShieldAlert className="h-5 w-5" />
             <span className="text-xs font-bold uppercase tracking-wider">
-              Auditoría Comunitaria & Veeduría
+              Reporte ciudadano
             </span>
           </div>
           <DialogTitle className="text-xl font-bold text-slate-900 leading-tight">
-            Reportar Evidencia en Terreno
+            Cuéntanos cómo va la obra
           </DialogTitle>
           <DialogDescription className="text-sm text-slate-600 line-clamp-2">
             {project.description}
@@ -104,9 +104,9 @@ export function CitizenVerificationModal({
               </span>
             </div>
             <div>
-              <span className="text-slate-500 block">Ejecución SECOP II:</span>
+              <span className="text-slate-500 block">SECOP II registra:</span>
               <span className="font-semibold text-indigo-700">
-                {project.secopPct}% contractual
+                {project.secopPct}% de avance
               </span>
             </div>
           </div>
@@ -114,7 +114,7 @@ export function CitizenVerificationModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label htmlFor="reporterName" className="text-xs font-medium text-slate-700">
-                Nombre o Veeduría / JAC
+                Tu nombre o veeduría
               </Label>
               <Input
                 id="reporterName"
@@ -127,7 +127,7 @@ export function CitizenVerificationModal({
             </div>
             <div>
               <Label htmlFor="reporterContact" className="text-xs font-medium text-slate-700">
-                WhatsApp o Correo
+                WhatsApp o correo
               </Label>
               <Input
                 id="reporterContact"
@@ -143,7 +143,7 @@ export function CitizenVerificationModal({
           <div>
             <div className="flex justify-between items-center mb-1">
               <Label htmlFor="pctRange" className="text-xs font-medium text-slate-700">
-                % Avance Físico Real Observado en Terreno
+                Avance que ves en terreno
               </Label>
               <span className="text-sm font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                 {observedPct}%
@@ -160,15 +160,15 @@ export function CitizenVerificationModal({
               className="w-full accent-emerald-600 cursor-pointer"
             />
             <div className="flex justify-between text-[11px] text-slate-400 mt-0.5">
-              <span>0% (Sin iniciar / paralizada)</span>
-              <span>50% (Media marcha)</span>
-              <span>100% (Obra entregada)</span>
+              <span>0% (sin iniciar o detenida)</span>
+              <span>50% (a mitad de camino)</span>
+              <span>100% (entregada)</span>
             </div>
           </div>
 
           <div>
             <Label className="text-xs font-medium text-slate-700">
-              Estado de la Obra en Terreno
+              Estado que ves en terreno
             </Label>
             <div className="grid grid-cols-3 gap-2 mt-1">
               {[
@@ -194,11 +194,11 @@ export function CitizenVerificationModal({
 
           <div>
             <Label htmlFor="observation" className="text-xs font-medium text-slate-700">
-              Observación de la Comunidad (Hechos y Testimonio)
+              Lo que viste (hechos concretos)
             </Label>
             <Textarea
               id="observation"
-              placeholder="Describe lo observado en campo (ej. ausencia de maquinaria, falta de señalización, material abandonado)..."
+              placeholder="Describe lo que viste (ej. sin maquinaria hace una semana, falta señalización, material abandonado)..."
               value={observation}
               onChange={(e) => setObservation(e.target.value)}
               rows={2}
@@ -206,7 +206,7 @@ export function CitizenVerificationModal({
             />
           </div>
 
-          {/* Fotografía y coordenadas EXIF simuladas */}
+          {/* Fotografía y coordenadas */}
           <div className="rounded-lg border border-dashed border-slate-300 p-3 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <div className="h-9 w-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
@@ -214,10 +214,10 @@ export function CitizenVerificationModal({
               </div>
               <div>
                 <p className="text-xs font-semibold text-slate-800">
-                  Foto de Evidencia con Metadatos EXIF
+                  Foto con ubicación y fecha
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  Extrae GPS ({project.municipality}) y fecha automática.
+                  Tomamos el GPS ({project.municipality}) y la fecha de la foto.
                 </p>
               </div>
             </div>
@@ -231,12 +231,12 @@ export function CitizenVerificationModal({
               {hasPhoto ? (
                 <>
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                  Foto adjunta (GPS OK)
+                  Foto lista
                 </>
               ) : (
                 <>
                   <Upload className="h-3.5 w-3.5" />
-                  Cargar Evidencia
+                  Subir foto
                 </>
               )}
             </Button>
@@ -258,7 +258,7 @@ export function CitizenVerificationModal({
               className="bg-emerald-700 hover:bg-emerald-800 text-white"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Validando..." : "Registrar y Recalcular Brecha"}
+              {isSubmitting ? "Enviando..." : "Enviar reporte"}
             </Button>
           </DialogFooter>
         </form>

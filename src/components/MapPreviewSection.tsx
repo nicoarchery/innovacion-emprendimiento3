@@ -36,14 +36,14 @@ function getGap(project: Project) {
 
 function ProjectGapBars({ project }: { project: Project }) {
   const gap = getGap(project);
-  const atRisk = gap > GAP_THRESHOLD;
+  const needsReview = gap > GAP_THRESHOLD;
 
   return (
     <div className="space-y-3">
       <div>
         <div className="mb-1 flex items-center justify-between text-xs">
           <span className="font-medium text-muted-foreground">
-            Ejecución SECOP II
+            Avance según SECOP II
           </span>
           <span className="font-semibold text-slate-700">
             {project.secopPct}%
@@ -57,7 +57,7 @@ function ProjectGapBars({ project }: { project: Project }) {
       <div>
         <div className="mb-1 flex items-center justify-between text-xs">
           <span className="font-medium text-muted-foreground">
-            Evidencia Física en Campo
+            Avance confirmado en terreno
           </span>
           <span className="font-semibold text-slate-700">
             {project.fieldPct}%
@@ -65,24 +65,24 @@ function ProjectGapBars({ project }: { project: Project }) {
         </div>
         <Progress
           value={project.fieldPct}
-          indicatorClassName={atRisk ? "bg-amber-500" : "bg-emerald-600"}
+          indicatorClassName={needsReview ? "bg-amber-500" : "bg-emerald-600"}
         />
       </div>
       <div
         className={cn(
           "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
-          atRisk
+          needsReview
             ? "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200"
             : "bg-emerald-50 text-emerald-800 ring-1 ring-inset ring-emerald-200"
         )}
       >
-        {atRisk ? (
+        {needsReview ? (
           <>
             <Bell className="h-3.5 w-3.5" />
-            Brecha del {gap}% · Alerta de Riesgo Territorial
+            Difiere {gap}% · Requiere revisión
           </>
         ) : (
-          <>Brecha del {gap}% · Ejecución en línea</>
+          <>Difiere {gap}% · Al día</>
         )}
       </div>
     </div>
@@ -125,7 +125,7 @@ export function MapPreviewSection() {
     e.preventDefault();
     if (!contact.trim()) return;
 
-    const message = `Hola 👋 Vivo cerca de ${selectedForDialog} y quiero recibir alertas sobre estas obras de impacto:\n${dialogProjects
+    const message = `Vivo cerca de ${selectedForDialog} y quiero recibir alertas de estas obras:\n${dialogProjects
       .map((p) => `• ${p.name}`)
       .join("\n")}\n\nMi contacto: ${contact.trim()}`;
 
@@ -144,10 +144,10 @@ export function MapPreviewSection() {
     openWhatsApp(message);
 
     toast({
-      title: "¡Listo! Estamos abriendo WhatsApp",
+      title: "Abriendo WhatsApp",
       variant: "success",
       description:
-        "Te envía una solicitud de alerta para las obras de " + selectedForDialog + ".",
+        "Te preparamos un mensaje para seguir las obras de " + selectedForDialog + ".",
     });
     setContact("");
   }
@@ -160,11 +160,11 @@ export function MapPreviewSection() {
             Mapa ciudadano
           </span>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            ¿Sabes en qué se están invirtiendo los fondos en tu municipio?
+            Revisa las obras de tu municipio
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Consulta el mapa abierto de proyectos verificados y compara la
-            ejecución registrada en SECOP II con la evidencia física en campo.
+            Filtra por municipio. Compara el avance que registra SECOP II con
+            lo que ves en terreno.
           </p>
         </div>
 
@@ -198,8 +198,8 @@ export function MapPreviewSection() {
             />
             <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
               <MapPinned className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
-              Haz clic en un pin para ver el estado de ejecución vs. la
-              evidencia en campo de cada obra.
+              Elige un punto para comparar el registro SECOP II con el avance
+              en terreno de cada obra.
             </p>
           </Card>
 
@@ -215,7 +215,7 @@ export function MapPreviewSection() {
             )}
             {visibleProjects.map((project) => {
               const gap = getGap(project);
-              const atRisk = gap > GAP_THRESHOLD;
+              const needsReview = gap > GAP_THRESHOLD;
               return (
                 <Card key={project.id}>
                   <CardHeader className="pb-2">
@@ -226,12 +226,12 @@ export function MapPreviewSection() {
                       <span
                         className={cn(
                           "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide",
-                          atRisk
+                          needsReview
                             ? "bg-amber-100 text-amber-800"
                             : "bg-emerald-100 text-emerald-800"
                         )}
                       >
-                        {atRisk ? "Riesgo" : "En línea"}
+                        {needsReview ? "Requiere revisión" : "Al día"}
                       </span>
                     </div>
                   </CardHeader>
@@ -245,7 +245,7 @@ export function MapPreviewSection() {
                         openDialog(project.municipality as Municipality)
                       }
                     >
-                      Ver detalle y recibir alertas
+                      Ver ficha y seguir obra
                     </Button>
                   </CardContent>
                 </Card>
@@ -258,10 +258,10 @@ export function MapPreviewSection() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Obras de impacto en {selectedForDialog}</DialogTitle>
+            <DialogTitle>Obras en {selectedForDialog}</DialogTitle>
             <DialogDescription>
-              Compará la ejecución oficial con la evidencia física reportada en
-              campo.
+              Compara el registro oficial con el reporte en terreno. Si una
+              obra va al día, tu confirmación respalda su reconocimiento.
             </DialogDescription>
           </DialogHeader>
 
@@ -288,14 +288,14 @@ export function MapPreviewSection() {
           >
             <div className="flex items-center gap-2 font-semibold text-emerald-900">
               <Bell className="h-4 w-4" />
-              ¿Vives cerca? Recibe alertas sobre estas obras
+              ¿Vives cerca? Confirma el avance y sigue estas obras
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="contact">Correo o WhatsApp</Label>
               <Input
                 id="contact"
                 type="text"
-                placeholder="ej. 3001234567 o tu@correo.com"
+                placeholder="300 123 4567 o tu@correo.com"
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
                 required
@@ -303,7 +303,7 @@ export function MapPreviewSection() {
             </div>
             <Button type="submit" variant="whatsapp" className="w-full">
               <MessageCircle className="h-4 w-4" />
-              Suscribirme por WhatsApp
+              Seguir obras por WhatsApp
             </Button>
           </form>
         </DialogContent>

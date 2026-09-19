@@ -168,14 +168,14 @@ export function MapaCali() {
           title: "No se pudo actualizar el mapa",
           description: json.error ?? "Error desconocido",
         });
-      } else {
-        const r = json.resultado;
-        if (r) {
-          toast({
-            title: "Mapa actualizado",
-            description: `${r.nuevas} obras nuevas · ${r.actualizadas} actualizadas · ${r.geocodificadas} ubicaciones · ${r.sin_ubicacion} sin ubicación determinada`,
-          });
-        }
+        } else {
+          const r = json.resultado;
+          if (r) {
+            toast({
+              title: "Mapa actualizado",
+              description: `${r.nuevas} nuevas · ${r.actualizadas} actualizadas · ${r.geocodificadas} ubicadas · ${r.sin_ubicacion} sin dirección útil`,
+            });
+          }
         if (json.ultimaSync) {
           setMeta((m) => (m ? { ...m, ultimaSync: json.ultimaSync ?? null } : m));
         }
@@ -203,12 +203,11 @@ export function MapaCali() {
           <div>
             <h1 className="flex items-center gap-2 text-xl font-bold text-slate-900">
               <MapPinned className="h-5 w-5 text-emerald-700" />
-              Mapa de Obras Públicas de Cali
+              Obras de Cali en un mapa
             </h1>
             <p className="mt-0.5 max-w-2xl text-sm text-slate-500">
-              Obras identificadas desde SECOP II, georreferenciadas por geocodificación. La
-              información SECOP proviene de la fuente oficial y la ubicación es procesada por la
-              aplicación.
+              Contratos SECOP II por estado, entidad, valor y año. La dirección
+              viene de SECOP II y la coordenada es aproximada.
             </p>
           </div>
 
@@ -216,13 +215,13 @@ export function MapaCali() {
             {totales && (
               <div className="flex flex-wrap items-center gap-1.5 text-xs">
                 <span className="rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-800">
-                  {totales.resueltas} con ubicación
+                  {totales.resueltas} ubicadas
                 </span>
                 <span className="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-600">
-                  {totales.pendientes} pendientes
+                  {totales.pendientes} por ubicar
                 </span>
                 <span className="rounded-full bg-amber-50 px-2.5 py-1 font-medium text-amber-800">
-                  {totales.sin_ubicacion} sin ubicación
+                  {totales.sin_ubicacion} sin dirección útil
                 </span>
               </div>
             )}
@@ -238,12 +237,12 @@ export function MapaCali() {
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
           <span className="inline-flex items-center gap-1">
-            <Database className="h-3.5 w-3.5" /> Datos locales
+            <Database className="h-3.5 w-3.5" /> Copia local de SECOP II
           </span>
-          <span>Última actualización: {formatearFecha(ultimaSync?.finished_at ?? null)}</span>
+          <span>Actualizado: {formatearFecha(ultimaSync?.finished_at ?? null)}</span>
           {ultimaSync && (
             <span>
-              última sync: {ultimaSync.nuevas} nuevas, {ultimaSync.actualizadas} actualizadas
+              {ultimaSync.nuevas} nuevas · {ultimaSync.actualizadas} actualizadas
             </span>
           )}
         </div>
@@ -276,9 +275,9 @@ export function MapaCali() {
             <div className="absolute inset-0 z-[1100] flex flex-col items-center justify-center gap-3 bg-slate-50/90 px-6 text-center">
               <MapPinned className="h-10 w-10 text-slate-300" />
               <p className="max-w-md text-sm text-slate-600">
-                Aún no hay obras georreferenciadas para mostrar. Pulsa{" "}
-                <strong>Actualizar mapa</strong> para sincronizar con SECOP y geocodificar las
-                ubicaciones.
+                Sin obras ubicadas con estos filtros. Pulsa{" "}
+                <strong>Actualizar mapa</strong> para traer contratos de SECOP
+                y ubicar sus direcciones.
               </p>
               <Button onClick={actualizarMapa} disabled={sincronizando}>
                 <RefreshCw className={`h-4 w-4 ${sincronizando ? "animate-spin" : ""}`} />
@@ -325,7 +324,7 @@ export function MapaCali() {
               </span>
             );
           })}
-          <span className="ml-auto text-slate-400">Tarjetas © OpenStreetMap · DATOS NO OFICIALES</span>
+          <span className="ml-auto text-slate-400">Base © OpenStreetMap · Ubicaciones aproximadas</span>
         </div>
       </div>
     </div>

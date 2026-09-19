@@ -5,9 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { MapaCaliDynamic } from "@/components/mapa/MapaCaliDynamic";
 
 export const metadata: Metadata = {
-  title: "Mapa de Obras Públicas de Cali | Impacto Territorial",
+  title: "Mapa de obras de Cali | Consulta ciudadana",
   description:
-    "Mapa interactivo de obras públicas de Cali identificadas desde SECOP II con ubicación georreferenciada (fuente SECOP + geocodificación).",
+    "Filtra contratos de obra de Cali desde SECOP II por estado, entidad, valor y año. La ubicación es aproximada.",
 };
 
 export default function MapaPage() {
