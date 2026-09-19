@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { label: "Explorador en Vivo (MVP)", href: "/explorador", isBadge: true },
-  { label: "Mapa de Obras", href: "/#mapa-ciudadano" },
+  { label: "Mapa de Obras", href: "/mapa" },
   { label: "Benchmark ESG", href: "/#lead-b2b" },
   { label: "Cómo funciona", href: "/#como-funciona" },
 ];
