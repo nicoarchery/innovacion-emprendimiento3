@@ -4,10 +4,12 @@ import {
   cacheUbicacion,
   listObrasPendientesGeo,
   marcarUbicacion,
+  migrarGeoV2,
   registrarSyncRun,
   totalObras,
   upsertObra,
 } from "@/lib/mapa/db";
+import { canonizarDireccionCO } from "@/lib/mapa/direccionCO";
 import { geocodificarObra } from "@/lib/mapa/geocodeService";
 import {
   clasificarYFiltrar,
@@ -97,6 +99,7 @@ export async function syncMapa(): Promise<SyncResult> {
   const inicio = Date.now();
 
   try {
+    migrarGeoV2();
     const contratos = await extraerContratosCali();
     let nuevas = 0;
     let actualizadas = 0;
@@ -117,8 +120,8 @@ export async function syncMapa(): Promise<SyncResult> {
     let geocodificadas = 0;
 
     for (const obra of pendientes) {
-      const direccionCache = obra.direccion_ejecucion || "";
-      const cache = direccionCache ? buscarCacheUbicacion(direccionCache) : null;
+      const llaveCache = canonizarDireccionCO(obra.direccion_ejecucion ?? "");
+      const cache = llaveCache ? buscarCacheUbicacion(llaveCache) : null;
 
       if (cache) {
         marcarUbicacion(
@@ -138,8 +141,8 @@ export async function syncMapa(): Promise<SyncResult> {
       const geo: GeoResult | null = await geocodificarObra(obra);
       if (geo) {
         marcarUbicacion(obra.id_contrato, geo, "resuelta");
-        if (direccionCache) {
-          cacheUbicacion(direccionCache, { lat: geo.lat, lon: geo.lon, comuna: geo.comuna, barrio: geo.barrio, displayName: geo.displayName, fuente: geo.fuente, confianza: geo.confianza });
+        if (llaveCache) {
+          cacheUbicacion(llaveCache, { lat: geo.lat, lon: geo.lon, comuna: geo.comuna, barrio: geo.barrio, displayName: geo.displayName, fuente: geo.fuente, confianza: geo.confianza });
         }
         geocodificadas++;
       }

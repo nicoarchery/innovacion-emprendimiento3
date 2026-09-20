@@ -6,6 +6,7 @@ import {
   type GeoConfianza,
   type ObraRow,
 } from "@/lib/mapa/types";
+import { CALI_BBOX, canonizarDireccionCO } from "@/lib/mapa/direccionCO";
 
 let db: Database.Database | null = null;
 
@@ -79,6 +80,11 @@ CREATE TABLE IF NOT EXISTS sync_runs (
   geocodificadas INTEGER DEFAULT 0,
   sin_ubicacion INTEGER DEFAULT 0,
   error TEXT
+);
+
+CREATE TABLE IF NOT EXISTS meta (
+  clave TEXT PRIMARY KEY,
+  valor TEXT
 );
 `;
 
@@ -376,4 +382,67 @@ export function obtenerObraPorId(idContrato: string): ObraRow | null {
     .prepare("SELECT * FROM obras WHERE id_contrato = ?")
     .get(idContrato) as ObraRow | undefined;
   return row ?? null;
+}
+
+// Migración geo v2 (una sola vez): purga puntos fuera del bbox metro,
+// elimina llaves de caché no canónicas y devuelve a pendiente las obras
+// resueltas sin entrada canónica, para re-resolverlas con el pipeline v2.
+export function migrarGeoV2(): {
+  purgadas: number;
+  llavesViejas: number;
+  reabiertas: number;
+} {
+  const database = getDb();
+  const hecha = database
+    .prepare("SELECT valor FROM meta WHERE clave = 'geo_migracion_v2'")
+    .get() as { valor: string } | undefined;
+  if (hecha) return { purgadas: 0, llavesViejas: 0, reabiertas: 0 };
+
+  const purga = database
+    .prepare(
+      `DELETE FROM ubicaciones WHERE lat NOT BETWEEN ? AND ? OR lon NOT BETWEEN ? AND ?`
+    )
+    .run(CALI_BBOX.minLat, CALI_BBOX.maxLat, CALI_BBOX.minLon, CALI_BBOX.maxLon);
+
+  const llaves = database
+    .prepare("SELECT direccion FROM ubicaciones")
+    .all() as { direccion: string }[];
+  const borrar = database.prepare("DELETE FROM ubicaciones WHERE direccion = ?");
+  let llavesViejas = 0;
+  for (const { direccion } of llaves) {
+    if (direccion !== canonizarDireccionCO(direccion)) {
+      borrar.run(direccion);
+      llavesViejas++;
+    }
+  }
+
+  const resueltas = database
+    .prepare(
+      "SELECT id_contrato, direccion_ejecucion FROM obras WHERE estado_ubicacion = 'resuelta'"
+    )
+    .all() as { id_contrato: string; direccion_ejecucion: string | null }[];
+  const existe = database.prepare("SELECT 1 FROM ubicaciones WHERE direccion = ?");
+  const reset = database.prepare(
+    `UPDATE obras SET lat = NULL, lon = NULL, comuna = NULL, barrio = NULL,
+      geo_fuente = NULL, geo_confianza = NULL,
+      estado_ubicacion = 'pendiente', geo_intentos = 0
+     WHERE id_contrato = ?`
+  );
+  let reabiertas = 0;
+  for (const r of resueltas) {
+    const canon = canonizarDireccionCO(r.direccion_ejecucion ?? "");
+    if (!canon || !existe.get(canon)) {
+      reset.run(r.id_contrato);
+      reabiertas++;
+    }
+  }
+
+  database
+    .prepare("INSERT INTO meta (clave, valor) VALUES ('geo_migracion_v2', ?)")
+    .run(new Date().toISOString());
+  return {
+    purgadas: Number(purga.changes),
+    llavesViejas,
+    reabiertas,
+  };
 }

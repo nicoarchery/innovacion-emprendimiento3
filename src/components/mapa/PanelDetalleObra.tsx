@@ -21,6 +21,7 @@ function fuenteLabel(fuente: string | null): string {
   if (fuente === "texto-contrato") return "Dirección citada en el objeto del contrato";
   if (fuente === "barrio-objeto") return "Barrio citado en el objeto del contrato";
   if (fuente === "cache-ubicaciones") return "Misma dirección de otra obra ya ubicada";
+  if (fuente === "overpass-interseccion") return "Cruce de vías calculado en OpenStreetMap";
   return fuente ?? "Sin dato";
 }
 
