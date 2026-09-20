@@ -25,11 +25,12 @@ Mapa rápido de la KB. Regla de autoridad: el código manda sobre las specs comp
 | `07-geocodificacion.md` | Pipeline de geocodificación y decisión de estados | CURRENT | Al tocar mapa/geocoding |
 | `08-mapa-y-explorador.md` | UI del mapa y del explorador territorial | CURRENT | Al tocar componentes de esas páginas |
 | `09-apis-y-rutas.md` | Endpoints implementados y su comportamiento real | CURRENT | Al tocar APIs |
-| `10-b2b-y-leads.md` | Flujo B2B, leads, enlaces WhatsApp | CURRENT/HYPOTHESIS | Al tocar formularios/leads |
+| `10-b2b-y-leads.md` | Flujo B2B y leads | CURRENT/HYPOTHESIS | Al tocar formularios/leads |
 | `11-roadmap-y-specs.md` | Estado LeanSpec: specs planned vs complete | ROADMAP | Antes de planificar o priorizar trabajo |
 | `12-hipotesis-y-validacion.md` | Hipótesis del proyecto y qué se validó/cómo | HYPOTHESIS | Al evaluar producto/mercado |
 | `13-decisiones-y-convenciones.md` | Convenciones del repo y decisiones detectadas | CURRENT | Al escribir código para respetar patrones |
 | `14-glosario.md` | Términos y siglas usados en el repo | CURRENT | Al leer specs o código |
+| `15-cumplimiento-legal-tos.md` | Legalidad y TOS por fuente de datos; ajustes para producción real | CURRENT | Al pasar a producción, monetizar o integrar nuevas fuentes |
 
 ## Notas críticas de sesgo
 

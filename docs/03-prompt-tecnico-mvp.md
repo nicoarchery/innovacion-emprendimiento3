@@ -64,7 +64,7 @@ src/
     - Estado de Ejecución SECOP II vs. Evidencia Física en Campo.
     - Botón de Acción: *"¿Vives cerca? Recibir alertas sobre esta obra"*.
   - **Formulario de Registro Ciudadano:**
-    - Campo: Correo electrónico o WhatsApp.
+    - Campo: Correo electrónico o teléfono.
     - Campo: Municipio de interés.
     - Evento de Analítica: Disparar `fbq('track', 'CompleteRegistration', { content_name: 'Alerts_Citizen' })`.
 

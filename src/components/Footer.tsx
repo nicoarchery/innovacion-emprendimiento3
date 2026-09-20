@@ -1,12 +1,6 @@
-import { MessageCircle } from "lucide-react";
-
-import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { ExternalLink } from "lucide-react";
 
 export function Footer() {
-  const whatsappLink = buildWhatsAppLink(
-    "Quiero conocer la plataforma de consulta de obras de Cali."
-  );
-
   return (
     <footer className="bg-tinta text-papel/75">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
@@ -25,13 +19,11 @@ export function Footer() {
           </div>
 
           <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-[3px] bg-[#1faa53] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#188a43]"
+            href="/mapa"
+            className="inline-flex items-center gap-2 rounded-[3px] bg-papel/10 px-5 py-2.5 text-sm font-semibold text-papel transition-colors hover:bg-papel/20"
           >
-            <MessageCircle className="h-4 w-4" />
-            Escríbenos por WhatsApp
+            <ExternalLink className="h-4 w-4" />
+            Ver el mapa de obras
           </a>
         </div>
 

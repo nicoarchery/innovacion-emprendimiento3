@@ -127,7 +127,7 @@ export function CitizenVerificationModal({
             </div>
             <div>
               <Label htmlFor="reporterContact" className="text-xs font-medium text-tinta/75">
-                WhatsApp o correo
+                Correo o teléfono
               </Label>
               <Input
                 id="reporterContact"

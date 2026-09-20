@@ -23,7 +23,6 @@ import { Select } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { track } from "@/lib/analytics";
 import { ROLE_OPTIONS, SECTOR_OPTIONS } from "@/lib/data";
-import { openWhatsApp } from "@/lib/whatsapp";
 
 const BLOCKED_DOMAINS = [
   "gmail.com",
@@ -123,8 +122,6 @@ export function B2bLeadMagnet() {
 
     setSubmitting(true);
 
-    const message = `Solicito la ficha de reconocimiento para nuestra organización.\n\n• Nombre: ${form.name.trim()}\n• Correo: ${form.email.trim()}\n• Empresa: ${form.company.trim()}\n• Cargo: ${form.role}\n• Sector: ${form.sector}`;
-
     track("Lead", {
       content_category: "B2B_Report_Download",
     });
@@ -140,17 +137,28 @@ export function B2bLeadMagnet() {
         sector: form.sector,
       }),
     })
-      .catch(() => undefined)
+      .then((res) => {
+        if (res.ok) {
+          toast({
+            title: "Solicitud recibida",
+            variant: "success",
+            description:
+              "Te contactaremos con los requisitos y pasos para tu ficha.",
+          });
+        } else {
+          toast({
+            title: "No se pudo guardar",
+            description: "Intenta de nuevo en unos segundos.",
+          });
+        }
+      })
+      .catch(() => {
+        toast({
+          title: "No se pudo guardar",
+          description: "Intenta de nuevo en unos segundos.",
+        });
+      })
       .finally(() => setSubmitting(false));
-
-    openWhatsApp(message);
-
-    toast({
-      title: "Solicitud recibida",
-      variant: "success",
-      description:
-        "Abrimos WhatsApp con tu solicitud de ficha de reconocimiento.",
-    });
 
     setForm({ name: "", email: "", company: "", role: "", sector: "" });
   }
@@ -192,7 +200,7 @@ export function B2bLeadMagnet() {
                 Solicita la ficha de tu organización
               </CardTitle>
               <CardDescription>
-                Déjanos tus datos y te enviamos los requisitos por WhatsApp.
+                Déjanos tus datos y te enviamos los requisitos por correo.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
@@ -293,7 +301,7 @@ export function B2bLeadMagnet() {
                   </div>
                 </div>
 
-                <Button type="submit" variant="whatsapp" className="w-full">
+                <Button type="submit" variant="default" className="w-full">
                   {submitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
@@ -301,7 +309,7 @@ export function B2bLeadMagnet() {
                   )}
                   {submitting
                     ? "Enviando solicitud..."
-                    : "Solicitar ficha por WhatsApp"}
+                    : "Solicitar ficha"}
                 </Button>
 
                 <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">

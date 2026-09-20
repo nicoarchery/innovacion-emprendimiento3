@@ -54,6 +54,7 @@ Este es el registro de **fuentes primarias consultadas** para construir esta KB.
 | `docs/02-estrategia-arquitectura.md` | documented-decision | Visión, arquitectura, monetización B2B |
 | `docs/03-prompt-tecnico-mvp.md` | documented-decision | MVP descrito (diffiere de lo implementado) |
 | `docs/04-hipotesis-validacion.md` | documented-decision | Hipótesis del proyecto |
+| `docs/knowledge/15-cumplimiento-legal-tos.md` | documented-decision | Legalidad y TOS por fuente (verificado en web 2026-09-20); ajustes para producción |
 | `docs/explica-leanspec.md` | historical | Cómo funciona el manager de specs |
 | `docs/archive/*` (sustento, modelos, mejoras, obra visible contxt, session, SPEC_SECOP) | historical/hypothesis | Ideas B2B/ESG, sustento teorico, propuestas de monetización — **no vigentes como producto** |
 

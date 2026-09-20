@@ -56,7 +56,6 @@ sources:
 - `mapa/clasificador.ts` — clasifica si un contrato es "obra".
 - `mapa/geocodeService.ts` + `mapa/direccionCO.ts` — geocodificación Colombia/Cali.
 - `mapa/types.ts` — tipos TS.
-- `whatsapp.ts` — helper de enlace WhatsApp (para leads).
 - `data.ts` — constantes de datos (ej. municipios) usadas en varios flujos.
 
 ## APIs implementadas (src/app/api)

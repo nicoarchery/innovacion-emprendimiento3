@@ -13,7 +13,7 @@ Es el camino más directo, económico y fácil de ajustar al marco académico. E
 
 - **Imagen/Video**: un mapa con pines sobre su municipio.
 - **Copy**: "¿Sabes en qué se están invirtiendo los fondos de infraestructura y desarrollo social en [Nombre del Municipio]? Consulta el mapa abierto de proyectos verificados."
-- **Acción requerida (Conversion Event)**: el anuncio lleva a una Landing Page básica con un mapa interactivo (o prototipo de Figma embed) y un botón: "Notificarme cuando se actualice una obra en mi barrio" (pide correo o WhatsApp).
+- **Acción requerida (Conversion Event)**: el anuncio lleva a una Landing Page básica con un mapa interactivo (o prototipo de Figma embed) y un botón: "Notificarme cuando se actualice una obra en mi barrio" (pide correo o teléfono).
 
 **Métrica clave**: CTR (> 2.5%), costo por clic (CPC) y tasa de registro/conversión en la landing page (> 10%).
 

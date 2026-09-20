@@ -23,11 +23,12 @@ Cómo buscar conocimiento de forma efectiva cuando no recuerdas qué archivo con
 | Geocodificación | `07-geocodificacion.md` |
 | Mapa/explorador UI | `08-mapa-y-explorador.md` |
 | APIs y rutas | `09-apis-y-rutas.md` |
-| B2B, leads, WhatsApp, monetización | `10-b2b-y-leads.md`, `12` |
+| B2B, leads, monetización | `10-b2b-y-leads.md`, `12` |
 | Specs/roadmap LeanSpec | `11-roadmap-y-specs.md` |
 | Hipótesis del proyecto | `12-hipotesis-y-validacion.md` |
 | Convenciones/decisiones | `13-decisiones-y-convenciones.md` |
 | Significados/siglas | `14-glosario.md` |
+| Legalidad y TOS de fuentes; ajustes para producción | `15-cumplimiento-legal-tos.md` |
 | Autoridad de cada fuente | `99-source-registry.md` |
 
 ## Búsqueda con grep

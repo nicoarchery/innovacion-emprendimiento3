@@ -212,4 +212,4 @@ Para proteger la neutralidad de la plataforma y evitar la cooptación política 
 | **Ejecución y Costos** | Presupuesto ($12.500M COP), % avance financiero, contratista, fechas. | **SECOP II** (`6qex-kahp`) y **SIIPO** | Consultas a API REST de SECOP II por NIT de Ecopetrol / Código de contrato. |
 | **Métricas ESG / GRI** | Beneficiarios (4.500 hab.), empleos locales generados, toneladas CO2. | **ERP Ecopetrol (SAP)** / **Ficha ART** | Integración B2B vía Webhooks / Ingesta de fichas técnicas de la ART. |
 | **Trazabilidad Ambiental** | Licencia ambiental, actas de compensación ecológica. | **VITAL (ANLA)** | Web Scraping automatizado en VITAL sobre resoluciones en PDF. |
-| **Verificación Ciudadana** | Fotografías con EXIF, reportes de estado físico, alertas. | **Plataforma / Bot WhatsApp** | Captura comunitaria mediante bot de WhatsApp $\rightarrow$ Extracción de EXIF (GPS/Fecha). |
+| **Verificación Ciudadana** | Fotografías con EXIF, reportes de estado físico, alertas. | **Plataforma (reporte directo)** | Captura comunitaria mediante formulario web/PWA de la plataforma $\rightarrow$ Extracción de EXIF (GPS/Fecha). |

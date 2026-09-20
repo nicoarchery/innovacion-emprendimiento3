@@ -39,7 +39,7 @@ Para materializar la propuesta de valor sin entrar en la arquitectura de softwar
 
 > * **Infraestructura de Ingesta y Automatización:** Plataformas de integración corporativa (flujos tipo *Make* / Webhooks) para conectar los datos de las empresas, procesar eventos y orquestar flujos de trabajo de manera ágil.
 > * **Recursos de Almacenamiento:** *Buckets* de almacenamiento en la nube (ej. Google Cloud Storage) para alojar evidencia gráfica de las obras, metadatos EXIF espaciales y documentos extraídos del gobierno.
-> * **Frameworks de Interfaz Ciudadana:** Entornos de desarrollo para aplicaciones móviles orientadas a entornos rurales o de baja conectividad (enfoque *local-first*) y herramientas de inteligencia artificial conversacional (bots conversacionales de WhatsApp / Copilot Studio) para la validación comunitaria.
+> * **Frameworks de Interfaz Ciudadana:** Entornos de desarrollo para aplicaciones móviles orientadas a entornos rurales o de baja conectividad (enfoque *local-first*) para la validación comunitaria, con captura de evidencia y reportes directos en la plataforma.
 > * **Herramientas de Procesamiento de Datos:** Motores de *web scraping* (Selenium/Playwright), OCR para lectura de actas físicas y modelos de procesamiento de lenguaje/audio para interpretar reportes comunitarios.
 > * **Entornos de Desarrollo:** Estaciones de trabajo ágiles basadas en distribuciones Linux para el equipo técnico.
 
@@ -58,6 +58,6 @@ La ventaja competitiva no reside únicamente en el código, sino en la red human
 
 Para ejecutar las fases iniciales de validación (MVP) y escalamiento, se deben asegurar los siguientes activos:
 
-> 1. **Presupuesto de Infraestructura Cloud:** Cubrimiento de costos de consumo de APIs comerciales (mensajería de WhatsApp), alojamiento de bases de datos y almacenamiento masivo de evidencia visual.
+> 1. **Presupuesto de Infraestructura Cloud:** Cubrimiento de costos de consumo de APIs comerciales (geocodificación, almacenamiento), alojamiento de bases de datos y almacenamiento masivo de evidencia visual.
 > 2. **Estrategia MVP "Espejo" (Venta en frío):** Mapeo manual pre-armado de 3 proyectos reales de una empresa objetivo utilizando datos públicos fragmentados (SECOP II, ANLA), presentado al Director de Sostenibilidad para demostrar el valor de la automatización.
 > 3. **Credenciales y Tokens de Acceso:** Aprobación de cuentas de desarrollador (App Tokens `X-App-Token`) en el portal de Datos Abiertos de Colombia para escalar las peticiones a la API de SECOP sin bloqueos por *rate limiting*.

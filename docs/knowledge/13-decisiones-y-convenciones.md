@@ -40,6 +40,13 @@ Revisar obligatoriamente antes de planificar: board + search; crear specs con `l
 | Leads no persistidos (prototipo) | routes `lead-*` | limitación |
 | Git: `data/` ignorado (DB no versionada) | `.gitignore` | vigente |
 
+## Decisiones explícitas recientes
+
+| Decisión | Fecha | Efecto | Referencia |
+|----------|-------|--------|------------|
+| **Retirar WhatsApp del producto**; reporte ciudadano (texto/foto/GPS) se sube **directo a la plataforma** | 2026-09-20 | Se elimina `src/lib/whatsapp.ts` y la variante `whatsapp` de Button; Footer/leads usan enlace a `/mapa` y envío directo a `/api/lead-*`; spec 006 rediseñada sin Meta Cloud API | `10-b2b-y-leads.md`, `15-cumplimiento-legal-tos.md`, spec `006` |
+| **Cumplimiento legal/TOS** documentado para producción | 2026-09-20 | Matriz de fuentes (SECOP/OSM/Photon/Overpass/ANLA) con condiciones; ajustes previos a producción: atribución, self-host de geocoding, privacidad Ley 1581/2012 | `15-cumplimiento-legal-tos.md`, `99-master-context.md` §8 |
+
 ## Estándares de calidad (dejar el repo limpio)
 
 - No añadir dependencias sin necesidad (`04` patrón ligero).

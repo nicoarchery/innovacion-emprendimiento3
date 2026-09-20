@@ -10,7 +10,6 @@ sources:
 - "src/components/CitizenVerificationModal.tsx"
 - "src/app/api/lead-b2b/route.ts"
 - "src/app/api/lead-citizen/route.ts"
-- "src/lib/whatsapp.ts"
 - "docs/archive/modelos_monetizado.md"
 ---
 
@@ -34,9 +33,9 @@ sources:
 - Es una **simulación de cliente-only** para el prototipo de consulta ciudadana.
 - ⇒ En la práctica: el "verifica la obra" NO produce datos en `06`.
 
-## Enlaces WhatsApp
+## Enlaces de contacto
 
-- `src/lib/whatsapp.ts`: `buildWhatsAppLink(message)` y `openWhatsApp()` con `NEXT_PUBLIC_WHATSAPP_NUMBER` (default `573000000000`). Usado por componentes de contact/lead para abrir chat.
+> **Decisión 2026-09-20**: se elimina WhatsApp del producto (helper `src/lib/whatsapp.ts` borrado). Los formularios de contacto/lead envían el dato directamente a `/api/lead-*` (que hoy solo loguea). La captura ciudadana futura será reporte directo en la plataforma (spec 006) — ver `15-cumplimiento-legal-tos.md`.
 
 ## Estado real
 
@@ -45,7 +44,7 @@ sources:
 | Formulario B2B (UI) | Implementado (prototipo) |
 | Almacenamiento de leads | **NO** (solo log) |
 | Verificación ciudadana real | **NO** (simulada) |
-| Enlaces WhatsApp | Implementados |
+| Enlaces de contacto (correo/teléfono) | Implementados |
 
 ## Recomendación al trabajar aquí
 

@@ -16,7 +16,7 @@ Esta carpeta concentra el **conocimiento operativo del proyecto Obra Visible** (
 ## Qué contiene
 
 - `00-index.md` — mapa de dominios de conocimiento y cuándo consultar cada uno.
-- `01-…14` — conocimiento por dominio (identidad, visión, implementación, stack, datos, geocodificación, mapa, explorador, APIs, leads, specs, roadmaps, glosario).
+- `01-…15` — conocimiento por dominio (identidad, visión, implementación, stack, datos, geocodificación, mapa, explorador, APIs, leads, specs, roadmaps, glosario, cumplimiento legal/TOS).
 - `99-source-registry.md` — registro de fuentes primarias consultadas (código, docs, specs, DB, git) sin datos de la aplicación en sí.
 
 ## Cómo usar esta KB
@@ -28,6 +28,5 @@ Esta carpeta concentra el **conocimiento operativo del proyecto Obra Visible** (
 
 ## Conocimiento ausente
 
-- No existe (todavía) un `99-master-context.md` que consolide todo en un solo archivo. Esta KB está diseñada para generarlo si se pide.
-- No hay registro formal de decisiones (ADR). Las decisiones históricas se infieren del código y los commits.
-- Sin master-context: este README + `00-index.md` cumplen esa función orgánicamente.
+- No hay registro formal de decisiones (ADR). Las decisiones históricas se infieren del código y los commits. Decisiones explícitas recientes quedan anotadas en los docs afectados (p. ej. retiro de WhatsApp en `10`, `15`, spec `006`).
+- Sin master-context: `99-master-context.md` consolida todo en un único archivo; este README + `00-index.md` cumplen la función orgánica de entrada.

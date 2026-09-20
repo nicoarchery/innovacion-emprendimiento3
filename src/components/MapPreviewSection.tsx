@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, MapPinned, MessageCircle } from "lucide-react";
+import { Bell, MapPinned, Send } from "lucide-react";
 
 import { ColombiaMap } from "@/components/ColombiaMap";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ import {
   type Municipality,
   type Project,
 } from "@/lib/data";
-import { openWhatsApp } from "@/lib/whatsapp";
+
 
 const GAP_THRESHOLD = 15;
 
@@ -100,13 +100,9 @@ export function MapPreviewSection() {
     openDialog(municipality);
   }
 
-  function handleAlert(e: React.FormEvent<HTMLFormElement>) {
+  async function handleAlert(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!contact.trim()) return;
-
-    const message = `Vivo cerca de ${selectedForDialog} y quiero recibir alertas de estas obras:\n${dialogProjects
-      .map((p) => `• ${p.name}`)
-      .join("\n")}\n\nMi contacto: ${contact.trim()}`;
 
     track("CompleteRegistration", {
       content_name: "Alerts_Citizen",
@@ -114,20 +110,26 @@ export function MapPreviewSection() {
       municipality: selectedForDialog,
     });
 
-    fetch("/api/lead-citizen", {
+    const res = await fetch("/api/lead-citizen", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contact: contact.trim(), municipality: selectedForDialog }),
     }).catch(() => undefined);
 
-    openWhatsApp(message);
-
-    toast({
-      title: "Abriendo WhatsApp",
-      variant: "success",
-      description:
-        "Te preparamos un mensaje para seguir las obras de " + selectedForDialog + ".",
-    });
+    if (res?.ok) {
+      toast({
+        title: "Solicitud recibida",
+        variant: "success",
+        description:
+          "Seguiremos las obras de " + selectedForDialog + " y te avisaremos en la plataforma.",
+      });
+    } else {
+      toast({
+        title: "No se pudo guardar",
+        description:
+          "Intenta de nuevo en unos segundos.",
+      });
+    }
     setContact("");
   }
 
@@ -268,7 +270,7 @@ export function MapPreviewSection() {
               ¿Vives cerca? Confirma el avance y sigue estas obras
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="contact">Correo o WhatsApp</Label>
+              <Label htmlFor="contact">Correo o teléfono</Label>
               <Input
                 id="contact"
                 type="text"
@@ -278,9 +280,9 @@ export function MapPreviewSection() {
                 required
               />
             </div>
-            <Button type="submit" variant="whatsapp" className="w-full">
-              <MessageCircle className="h-4 w-4" />
-              Seguir obras por WhatsApp
+            <Button type="submit" variant="default" className="w-full">
+              <Send className="h-4 w-4" />
+              Seguir obras en la plataforma
             </Button>
           </form>
         </DialogContent>

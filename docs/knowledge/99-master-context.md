@@ -35,12 +35,14 @@ El **estado real** es un producto funcional de consulta; la visión B2B/ESG, el 
 ## 3. Propósito y visión
 
 ### Propósito actual (CURRENT)
+
 - Permitir que cualquier persona consulte la obra pública de Cali en un mapa con filtros (estado, entidad, valor, año), vea ubicación aproximada, y acceda a la ficha y al enlace oficial SECOP.
 - Corregir expectativas con un **aviso de prototipo** global (datos no fiables / en construcción).
 
 ### Visión futura (DESIGNED/ROADMAP/HYPOTHESIS)
+
 - **Visibilidad**: conectar el registro contractual con el lugar físico y el avance real.
-- **Verificación**: que ciudadanos/veedurías aporten evidencia (fotos con GPS/fecha) vía WhatsApp/web.
+- **Verificación**: que ciudadanos/veedurías aporten evidencia (fotos con GPS/fecha) por la plataforma.
 - **Largo plazo**: plataforma multiactor de inteligencia territorial y "infraestructura de confianza" (§30), con perfil por empresa y reportes ESG.
 
 **Regla**: la visión NO es el estado actual. Nada del roadmap debe presentarse como existente (encargo, reglas 5 y 43).
@@ -71,14 +73,14 @@ Fuentes de la interpretación: `docs/02-estrategia-arquitectura.md` (4 fallas es
 
 ## 5. Actores y usuarios
 
-| Actor | Rol | Qué puede hacer HOY (CURRENT) | Qué se le diseñó/proyecta |
-|-------|-----|-------------------------------|---------------------------|
-| **Ciudadanía** | Usuario principal | Consultar mapa, ver ficha, filtrar | (ROADMAP) reportar, seguir obras, ver brechas |
-| **Veedurías / comunidades / JAC** | Usuario validador | Consultar mapa | (ROADMAP 004/006) subir evidencia foto+GPS, reportes |
-| **Entidades públicas** | Stakeholder / fuente | — (son fuente en SECOP) | Transparencia, visibilidad, posible respuesta |
-| **Empresas / contratistas** | Cliente objetivo (HYPOTHESIS) | Aparecen como contratista en fichas | (ROADMAP 008) perfil público por NIT, responder, sello |
-| **Interventorías** | Actor de control | — | (ROADMAP 005/006) descargos con actas en disputas |
-| **Banca / fondos / aseguradoras** | Cliente objetivo (HYPOTHESIS) | — | (ROADMAP/hist.) informes de riesgo/ejecución |
+| Actor                                    | Rol                           | Qué puede hacer HOY (CURRENT)      | Qué se le diseñó/proyecta                            |
+| ---------------------------------------- | ----------------------------- | ----------------------------------- | ------------------------------------------------------- |
+| **Ciudadanía**                    | Usuario principal             | Consultar mapa, ver ficha, filtrar  | (ROADMAP) reportar, seguir obras, ver brechas           |
+| **Veedurías / comunidades / JAC** | Usuario validador             | Consultar mapa                      | (ROADMAP 004/006) subir evidencia foto+GPS, reportes    |
+| **Entidades públicas**            | Stakeholder / fuente          | — (son fuente en SECOP)            | Transparencia, visibilidad, posible respuesta           |
+| **Empresas / contratistas**        | Cliente objetivo (HYPOTHESIS) | Aparecen como contratista en fichas | (ROADMAP 008) perfil público por NIT, responder, sello |
+| **Interventorías**                | Actor de control              | —                                  | (ROADMAP 005/006) descargos con actas en disputas       |
+| **Banca / fondos / aseguradoras**  | Cliente objetivo (HYPOTHESIS) | —                                  | (ROADMAP/hist.) informes de riesgo/ejecución           |
 
 **Distinción**: usuarios = ciudadanía/veedurías; clientes = empresa/B2B (conceptual); stakeholder/beneficiario = comunidad y entidades. No confundir (`docs 02`, `10-b2b-y-leads.md`).
 
@@ -87,11 +89,13 @@ Fuentes de la interpretación: `docs/02-estrategia-arquitectura.md` (4 fallas es
 ## 6. Propuesta de valor
 
 ### Beneficio esperado (diseño/hipótesis — NO validado)
+
 - **Ciudadanía**: transparencia, acceso, seguimiento, participación y verificación.
 - **Organizaciones**: gestión, monitoreo, reputación (sello), información territorial, trazabilidad de contratistas, respuesta a reportes.
 - **Actores financieros**: información de ejecución y riesgo (informes).
 
 ### Beneficio validado (CURRENT)
+
 - Solo **técnico**: consultar obras reales de Cali georreferenciadas (1434 obras en DB local, 146 con ubicación resuelta al 2026-09-20). No hay validación de mercado, adopción ni impacto.
 
 Distingue SIEMPRE "esperado" de "validado" (`12-hipotesis-y-validacion.md`).
@@ -121,26 +125,34 @@ Puntos clave: ingesta real de SECOP II (paginada, con app-token opcional); norma
 ## 8. Fuentes de datos
 
 ### Oficiales (CURRENT)
+
 - **SECOP II** — contratos de Cali (dataset contratos jbjy-vk9h vía `secopFetcher.ts`; filtro ciudad=CALI + tipo Obra/Concesión/APP). Sincronización hacia SQLite.
 - **SECOP II — procesos** (vía `secop.ts`) para el explorador, mezclado con datos simulados. ⚠ **No confundir** con la DB real.
 - Configuración: `SOCRATA_APP_TOKEN` opcional (env), rate-limiting tolerante a 429.
 
 ### Derivadas por la plataforma (CURRENT)
+
 - `is_obra`, `obra_score`, `obra_razon` (clasificador); `estado_ubicacion` (pendiente/resuelta/no_determinada), `geo_confianza` (alta/media/baja), fuente de geocoding, hash de integridad.
 
 ### De usuario (NO existe aún)
-- Reportes/evidencia ciudadana (specs 004/006): **solo diseño**, no hay persistencia de reportes. El modal y los leads son simulados/log.
+
+- Reportes/evidencia ciudadana (specs 004/006): **solo diseño**, no hay persistencia de reportes. El modal y los leads son simulados/log. Diseño 2026-09-20: reporte (texto/foto/GPS) subido **directo a la plataforma** (se retira WhatsApp del producto; ver `15-cumplimiento-legal-tos.md`).
 
 ### Otras (ROADMAP/HYPOTHESIS)
+
 - VITAL/ANLA (009), BPIN/SIIPO/ART (mencionadas en `docs/02` para el caso OxI Guamal), datos privados N2 (empresarial). **No integradas**.
 
 Regla: una fuente solo aporta lo que realmente ofrece. SECOP da datos contractuales; no da % de avance físico verificado (eso sería N3, inexistente). `05`, `08`, `99-source-registry.md`.
 
+### Cumplimiento legal/TOS
+
+- Cada fuente tiene condiciones de uso (atribución SECOP CC BY-SA, límites Nominatim/Overpass/Photon, ánimo del Portal datos.gov.co, privacidad Ley 1581/2012). **Antes de producción real hay que ajustar**: atribución visible, self-host de geocodificación y revisión legal. Detalle y matriz en `15-cumplimiento-legal-tos.md`.
+
 ## 9. Verificación ciudadana
 
 - **Estado actual (CURRENT)**: NO existe verificación real. `CitizenVerificationModal` es una **simulación de cliente** (espera, estado "verificando", éxito) sin GPS/EXIF real ni persistencia. Los endpoints `/api/lead-*` solo **loguean**.
-- **Diseñado (SPEC 004/006, ROADMAP)**: captura de foto con EXIF (GPS+fecha saneados), offline-first (PWA + IndexedDB), cola de sincronización, deduplicación, validación del id_contrato, moderación, enmascaramiento del contacto del ciudadano ante empresas, confirmación por canal original (WhatsApp).
-- **Cómo se registra/georreferencia/fecha** (diseñado): vía webhook de WhatsApp (Meta Cloud, firma X-Hub-Signature-256) o formulario web; EXIF/GPS extraídos en cliente; timestamp del reporte.
+- **Diseñado (SPEC 004/006, ROADMAP)**: captura de foto con EXIF (GPS+fecha saneados), offline-first (PWA + IndexedDB), cola de sincronización, deduplicación, validación del id_contrato, moderación, enmascaramiento del contacto del ciudadano ante empresas, confirmación en la plataforma (sesión/correo). [Decisión 2026-09-20: se retira WhatsApp del producto; el reporte se sube directo a la plataforma.]
+- **Cómo se registra/georreferencia/fecha** (diseñado): formulario web / PWA (reporte directo en la plataforma); EXIF/GPS extraídos en cliente; timestamp del reporte.
 - **Interpretación**: un reporte ciudadano es una **observación/evidencia aportada por un usuario; NO implica automáticamente irregularidad, fraude o incumplimiento**. Requiere moderación y protocolo de disputa.
 
 Fuentes: `10-b2b-y-leads.md`, `specs/004-captura-evidencia-campo`, `specs/006-canal-comunitario-moderacion`.
@@ -161,16 +173,16 @@ Fuentes: `10-b2b-y-leads.md`, `specs/004-captura-evidencia-campo`, `specs/006-ca
 
 Mecanismos para la credibilidad (marcando qué existe y qué está diseñado):
 
-| Mecanismo | Estado | Fuente |
-|-----------|--------|--------|
-| Trazabilidad de fuentes (url_secop en ficha) | CURRENT | `08-mapa-y-explorador.md` |
-| Aviso de prototipo (datos no fiables) | CURRENT (PrototypeNotice) | `specs/010`, `03` |
-| Sanajeo de EXIF (solo GPS+fecha, sin EXIF crudo) | ROADMAP (spec 004) | spec 004 |
-| Enmascaramiento del contacto ciudadano | ROADMAP (spec 006) | spec 006 |
-| Protocolo de revisión neutra / disputas | ROADMAP (specs 005/006) | spec 005, `docs/02` |
-| Evidencia cruzada (≥3 reportes <500m o 5 días hábiles) | ROADMAP (spec 006) | spec 006, `docs/02` |
-| Auditoría de transiciones de estado | ROADMAP (spec 005) | spec 005 |
-| Anti-spam (5 reportes/hora) | ROADMAP (spec 006) | spec 006 |
+| Mecanismo                                                 | Estado                    | Fuente                      |
+| --------------------------------------------------------- | ------------------------- | --------------------------- |
+| Trazabilidad de fuentes (url_secop en ficha)              | CURRENT                   | `08-mapa-y-explorador.md` |
+| Aviso de prototipo (datos no fiables)                     | CURRENT (PrototypeNotice) | `specs/010`, `03`       |
+| Sanajeo de EXIF (solo GPS+fecha, sin EXIF crudo)          | ROADMAP (spec 004)        | spec 004                    |
+| Enmascaramiento del contacto ciudadano                    | ROADMAP (spec 006)        | spec 006                    |
+| Protocolo de revisión neutra / disputas                  | ROADMAP (specs 005/006)   | spec 005,`docs/02`        |
+| Evidencia cruzada (≥3 reportes <500m o 5 días hábiles) | ROADMAP (spec 006)        | spec 006,`docs/02`        |
+| Auditoría de transiciones de estado                      | ROADMAP (spec 005)        | spec 005                    |
+| Anti-spam (5 reportes/hora)                               | ROADMAP (spec 006)        | spec 006                    |
 
 Diferenciar SIEMPRE: **información oficial ≠ observación ciudadana ≠ interpretación del sistema ≠ conclusión validada** (regla especial 38).
 
@@ -180,27 +192,27 @@ La confianza es clave para ciudadanía (credibilidad), empresas/reputación (sel
 
 ## 12. Estado actual del producto
 
-| Funcionalidad / componente | Estado | Evidencia | Observaciones |
-|----------------------------|--------|-----------|---------------|
-| Landing pública "Obras a la Vista" | CURRENT | `src/app/page.tsx`, `README` | Hero, preview de mapa, secciones, aviso |
-| Explorador territorial (/explorador) | CURRENT | `SecopExplorer.tsx` | Datos **parcialmente simulados** (no es la DB real) |
-| Mapa de obras de Cali (/mapa) | CURRENT | `src/app/mapa/*`, `MapaCali*` | Datos reales desde SQLite; filtros; panel detalle |
-| Ingesta SECOP II (contratos Cali) | CURRENT | `secopFetcher.ts`, `syncService.ts` | Paginada, tolerante a 429, normaliza + clasifica |
-| Base SQLite local (`data/mapa.db`, git-ignored) | CURRENT | `db.ts`, query en vivo | 1434 obras; 146 `resuelta`, 1288 `pendiente` (2026-09-20); 6 syncs |
-| Clasificador de obra (score) | CURRENT | `clasificador.ts` | Heurístico por tipo/UNSPSC/keywords |
-| Geocodificación (pipeline multi-fuente) | CURRENT | `geocodeService.ts`, `direccionCO.ts` | Nominatim → Overpass → Photon → texto → barrio; `enCali` gate; migración v2 (`geo_migracion_v2`) |
-| APIs públicas (mapa/obras, mapa/actualizar, secop, lead-*) | CURRENT | `src/app/api/**` | `/mapa/*` reales; `lead-*` solo log |
-| Aviso de prototipo global | CURRENT | `PrototypeNotice.tsx`, `layout.tsx` | spec 010 implementada |
-| Analítica (Meta Pixel/GA4 por env) | CURRENT | `layout.tsx` | Solo si hay env vars |
-| Perfil público por empresa (008) | ROADMAP | spec 008 | No existe código |
-| Motor de brechas / alertas (005) | ROADMAP | spec 005 | No existe código |
-| Captura de evidencia campo / PWA (004) | ROADMAP | spec 004 | No existe código |
-| Canal comunitario WhatsApp / moderación (006) | ROADMAP | spec 006 | No existe código (solo mock de whatsapp.ts) |
-| Reportes ESG / ART (007) | ROADMAP | spec 007 | No existe código |
-| Ingesta VITAL/ANLA (009) | ROADMAP | spec 009 | No existe código |
-| Cruce PDET/ZOMAC (003) | ROADMAP | spec 003 | No existe código |
-| Leads B2B/ciudadano | CURRENT (parcial) | `B2bLeadMagnet`, rutas lead-* | Solo validación + log, no persiste |
-| Verificación ciudadana | DESIGNED (simulado) | `CitizenVerificationModal` | Simulación de cliente; sin persistencia |
+| Funcionalidad / componente                                  | Estado              | Evidencia                                 | Observaciones                                                                                            |
+| ----------------------------------------------------------- | ------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Landing pública "Obras a la Vista"                         | CURRENT             | `src/app/page.tsx`, `README`          | Hero, preview de mapa, secciones, aviso                                                                  |
+| Explorador territorial (/explorador)                        | CURRENT             | `SecopExplorer.tsx`                     | Datos**parcialmente simulados** (no es la DB real)                                                 |
+| Mapa de obras de Cali (/mapa)                               | CURRENT             | `src/app/mapa/*`, `MapaCali*`         | Datos reales desde SQLite; filtros; panel detalle                                                        |
+| Ingesta SECOP II (contratos Cali)                           | CURRENT             | `secopFetcher.ts`, `syncService.ts`   | Paginada, tolerante a 429, normaliza + clasifica                                                         |
+| Base SQLite local (`data/mapa.db`, git-ignored)           | CURRENT             | `db.ts`, query en vivo                  | 1434 obras; 146`resuelta`, 1288 `pendiente` (2026-09-20); 6 syncs                                    |
+| Clasificador de obra (score)                                | CURRENT             | `clasificador.ts`                       | Heurístico por tipo/UNSPSC/keywords                                                                     |
+| Geocodificación (pipeline multi-fuente)                    | CURRENT             | `geocodeService.ts`, `direccionCO.ts` | Nominatim → Overpass → Photon → texto → barrio;`enCali` gate; migración v2 (`geo_migracion_v2`) |
+| APIs públicas (mapa/obras, mapa/actualizar, secop, lead-*) | CURRENT             | `src/app/api/**`                        | `/mapa/*` reales; `lead-*` solo log                                                                  |
+| Aviso de prototipo global                                   | CURRENT             | `PrototypeNotice.tsx`, `layout.tsx`   | spec 010 implementada                                                                                    |
+| Analítica (Meta Pixel/GA4 por env)                         | CURRENT             | `layout.tsx`                            | Solo si hay env vars                                                                                     |
+| Perfil público por empresa (008)                           | ROADMAP             | spec 008                                  | No existe código                                                                                        |
+| Motor de brechas / alertas (005)                            | ROADMAP             | spec 005                                  | No existe código                                                                                        |
+| Captura de evidencia campo / PWA (004)                      | ROADMAP             | spec 004                                  | No existe código                                                                                        |
+| Canal comunitario y moderación (006)              | ROADMAP             | spec 006                                  | No existe código; diseñado como reporte directo en la plataforma                                                |
+| Reportes ESG / ART (007)                                    | ROADMAP             | spec 007                                  | No existe código                                                                                        |
+| Ingesta VITAL/ANLA (009)                                    | ROADMAP             | spec 009                                  | No existe código                                                                                        |
+| Cruce PDET/ZOMAC (003)                                      | ROADMAP             | spec 003                                  | No existe código                                                                                        |
+| Leads B2B/ciudadano                                         | CURRENT (parcial)   | `B2bLeadMagnet`, rutas lead-*           | Solo validación + log, no persiste                                                                      |
+| Verificación ciudadana                                     | DESIGNED (simulado) | `CitizenVerificationModal`              | Simulación de cliente; sin persistencia                                                                 |
 
 ⚠ Los números de la DB son del 2026-09-20; pueden cambiar tras cada sync (`06-base-de-datos-sqlite.md`, `99-source-registry.md`).
 
@@ -213,9 +225,8 @@ La confianza es clave para ciudadanía (credibilidad), empresas/reputación (sel
 5. **Clasificación** automática contrato→"obra" (con score y razón).
 6. **Geocodificación** de direcciones en Cali con estados y confianza.
 7. **Formularios/leads** B2B y ciudadano (validación + log; sin almacenamiento).
-8. **Enlaces WhatsApp** para contacto (número configurable por env, default placeholder).
-9. **Aviso de prototipo** global.
-10. **Analítica** condicionada a variables de entorno (Meta Pixel/GA4 configurable).
+8. **Aviso de prototipo** global.
+9. **Analítica** condicionada a variables de entorno (Meta Pixel/GA4 configurable).
 
 Nada más (no hay brechas, reportes, perfiles, ESG, moderación, VITAL, PDET).
 
@@ -225,15 +236,15 @@ Nada más (no hay brechas, reportes, perfiles, ESG, moderación, VITAL, PDET).
 
 Especificaciones LeanSpec planificadas (estado frontmatter: `planned`). Contenido tomado de los README de specs (no inferido). Todas dependen de la ingesta SECOP (001, ya complete).
 
-| Spec / funcionalidad | Propósito | Estado | Dependencias | Comentarios |
-|----------------------|-----------|--------|--------------|-------------|
-| **003** PDET/ZOMAC | Etiquetar contratos con municipio/DIVIPOLA y zonas PDET/ZOMAC; filtro y badges; cruce con brechas | planned | 001, 002 | Diccionario divipola; geo_status=unresolved para no asignables |
-| **004** Captura de evidencia campo (PWA) | Fotos con EXIF (GPS+fecha), offline-first, sincronización, deduplicación; alimenta N3 | planned | 001 | exifr en cliente; bucket de objetos; estados pending/synced/invalid/duplicated |
-| **005** Motor de brechas | gap = \|N1−N3\|; alertas si >15%; estados de gobernanza (bajo_revision_neutra) | planned | 001, 002, 004 | Umbral 15% es hipótesis; recálculo ≤2s; audit log |
-| **006** Canal comunitario y moderación | Reportes por WhatsApp (Meta Cloud) o web; cola de moderación; evidencia cruzada (≥3 <500m / 5 días hábiles); anti-spam; enmascaramiento | planned | 005 | Webhook firmado X-Hub-Signature-256; no exponer contacto a empresas |
-| **007** Reportes ESG y ART | Generador de informes GRI/ISSB/ODS y de avance OpI (ART/DIAN) con datos N1/N2/N3 verificados; PDF/XLSX | planned | 001, 005 | Para OpI requiere BPIN, entidad, contratista, presupuesto, %avance |
-| **008** Perfil público por empresa | Vitrina por NIT: mapa, brechas, badges, reportes, benchmark anónimo; CTA "Reclama tu perfil"→lead | planned | 002, 005, 007 | ISR revalidate 600s; control de visibilidad por plan |
-| **009** Ingesta VITAL (ANLA) | Extraer resoluciones/licencias ambientales; OCR en PDFs; trazabilidad ambiental en fichas | planned | 001 | Backoff/cortesía frente a 429/503; no abusar del origen |
+| Spec / funcionalidad                           | Propósito                                                                                                                                  | Estado  | Dependencias  | Comentarios                                                                    |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------- | ------------------------------------------------------------------------------ |
+| **003** PDET/ZOMAC                       | Etiquetar contratos con municipio/DIVIPOLA y zonas PDET/ZOMAC; filtro y badges; cruce con brechas                                           | planned | 001, 002      | Diccionario divipola; geo_status=unresolved para no asignables                 |
+| **004** Captura de evidencia campo (PWA) | Fotos con EXIF (GPS+fecha), offline-first, sincronización, deduplicación; alimenta N3                                                     | planned | 001           | exifr en cliente; bucket de objetos; estados pending/synced/invalid/duplicated |
+| **005** Motor de brechas                 | gap =\|N1−N3\|; alertas si >15%; estados de gobernanza (bajo_revision_neutra)                                                              | planned | 001, 002, 004 | Umbral 15% es hipótesis; recálculo ≤2s; audit log                           |
+| **006** Canal comunitario y moderación  | Reportes (texto/foto/GPS) subidos directo en la plataforma; cola de moderación; evidencia cruzada (≥3 <500m / 5 días hábiles); anti-spam; enmascaramiento | planned | 005           | Reporte directo (formulario web/PWA); no exponer contacto a empresas            |
+| **007** Reportes ESG y ART               | Generador de informes GRI/ISSB/ODS y de avance OpI (ART/DIAN) con datos N1/N2/N3 verificados; PDF/XLSX                                      | planned | 001, 005      | Para OpI requiere BPIN, entidad, contratista, presupuesto, %avance             |
+| **008** Perfil público por empresa      | Vitrina por NIT: mapa, brechas, badges, reportes, benchmark anónimo; CTA "Reclama tu perfil"→lead                                         | planned | 002, 005, 007 | ISR revalidate 600s; control de visibilidad por plan                           |
+| **009** Ingesta VITAL (ANLA)             | Extraer resoluciones/licencias ambientales; OCR en PDFs; trazabilidad ambiental en fichas                                                   | planned | 001           | Backoff/cortesía frente a 429/503; no abusar del origen                       |
 
 El roadmap no incluye fechas ni SLAs. Fuentes: `specs/003-009/README.md`, `11-roadmap-y-specs.md`.
 
@@ -244,7 +255,7 @@ El roadmap no incluye fechas ni SLAs. Fuentes: `specs/003-009/README.md`, `11-ro
 - **Frontend/UI**: Next.js App Router + React + Tailwind. Páginas `/` (landing), `/explorador`, `/mapa`. Leaflet + react-leaflet + markercluster (mapa); wrappers SSR-safe (`MapaCaliDynamic`) porque Leaflet no corre en server. Componentes agrupados en `src/components/**`.
 - **Backend**: route handlers en `src/app/api/**` (`/mapa/obras`, `/mapa/actualizar`, `/secop`, `/lead-b2b`, `/lead-citizen`). Sin auth (prototipo).
 - **Base de datos**: SQLite local `data/mapa.db` (better-sqlite3), git-ignored, con tablas `obras`, `ubicaciones`, `sync_runs`, `meta`. Sin almacenamiento externo en la nube.
-- **Integraciones**: SECOP II vía SODA API (fetch HTTP paginado, app-token opcional); geocodificación con Nominatim, Overpass y Photon (código), WhatsApp solo como helper de enlace (no integración funcional aún).
+- **Integraciones**: SECOP II vía SODA API (fetch HTTP paginado, app-token opcional); geocodificación con Nominatim, Overpass y Photon (código). [Decisión 2026-09-20: se elimina WhatsApp del producto.]
 - **Procesamiento**: `syncService.ts` (sync incremental + hash), `clasificador.ts`, `geocodeService.ts`, normalización en `secopFetcher.ts`.
 - **Infraestructura**: la del deploy no está documentada en el repo (sin Docker/k8s/vercel.com visible); asumir deploys estándar Next.js. `No confirmado`.
 - **Autenticación**: ninguna implementada (visión: roles por plan en 008, ROADMAP).
@@ -257,24 +268,30 @@ Fuentes: `04-stack-tecnico.md`, `03-implementacion-actual.md`, `09-apis-y-rutas.
 Modelo **documentado** (HYPOTHESIS; sin implementación ni clientes reales). Fuentes: `docs/archive/modelos_monetizado.md`, `docs/02-estrategia-arquitectura.md` §5, `10-b2b-y-leads.md`, `specs` afectadas.
 
 ### Gratis para ciudadanía (SEMPRE; da credibilidad)
+
 - Mapa/explorador de contratos SECOP, fichas de obra.
-- Reporte ciudadano con foto/GPS vía WhatsApp (sin cuenta) — ROADMAP.
+- Reporte ciudadano con foto/GPS subido directo en la plataforma (sin cuenta) — ROADMAP.
 - Alertas básicas: seguir hasta 3 obras y recibir cambios de estado — ROADMAP.
 - Ficha pública básica de la entidad (vitrina). El "sello como dato visible" gratis.
 
 ### Base — ESG Analytics (B2B, concepto)
+
 - Conector SECOP II + tableros internos; generador de reportes GRI/ISSB S1/S2 con cifras y fuentes citadas. Sin mapa público propio, sin sello, sin captura ciudadana.
 
 ### Pro — Licencia Social y Territorio (B2B, concepto)
+
 - Todo Base + ficha pública gestionada (hitos, fotos oficiales, actas, BPIN), sello visible mientras brecha ≤15%, canal comunitario moderado (spec 006), alertas tempranas.
 
 ### Enterprise — Trazabilidad de contratistas (B2B, concepto)
+
 - Todo Pro + perfil por contratista (historial/brechas/reportes), motor de brechas agregado (005), reportes ART/OxI (007), roles y permisos.
 
 ### Fee por proyecto OxI (pago por uso, concepto)
+
 - Monitoreo dedicado de un proyecto de Obras por Impuestos; expediente listo para DIAN/ART; se cobra por proyecto con inicio y fin.
 
 ### Informes de riesgo (compra puntual, concepto)
+
 - Informes para aseguradoras/fondos ESG (ejecución, retraso, brecha histórica, reportes ciudadanos). No acceden a la plataforma; compran el documento.
 
 **Clientes mencionados (Celsia, Ecopetrol, Cerrejón, Odinsa, Promigas, etc.) son EJEMPLOS CONCEPTUALES en los docs.** No hay evidencia de que sean clientes reales. No presentarlos como clientes (regla especial 39).
@@ -285,13 +302,13 @@ Modelo **documentado** (HYPOTHESIS; sin implementación ni clientes reales). Fue
 
 > La ciudadanía conserva acceso al nivel fundamental de transparencia y participación; el pago se concentra en capacidades de gestión, analítica, respuesta, trazabilidad y herramientas empresariales.
 
-| Ciudadanía (gratis) | Organizaciones (pago) |
-|----------------------|-----------------------|
-| Ver información pública (mapa/fichas) | Gestionar la ficha y responder reportes |
-| Ver brechas y estado | Analizar brechas (motor/alertas) |
-| Reportar (foto/GPS vía WhatsApp) | Alertas tempranas + motor de brechas |
-| Seguir obras (alertas básicas) | Gestionar proyectos/varios contratistas |
-| Ver estado / sello como dato | Sello gestionado + reportes GRI/ISSB/ART |
+| Ciudadanía (gratis)                    | Organizaciones (pago)                    |
+| --------------------------------------- | ---------------------------------------- |
+| Ver información pública (mapa/fichas) | Gestionar la ficha y responder reportes  |
+| Ver brechas y estado                    | Analizar brechas (motor/alertas)         |
+| Reportar (foto/GPS directo en la plataforma)        | Alertas tempranas + motor de brechas     |
+| Seguir obras (alertas básicas)         | Gestionar proyectos/varios contratistas  |
+| Ver estado / sello como dato            | Sello gestionado + reportes GRI/ISSB/ART |
 
 Desglose de `modelos_monetizado.md`: "Nunca detrás de pago" vs "Siempre detrás de pago". Aplica coherentemente en valor, negocio, producto, pitch y visión.
 
@@ -312,11 +329,13 @@ Desglose de `modelos_monetizado.md`: "Nunca detrás de pago" vs "Siempre detrás
 ## 19. Deseabilidad
 
 ### Hipótesis de deseabilidad (documentadas, sin evidencia propia)
+
 - Los ciudadanos quieren ver en qué se gasta la obra pública de su barrio/municipio.
 - Las veedurías quieren validar estado físico (evidencia) con herramientas simples.
 - Las empresas precisan demostrar avance ante comunidad/ART/DIAN y comprar gestión/reputación.
 
 ### Evidencia de deseabilidad
+
 - **No existe** en el repositorio: sin encuestas publicadas, sin analítica de uso, sin registros reales. El doc `04-hipotesis-validacion.md` propondía experimentos (Meta Ads, CTR >2.5%, conversión >10%, +500 clics/+50 registros, CPL B2B, venta en frío de MVP espejo) — **como diseño**, no como resultado.
 
 Fuente: `12-hipotesis-y-validacion.md`, `docs/04-hipotesis-validacion.md`.
@@ -325,20 +344,20 @@ Fuente: `12-hipotesis-y-validacion.md`, `docs/04-hipotesis-validacion.md`.
 
 ## 20. Factibilidad
 
-| Punto | Clasificación | Detalle |
-|-------|---------------|---------|
-| Datos SECOP II | **Resuelto** | Ingesta funcional (pagínada, tolerante a 429) |
-| Geocodificación Cali | **Resuelto** (parcial) | Pipeline multi-fuente; 146 de 1434 resueltas; migración v2 aplicada |
-| Clasificación de obra | **Resuelto** | Heurística funcional |
-| Almacenamiento | **Resuelto** local; ROADMAP en nube (bucket) | SQLite local git-ignored; evidencias en bucket = spec 004 |
-| Verificación/evidencia (EXIF/GPS, PWA) | **Implementable** | Spec 004 detallada; requiere PWA + API multipart + bucket |
-| WhatsApp | **Implementable** | Helper existe; falta webhook de Meta Cloud firmado (spec 006) |
-| Moderación | **Implementable** | Spec 006; cola + panel + anti-spam |
-| Motor de brechas | **Implementable** | Funciones puras (spec 005); requiere N1/N2/N3 |
-| Reportes ESG/PDF | **Implementable** | Spec 007; plantillas + cola de trabajos |
-| Escalabilidad | **Riesgo / requiere diseño** | SQLite local no escala a multi-usuario/escritura concurrente; ausencia de auth |
-| Seguridad | **Riesgo** | Sin auth; webhooks no firmados (spec 006 plantea firmas); privacy de EXIF aún ROADMAP |
-| Actualización | **Resuelto** (manual) | Sync vía endpoint; falta programación (design) |
+| Punto                                   | Clasificación                                     | Detalle                                                                                |
+| --------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Datos SECOP II                          | **Resuelto**                                 | Ingesta funcional (pagínada, tolerante a 429)                                         |
+| Geocodificación Cali                   | **Resuelto** (parcial)                       | Pipeline multi-fuente; 146 de 1434 resueltas; migración v2 aplicada                   |
+| Clasificación de obra                  | **Resuelto**                                 | Heurística funcional                                                                  |
+| Almacenamiento                          | **Resuelto** local; ROADMAP en nube (bucket) | SQLite local git-ignored; evidencias en bucket = spec 004                              |
+| Verificación/evidencia (EXIF/GPS, PWA) | **Implementable**                            | Spec 004 detallada; requiere PWA + API multipart + bucket                              |
+| Captura de evidencia de campo (reporte directo) | **Implementable**                            | Formulario web/PWA + persistencia (specs 004/006)                                             |
+| Moderación                             | **Implementable**                            | Spec 006; cola + panel + anti-spam                                                     |
+| Motor de brechas                        | **Implementable**                            | Funciones puras (spec 005); requiere N1/N2/N3                                          |
+| Reportes ESG/PDF                        | **Implementable**                            | Spec 007; plantillas + cola de trabajos                                                |
+| Escalabilidad                           | **Riesgo / requiere diseño**                | SQLite local no escala a multi-usuario/escritura concurrente; ausencia de auth         |
+| Seguridad                               | **Riesgo**                                   | Sin auth; webhooks no firmados (spec 006 plantea firmas); privacy de EXIF aún ROADMAP |
+| Actualización                          | **Resuelto** (manual)                        | Sync vía endpoint; falta programación (design)                                       |
 
 ## 21. Viabilidad
 
@@ -348,7 +367,7 @@ Fuente: `12-hipotesis-y-validacion.md`, `docs/04-hipotesis-validacion.md`.
 - **Modelo de ingresos**: propuesto (tiers + fee + informes). **Pendiente de validación** (sin precios publicados, sin disposición a pagar medida).
 - **Escalabilidad**: técnica limitada (SQLite) pero roadmap tipo SaaS estándar.
 - **Costos potenciales**: geocodificación de las fuentes externas (rate-limits), verificación (diseño), infraestructura (no documentado). **Pendiente**.
-- **Dependencias**: SECOP/datos.gov.co (fuente central), OSM/Nominatim/Overpass/Photon, Meta (WhatsApp, Ads), ANLA (spec 009).
+- **Dependencias**: SECOP/datos.gov.co (fuente central), OSM/Nominatim/Overpass/Photon, Meta Ads (solo validación, docs/04), ANLA (spec 009).
 - **Riesgos comerciales**: falta de demanda validada, umbral de pago B2B no probado.
 - **Hipótesis comerciales**: sin TAM/SAM/SOM; sin CAC/LTV. Decir **"pendiente de validación"** para datos inexistentes. Fuente: `12`, `docs/04`.
 
@@ -367,18 +386,18 @@ Evitar términos absolutos (revolucionario/único/disruptivo) sin evidencia. Fue
 
 ## 23. Riesgos
 
-| Riesgo | Impacto | Mitigación | Estado |
-|--------|---------|-----------|--------|
-| Datos (calidad/official gaps de SECOP) | Medio | Trazabilidad a fuente, aviso de prototipo | Abierto (CURRENT mitigación parcial) |
-| Dependencia de plataformas (SECOP, OSM, Meta, ANLA) | Alto | Rate-limits, backoff (specs 004/005/009); contiendas | Abierto |
-| Adopción ciudadana baja | Alto | Diseño de experimentos (docs/04) | Sin evidencia |
-| Confianza (reportes falsos, manipulación) | Alto | Protocolo disputa + evidencia cruzada + moderación (005/006) | ROADMAP |
-| Privacidad (EXIF, contacto) | Medio | Sanajeo EXIF, enmascaramiento contacto (004/006) | ROADMAP |
-| Reputación en caso de alertas injustas | Alto | Revisión neutra, descargos (actas interventoría) | ROADMAP |
-| Sostenibilidad/monetización B2B no probada | Alto | Modelo ciudadanía-gratis vs pago (docs/02) | No validado |
-| Efectos de red (sin constelación) | Medio | (no documentado) | Abierto |
-| Escalabilidad tecnológica (SQLite) | Medio | Migración DB en fases futuras | Abierto |
-| Seguridad (sin auth, webhooks) | Medio | Especs 004/006 (webhook firmado) | ROADMAP |
+| Riesgo                                              | Impacto | Mitigación                                                   | Estado                                |
+| --------------------------------------------------- | ------- | ------------------------------------------------------------- | ------------------------------------- |
+| Datos (calidad/official gaps de SECOP)              | Medio   | Trazabilidad a fuente, aviso de prototipo                     | Abierto (CURRENT mitigación parcial) |
+| Dependencia de plataformas (SECOP, OSM, Meta, ANLA) | Alto    | Rate-limits, backoff (specs 004/005/009); contiendas          | Abierto                               |
+| Adopción ciudadana baja                            | Alto    | Diseño de experimentos (docs/04)                             | Sin evidencia                         |
+| Confianza (reportes falsos, manipulación)          | Alto    | Protocolo disputa + evidencia cruzada + moderación (005/006) | ROADMAP                               |
+| Privacidad (EXIF, contacto)                         | Medio   | Sanajeo EXIF, enmascaramiento contacto (004/006)              | ROADMAP                               |
+| Reputación en caso de alertas injustas             | Alto    | Revisión neutra, descargos (actas interventoría)            | ROADMAP                               |
+| Sostenibilidad/monetización B2B no probada         | Alto    | Modelo ciudadanía-gratis vs pago (docs/02)                   | No validado                           |
+| Efectos de red (sin constelación)                  | Medio   | (no documentado)                                              | Abierto                               |
+| Escalabilidad tecnológica (SQLite)                 | Medio   | Migración DB en fases futuras                                | Abierto                               |
+| Seguridad (sin auth, webhooks)                      | Medio   | Especs 004/006 (webhook firmado)                              | ROADMAP                               |
 
 Fuente: `12-hipotesis-y-validacion.md`, `13-decisiones-y-convenciones.md`, `00-index.md` (matriz de contradicciones).
 
@@ -386,17 +405,17 @@ Fuente: `12-hipotesis-y-validacion.md`, `13-decisiones-y-convenciones.md`, `00-i
 
 ## 24. Hipótesis por validar
 
-| # | Hipótesis | Evidencia actual | Estado | Cómo validarla |
-|---|-----------|------------------|--------|----------------|
-| H1 | Los ciudadanos consultarán obra pública georreferenciada | Ninguna de uso | HYPOTHESIS | Smoke test/Meta Ads (docs/04: CTR>2.5%, >500 clics, conversión>10%) |
-| H2 | Líderes comunitarios usan plataforma si ven obras de su municipio | Ninguna | HYPOTHESIS | Geofencing + landing + registro (docs/04) |
-| H3 | Veedurías necesitan captura de evidencia simple (foto/GPS) | Ninguna | HYPOTHESIS | Pilotaje spec 004 |
-| H4 | Motor de brecha (N1-vs-N3) es accionable | Ninguna | HYPOTHESIS | Spec 005 + protocolo disputas |
-| H5 | Empresas valoran ficha pública/sello (LSO) | Ninguna (solo docs) | HYPOTHESIS | Venta en frío con MVP espejo (docs/04) |
-| H6 | Hay disposición a pagar B2B (SaaS/fee/informes) | Ninguna (no hay precios/CAC/LTV) | HYPOTHESIS | Experimentos B2B (docs/04): CPL, leads con correo corporativo, reuniones |
-| H7 | Entidades públicas se benefician/participan | Ninguna | HYPOTHESIS | Presentación a entidad; datos ART/BPIN |
-| H8 | Aseguradoras/banca compran informes de riesgo | Ninguna | HYPOTHESIS | Informes puntuales, encaje con pólizas |
-| H9 | Umbral de brecha >15% es correcto | Es explícita hipótesis en spec 005 | HYPOTHESIS | Parametrizar tras datos reales |
+| #  | Hipótesis                                                         | Evidencia actual                     | Estado     | Cómo validarla                                                          |
+| -- | ------------------------------------------------------------------ | ------------------------------------ | ---------- | ------------------------------------------------------------------------ |
+| H1 | Los ciudadanos consultarán obra pública georreferenciada         | Ninguna de uso                       | HYPOTHESIS | Smoke test/Meta Ads (docs/04: CTR>2.5%, >500 clics, conversión>10%)     |
+| H2 | Líderes comunitarios usan plataforma si ven obras de su municipio | Ninguna                              | HYPOTHESIS | Geofencing + landing + registro (docs/04)                                |
+| H3 | Veedurías necesitan captura de evidencia simple (foto/GPS)        | Ninguna                              | HYPOTHESIS | Pilotaje spec 004                                                        |
+| H4 | Motor de brecha (N1-vs-N3) es accionable                           | Ninguna                              | HYPOTHESIS | Spec 005 + protocolo disputas                                            |
+| H5 | Empresas valoran ficha pública/sello (LSO)                        | Ninguna (solo docs)                  | HYPOTHESIS | Venta en frío con MVP espejo (docs/04)                                  |
+| H6 | Hay disposición a pagar B2B (SaaS/fee/informes)                   | Ninguna (no hay precios/CAC/LTV)     | HYPOTHESIS | Experimentos B2B (docs/04): CPL, leads con correo corporativo, reuniones |
+| H7 | Entidades públicas se benefician/participan                       | Ninguna                              | HYPOTHESIS | Presentación a entidad; datos ART/BPIN                                  |
+| H8 | Aseguradoras/banca compran informes de riesgo                      | Ninguna                              | HYPOTHESIS | Informes puntuales, encaje con pólizas                                  |
+| H9 | Umbral de brecha >15% es correcto                                  | Es explícita hipótesis en spec 005 | HYPOTHESIS | Parametrizar tras datos reales                                           |
 
 Todas marcadas HYPOTHESIS; ninguna convertida en hecho. (`12`, `specs/005`, `docs/04`)
 
@@ -407,18 +426,23 @@ Todas marcadas HYPOTHESIS; ninguna convertida en hecho. (`12`, `specs/005`, `doc
 Solo las **documentadas** en el proyecto (no inventar objetivos):
 
 ### Producto
+
 - Obras ingeridas, clasificadas, geocodificadas; % `estado_ubicacion` (hoy: 146/1434 resueltas); freshness del sync.
 
 ### Participación ciudadana
+
 - (Propuestas en docs/04): CTR >2.5%, registros >10%, +500 clics/+50 registros por zona. **Diseño, no vigente**.
 
 ### Calidad
+
 - Ratio de precisión geocodificación (confianza alta/media/baja); integridad (hash); tasa de duplicados (spec 004).
 
 ### Negocio
+
 - (Sin objetivos numéricos documentados): CPL B2B, leads con correo corporativo, reuniones con MVP espejo (docs/04). **Pendiente**.
 
 ### Impacto
+
 - No definido cuantitativamente. **Pendiente de definir**.
 
 Fuente: `12`, `docs/04-hipotesis-validacion.md`, `06`, `07`.
@@ -448,18 +472,14 @@ Historia de git: desde commit "Initial commit" (2026-09-12) hasta geocoding+Over
 ## 27. Pitch
 
 ### Pitch de 30 segundos
+
 "Obra Visible es un mapa-ciudad de la obra pública de Cali: mostramos los contratos reales de SECOP II georreferenciados, con su ficha y su ubicación aproximada. Estamos en fase de prototipo y nuestras specs de roadmap —no implementadas aún— apuntan a que ciudadanos y veedurías puedan reportar evidencia en campo y compararla con lo oficial. El objetivo a largo plazo es que comunidades, empresas y entidades hablen sobre la base de datos verificables, no de promesas."
 
 ### Pitch de 1 minuto
+
 Problema: la información de obra pública existe en SECOP II pero está fragmentada, es difícil de consultar y no se conecta con lo que pasa en el territorio. Obra Visible toma los contratos oficiales de SECOP II para Cali, los normaliza, los clasifica y los geolocaliza en un mapa interactivo. Hoy el producto es un prototipo funcional: 1434 obras en base local, 146 georreferenciadas, con detalle y enlace al contrato original, y con un aviso honesto de prototipo. La visión (en specs 003-009) es que la ciudadanía reporte evidencia con GPS y fecha, se modere, y se calcule la brecha entre lo oficial y lo observado; las empresas podrían pagar por gestionar su ficha, responder reportes y demostrar cumplimiento, mientras la ciudadanía conserva el acceso gratuito. Ninguna de esas capacidades de pago está implementada; es el plan.
 
-### Pitch de 3 minutos
-(1) Contexto: datos de contratación pública abundantes pero fragmentados (docs: 4 fallas estructurales). (2) Solución actual: ingesta de SECOP II hacia SQLite; clasificación heurística de obra; pipeline de geocodificación (Nominatim→Overpass→Photon→texto→barrio) con estados y confianza; mapa interactivo con filtros y fichas; aviso de prototipo global. (3) Software real demostrado: 1434 obras de Cali, 146 con ubicación resuelta; API `/mapa/obras` y `/mapa/actualizar`; 6 sincronizaciones registradas. (4) Diferencia conceptual con otras herramientas: cruzar el dato oficial con evidencia territorial verificada (visión). (5) Roadmap 003-009: PDET/ZOMAC, captura de evidencia PWA, motor de brechas, canal comunitario por WhatsApp, reportes ESG/ART, perfil por empresa, VITAL/ANLA. (6) Modelo: ciudadanía gratis; B2B en tiers con ejemplos conceptuales; sin clientes ni ingresos aún. (7) Cierre: estamos validando factibilidad técnica (resuelta) y pendiente la deseabilidad comercial con experimentos diseñados (docs/04).
-
-### Pitch de 5 minutos
-Añade: (a) cadena causal del problema y por qué es HYPOTHESIS; (b) detalle de arquitectura actual (Next.js, SQLite, Leaflet, APIs, sync); (c) gobernanza anti-confusión: información oficial ≠ observación ≠ interpretación ≠ conclusión validada; protocolo de disputas y evidencia cruzada (specs 005/006); (d) monetización por capas (tabla §§17) y regla "nunca detrás de pago"; (e) riesgos (plataformas, confianza, sostenibilidad) y mitigaciones; (f) hipótesis H1–H9 y cómo validarlas (Docs/04); (g) visión de largo plazo (consulta→seguimiento→verificación→gestión de evidencia→inteligencia territorial→infraestructura de confianza) marcada como visión conceptual, no roadmap oficial.
-
----
+----
 
 ## 28. Estructura de presentación (10–15 diapositivas)
 
@@ -470,7 +490,7 @@ Añade: (a) cadena causal del problema y por qué es HYPOTHESIS; (b) detalle de 
 5. **Demo funcional** — Mapa con filtros, ficha de obra, enlace SECOP. Visual: live demo o gif.
 6. **Tecnología actual** — Next, SQLite, Leaflet, geocoding, sync. Visual: arquitectura simple.
 7. **Estado real del producto** — Tabla por funcionalidad (CURRENT/ROADMAP). Visual: matriz de estado.
-8. **Visión y productos futuros** — Perfil por empresa, brechas, reportes, WhatsApp. Visual: mocks.
+8. **Visión y productos futuros** — Perfil por empresa, brechas, reportes directos. Visual: mocks.
 9. **Cómo participa la ciudadanía** — Reporte con foto/GPS (diseño); aclaración de que no es conclusión de irregularidad. Visual: flujo del reporte.
 10. **Modelo de negocio** — Ciudadanía gratis; tiers B2B; fee OxI; informes. Visual: tabla quarry de monetización.
 11. **Gobernanza y confianza** — Trazabilidad, moderación, disputas, sello ≤15%. Visual: diagrama revisión neutra.
@@ -485,6 +505,7 @@ Adaptable a: académica (énfasis en métodos/hipótesis), sustentación (plante
 ## 29. Caso de inversión (argumento hipotético)
 
 **Tesis que debería probarse** (no es recomendación de inversión ni declaración de atractivo real):
+
 - Problema y necesidad: fragmentación de información pública de obra + necesidad de verificación territorial.
 - Producto: MVP de consulta ciudadana funcional sobre datos oficiales (SECOP II), con aviso de prototipo.
 - Usuarios: ciudadanía (actual); clientes: B2B conceptual — sin evidencia de demanda.
@@ -521,22 +542,22 @@ Si las hipótesis se validan, Obra Visible podría convertirse en una **referenc
 
 ## 31. Glosario de términos propios
 
-| Término | Definición | Estado del término |
-|---------|------------|--------------------|
-| **SECOP II** | Plataforma de contratación pública electrónica de Colombia (datos abiertos vía datos.gov.co) | CURRENT (fuente) |
-| **N1** | % de ejecución/pago según SECOP II (dato oficial) | ROADMAP (motor gaps) |
-| **N2** | % de avance reportado por la empresa/contratista | ROADMAP (008) |
-| **N3** | % de avance observado en campo / evidencia ciudadana | ROADMAP (004/006) |
-| **Brecha (gap)** | \|N1 − N3\|; alerta si >15% | ROADMAP (005) — umbral hipótesis |
-| **Evidencia cruzada** | ≥3 reportes independientes <500 m o 5 días hábiles para confirmar alerta | ROADMAP (006) |
-| **Revisión neutra** | Revisión imparcial de una alerta antes de publicarse como hallazgo | ROADMAP (005/006) |
-| **Sello LSO** | Distintivo de licencia social y territorio (brecha ≤15%) | ROADMAP (007/008) |
-| **OpI** | Obras por Impuestos (mecanismo DIAN/ART) | ROADMAP (007/009) + contexto |
-| **PDET / ZOMAC** | Programas de Desarrollo con Enfoque Territorial / Zonas Más Afectadas por el Conflicto | ROADMAP (003) |
-| **DIVIPOLA** | Codificación estándar oficial de municipios de Colombia (DANE) | ROADMAP (003) |
-| **VITAL** | Visor de trámites ambientales de la ANLA | ROADMAP (009) |
-| **EXIF / GPS / timestamp** | Metadatos de foto (ubicación/fecha) usados como evidencia | ROADMAP (004) |
-| **CivicTech / GovTech / ESGTech** | Categorías de producto (sólo rasgos incidentales o visión) | Actual: parcial / visión |
+| Término                                | Definición                                                                                      | Estado del término                |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| **SECOP II**                      | Plataforma de contratación pública electrónica de Colombia (datos abiertos vía datos.gov.co) | CURRENT (fuente)                   |
+| **N1**                            | % de ejecución/pago según SECOP II (dato oficial)                                              | ROADMAP (motor gaps)               |
+| **N2**                            | % de avance reportado por la empresa/contratista                                                 | ROADMAP (008)                      |
+| **N3**                            | % de avance observado en campo / evidencia ciudadana                                             | ROADMAP (004/006)                  |
+| **Brecha (gap)**                  | \|N1 − N3\|; alerta si >15%                                                                     | ROADMAP (005) — umbral hipótesis |
+| **Evidencia cruzada**             | ≥3 reportes independientes <500 m o 5 días hábiles para confirmar alerta                      | ROADMAP (006)                      |
+| **Revisión neutra**              | Revisión imparcial de una alerta antes de publicarse como hallazgo                              | ROADMAP (005/006)                  |
+| **Sello LSO**                     | Distintivo de licencia social y territorio (brecha ≤15%)                                        | ROADMAP (007/008)                  |
+| **OpI**                           | Obras por Impuestos (mecanismo DIAN/ART)                                                         | ROADMAP (007/009) + contexto       |
+| **PDET / ZOMAC**                  | Programas de Desarrollo con Enfoque Territorial / Zonas Más Afectadas por el Conflicto          | ROADMAP (003)                      |
+| **DIVIPOLA**                      | Codificación estándar oficial de municipios de Colombia (DANE)                                 | ROADMAP (003)                      |
+| **VITAL**                         | Visor de trámites ambientales de la ANLA                                                        | ROADMAP (009)                      |
+| **EXIF / GPS / timestamp**        | Metadatos de foto (ubicación/fecha) usados como evidencia                                       | ROADMAP (004)                      |
+| **CivicTech / GovTech / ESGTech** | Categorías de producto (sólo rasgos incidentales o visión)                                    | Actual: parcial / visión          |
 
 Pendiente de definir: métricas de impacto, KPI de adopción, SLA del roadmap. `14-glosario.md`.
 
@@ -544,21 +565,21 @@ Pendiente de definir: métricas de impacto, KPI de adopción, SLA del roadmap. `
 
 ## 32. Tabla de verdad rápida
 
-| Afirmación | ¿Verdad? | Fuente / prueba |
-|------------|----------|-----------------|
-| Obra Visible es una plataforma web de consulta de obra pública | **VERDADERO** | `README`, app funcionando |
-| Existe un mapa de Cali con obras desde SECOP II | **VERDADERO** | SQLite: 1434 obras; 146 georreferenciadas (2026-09-20) |
-| Datos del mapa son confiables | **NO** | Aviso de prototipo global; migración geo en curso |
-| Los reportes ciudadanos a WhatsApp están funcionando | **NO** | Es ROADMAP (specs 004/006/009) |
-| El motor de brechas existe y alerta | **NO** | ROADMAP (spec 005) |
-| Los perfiles de empresa existen | **NO** | ROADMAP (spec 008) |
-| Hay clientes B2B pagando | **NO** | Sin evidencia (HYPOTHESIS) |
-| Hay ingresos para el proyecto | **NO** | Sin evidencia (HYPOTHESIS) |
-| El jugador Celsia/Ecopetrol/… es cliente | **NO** | Documentado como ejemplos conceptuales |
-| Las marcas municipales "Puerto Gaitán, Montelíbano…" son zonas piloto activas | **NO** | Diseño de experimentos (docs/04), HYPOTHESIS |
-| La información contractada se abrió con una ruta manual (CURRENT) | **SÍ** | `/api/mapa/actualizar` |
-| La geocodificación tuvo una migración v2 | **SÍ** | `meta.geo_migracion_v2` (2026-09-20T01:49:15.987Z) |
-| El exploratory es una muestra parcialmente simulada | **VERDADERO** | `SecopExplorer.tsx`, misleading "pública oficialmente" (ver 00-index/contradicciones) |
+| Afirmación                                                                      | ¿Verdad?           | Fuente / prueba                                                                          |
+| -------------------------------------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------- |
+| Obra Visible es una plataforma web de consulta de obra pública                  | **VERDADERO** | `README`, app funcionando                                                              |
+| Existe un mapa de Cali con obras desde SECOP II                                  | **VERDADERO** | SQLite: 1434 obras; 146 georreferenciadas (2026-09-20)                                   |
+| Datos del mapa son confiables                                                    | **NO**        | Aviso de prototipo global; migración geo en curso                                       |
+| Los reportes ciudadanos están funcionando en la plataforma                      | **NO**        | Es ROADMAP (specs 004/006)                                                                        |
+| El motor de brechas existe y alerta                                              | **NO**        | ROADMAP (spec 005)                                                                       |
+| Los perfiles de empresa existen                                                  | **NO**        | ROADMAP (spec 008)                                                                       |
+| Hay clientes B2B pagando                                                         | **NO**        | Sin evidencia (HYPOTHESIS)                                                               |
+| Hay ingresos para el proyecto                                                    | **NO**        | Sin evidencia (HYPOTHESIS)                                                               |
+| El jugador Celsia/Ecopetrol/… es cliente                                        | **NO**        | Documentado como ejemplos conceptuales                                                   |
+| Las marcas municipales "Puerto Gaitán, Montelíbano…" son zonas piloto activas | **NO**        | Diseño de experimentos (docs/04), HYPOTHESIS                                            |
+| La información contractada se abrió con una ruta manual (CURRENT)              | **SÍ**       | `/api/mapa/actualizar`                                                                 |
+| La geocodificación tuvo una migración v2                                       | **SÍ**       | `meta.geo_migracion_v2` (2026-09-20T01:49:15.987Z)                                     |
+| El exploratory es una muestra parcialmente simulada                              | **VERDADERO** | `SecopExplorer.tsx`, misleading "pública oficialmente" (ver 00-index/contradicciones) |
 
 ---
 
@@ -566,7 +587,7 @@ Pendiente de definir: métricas de impacto, KPI de adopción, SLA del roadmap. `
 
 Obra Visible es un **mapa-ciudadano de la obra pública de Cali**. Usa datos abiertos oficiales de SECOP II, los normaliza, los clasifica como "obra" y los geolocaliza; hoy el mapa funciona sobre una base SQLite con **1434 obras reales de Cali** (146 ya georreferenciadas) y una landing con aviso honesto de prototipo. La UI muestra la obra como ficha con ubicación aproximada, estado, valor, entidad (ejecutora/contratista), fechas y enlace al expediente oficial; filtros por valor/estado/año/entidad; y una sincronización manual hacia el origen.
 
-La visión —**no implementada**— es que la ciudadanía (y las veedurías) puedan reportar evidencia en campo (foto con GPS) para comparar lo oficial con lo observado, mediada por moderación y revisión neutral mediante un "índice de brecha". De esa forma, las organizaciones (empresas, fondos, aseguradoras) podrían **pagar por gestionar** su ficha pública (sello y respuesta), analítica ESG/ART e informes de riesgo, mientras la ciudadanía **conserva gratis** la transparencia fundamental. Esto viene documentado como hipótesis de negocio (tiers: Gratis/Base/Pro/Enterprise/Fee/Informes), sin clientes ni ingresos; y el roadmap técnico (specs 003-009) planea PDET/ZOMAC, PWA de campo, motor de brechas, WhatsApp, reportes ESG/ART y VITAL/ANLA — que no existen hoy.
+La visión —**no implementada**— es que la ciudadanía (y las veedurías) puedan reportar evidencia en campo (foto con GPS) para comparar lo oficial con lo observado, mediada por moderación y revisión neutral mediante un "índice de brecha". De esa forma, las organizaciones (empresas, fondos, aseguradoras) podrían **pagar por gestionar** su ficha pública (sello y respuesta), analítica ESG/ART e informes de riesgo, mientras la ciudadanía **conserva gratis** la transparencia fundamental. Esto viene documentado como hipótesis de negocio (tiers: Gratis/Base/Pro/Enterprise/Fee/Informes), sin clientes ni ingresos; y el roadmap técnico (specs 003-009) planea PDET/ZOMAC, PWA de campo, motor de brechas, reportes directos a la plataforma, reportes ESG/ART y VITAL/ANLA — que no existen hoy.
 
 La credibilidad se sostiene en: datos trazables a SECOP, avisos de prototipo, protocolo de disputas y evidencia cruzada (diseño), y en que **información oficial ≠ observación ciudadana ≠ interpretación ≠ conclusión validada**. Visiblemente, aún es un prototipo; su misión es convertirse en infraestructura de confianza territorial (visión).
 
@@ -574,7 +595,7 @@ La credibilidad se sostiene en: datos trazables a SECOP, avisos de prototipo, pr
 
 ## 34. Trazabilidad de este documento
 
-Fuentes de la KB (autoridad superior): `README`, `00-index`, `01-product-identity`, `02-vision-y-producto`, `03-implementacion-actual`, `04-stack-tecnico`, `05-datos-secop`, `06-base-de-datos-sqlite`, `07-geocodificacion`, `08-mapa-y-explorador`, `09-apis-y-rutas`, `10-b2b-y-leads`, `11-roadmap-y-specs`, `12-hipotesis-y-validacion`, `13-decisiones-y-convenciones`, `14-glosario`, `99-source-registry`.
+Fuentes de la KB (autoridad superior): `README`, `00-index`, `01-product-identity`, `02-vision-y-producto`, `03-implementacion-actual`, `04-stack-tecnico`, `05-datos-secop`, `06-base-de-datos-sqlite`, `07-geocodificacion`, `08-mapa-y-explorador`, `09-apis-y-rutas`, `10-b2b-y-leads`, `11-roadmap-y-specs`, `12-hipotesis-y-validacion`, `13-decisiones-y-convenciones`, `14-glosario`, `15-cumplimiento-legal-tos`, `99-source-registry`.
 
 Primarias de alto nivel citadas: `docs/02-estrategia-arquitectura.md`, `docs/archive/sustento.md`, `docs/archive/modelos_monetizado.md`, `docs/04-hipotesis-validacion.md`, `specs/003/…009/README.md`, `specs/010-017` (implementadas), código `src/**` y `data/mapa.db` (verificado en vivo 2026-09-20).
 
@@ -588,7 +609,7 @@ Regla de autoridad: **este documento es derivado; ante conflicto, manda la KB y 
 - `project`: obra-visible
 - `status`: current-snapshot
 - `authority`: derived
-- `based_on`: 17 docs de `docs/knowledge/`, especs 003–009 y 010–017, docs/02 y docs/04, códigos fuente y SQLite.
+- `based_on`: 18 docs de `docs/knowledge/`, especs 003–009 y 010–017, docs/02 y docs/04, códigos fuente y SQLite.
 - `last_verified`: 2026-09-20
 - Propietario del documento: el encargado del conocimiento del proyecto (rollo Keeper); regla: no se altera sin re-verificación.
 
@@ -606,13 +627,13 @@ Regla de autoridad: **este documento es derivado; ante conflicto, manda la KB y 
 
 ## 37. Checklist de consistencia (aplicado)
 
-- [x] ¿Mezclé funcionalidades futuras con actuales? No: §12/13 sólo CURRENT; futuro etiquetado ROADMAP/DESIGNED.
-- [x] ¿Aparecen clientes objetivos como clientes reales? No: §16/27/32 aclaran HYPOTHESIS.
-- [x] ¿Presenté hipótesis como hechos? No: §19/24/25/29 explicitan.
-- [x] ¿Traté roadmap como MVP? No: §14 separa; avisos en §30.
-- [x] ¿Traté histórico como actual? No: §26 timeline y DEPRECATED.
-- [x] ¿Trazabilidad de cada afirmación a KB/fuente? Sí, una sección de trazabilidad + citas inline.
-- [x] ¿Evité data falsa/ciencia ficción? Sí (ver §32 + reglas §36).
+- [X] ¿Mezclé funcionalidades futuras con actuales? No: §12/13 sólo CURRENT; futuro etiquetado ROADMAP/DESIGNED.
+- [X] ¿Aparecen clientes objetivos como clientes reales? No: §16/27/32 aclaran HYPOTHESIS.
+- [X] ¿Presenté hipótesis como hechos? No: §19/24/25/29 explicitan.
+- [X] ¿Traté roadmap como MVP? No: §14 separa; avisos en §30.
+- [X] ¿Traté histórico como actual? No: §26 timeline y DEPRECATED.
+- [X] ¿Trazabilidad de cada afirmación a KB/fuente? Sí, una sección de trazabilidad + citas inline.
+- [X] ¿Evité data falsa/ciencia ficción? Sí (ver §32 + reglas §36).
 
 Si se halla una contradicción con la KB, **la KB manda** (documentar en este registro).
 
@@ -622,6 +643,7 @@ Si se halla una contradicción con la KB, **la KB manda** (documentar en este re
 
 Flujo ciudadano (diseño conceptual): **ver → observar → reportar → aportar evidencia → seguimiento**.
 Principios de gobierno del dato:
+
 - Separar **información oficial / observación ciudadana / interpretación / conclusión validada**.
 - Un reporte ciudadano **no es** una acusación de irregularidad, fraude o incumplimiento. Sólo aporta evidencia para contraste neutral.
 - Protección del ciudadano: enmascarar contacto ante empresas; moderación; no represalias.
