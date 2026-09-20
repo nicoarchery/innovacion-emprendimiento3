@@ -31,9 +31,9 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
       : "No determinadas";
 
   return (
-    <div className="absolute right-3 top-3 z-[1000] flex max-h-[calc(100%-1.5rem)] w-[22rem] max-w-[calc(100%-1.5rem)] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
-      <div className="flex items-start justify-between gap-2 border-b border-slate-100 px-4 py-3">
-        <h3 className="line-clamp-2 text-sm font-bold leading-snug text-slate-900">
+    <div className="absolute right-3 top-3 z-[1000] flex max-h-[calc(100%-1.5rem)] w-[22rem] max-w-[calc(100%-1.5rem)] flex-col overflow-hidden rounded-[4px] border border-tinta/25 bg-ficha shadow-xl">
+      <div className="flex items-start justify-between gap-2 border-b border-tinta/15 px-4 py-3">
+        <h3 className="line-clamp-2 font-display text-base font-semibold leading-snug text-tinta">
           {obra.nombre ?? "Obra sin descripción"}
         </h3>
         <Button
@@ -49,41 +49,41 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
 
       <div className="space-y-3 overflow-y-auto px-4 py-3">
         <section>
-          <h4 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-indigo-700">
+          <h4 className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-sello">
             <FileText className="h-3.5 w-3.5" /> Registro SECOP
           </h4>
           <dl className="space-y-1 text-[13px]">
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Entidad</dt>
-              <dd className="font-medium text-slate-800">{obra.entidad ?? "—"}</dd>
+              <dt className="text-[11px] text-tinta/50">Entidad</dt>
+              <dd className="font-medium text-tinta">{obra.entidad ?? "—"}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Contratista</dt>
-              <dd className="text-slate-700">{obra.contratista ?? "—"}</dd>
+              <dt className="text-[11px] text-tinta/50">Contratista</dt>
+              <dd className="text-tinta/80">{obra.contratista ?? "—"}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Valor</dt>
-              <dd className="font-semibold text-slate-900">
+              <dt className="text-[11px] text-tinta/50">Valor</dt>
+              <dd className="font-mono font-bold tabular-nums text-tinta">
                 {obra.valor !== null ? formatCOP(obra.valor) : "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Estado</dt>
+              <dt className="text-[11px] text-tinta/50">Estado</dt>
               <dd>{obra.estado ?? "—"}</dd>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <dt className="text-[11px] font-medium text-slate-400">Inicio</dt>
+                <dt className="text-[11px] text-tinta/50">Inicio</dt>
                 <dd>{obra.fechaInicio ?? "—"}</dd>
               </div>
               <div>
-                <dt className="text-[11px] font-medium text-slate-400">Fin</dt>
+                <dt className="text-[11px] text-tinta/50">Fin</dt>
                 <dd>{obra.fechaFin ?? "—"}</dd>
               </div>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Contrato</dt>
-              <dd className="text-xs text-slate-500">{obra.id}</dd>
+              <dt className="text-[11px] text-tinta/50">Contrato</dt>
+              <dd className="font-mono text-xs text-tinta/60">{obra.id}</dd>
             </div>
           </dl>
           {obra.urlSecop ? (
@@ -91,43 +91,43 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
               href={obra.urlSecop}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-indigo-700 hover:underline"
+              className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-sello underline-offset-4 hover:underline"
             >
               Ver en SECOP <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}
         </section>
 
-        <section className="rounded-lg bg-amber-50/60 p-3 ring-1 ring-amber-100">
-          <h4 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-amber-800">
+        <section className="border border-amber-700/30 bg-amber-50/70 p-3">
+          <h4 className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-amber-800">
             <MapPin className="h-3.5 w-3.5" /> Ubicación calculada
           </h4>
           <dl className="space-y-1 text-[13px]">
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Dirección SECOP</dt>
-              <dd className="text-slate-800">{obra.direccion ?? "SECOP no la publica"}</dd>
+              <dt className="text-[11px] text-tinta/50">Dirección SECOP</dt>
+              <dd className="text-tinta/85">{obra.direccion ?? "SECOP no la publica"}</dd>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <dt className="text-[11px] font-medium text-slate-400">Barrio</dt>
+                <dt className="text-[11px] text-tinta/50">Barrio</dt>
                 <dd>{obra.barrio ?? "—"}</dd>
               </div>
               <div>
-                <dt className="text-[11px] font-medium text-slate-400">Comuna</dt>
+                <dt className="text-[11px] text-tinta/50">Comuna</dt>
                 <dd>{obra.comuna ?? "—"}</dd>
               </div>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Coordenadas</dt>
-              <dd className="font-mono text-xs text-slate-700">{coordenadas}</dd>
+              <dt className="text-[11px] text-tinta/50">Coordenadas</dt>
+              <dd className="font-mono text-xs tabular-nums text-tinta/80">{coordenadas}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Cómo se ubicó</dt>
-              <dd className="text-xs text-slate-600">{fuenteLabel(obra.geoFuente)}</dd>
+              <dt className="text-[11px] text-tinta/50">Cómo se ubicó</dt>
+              <dd className="text-xs text-tinta/70">{fuenteLabel(obra.geoFuente)}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium text-slate-400">Confianza</dt>
-              <dd className="font-semibold text-slate-800">{confianzaLabel(obra.geoConfianza)}</dd>
+              <dt className="text-[11px] text-tinta/50">Confianza</dt>
+              <dd className="font-semibold text-tinta">{confianzaLabel(obra.geoConfianza)}</dd>
             </div>
           </dl>
           <p className="mt-2 flex items-start gap-1 text-[11px] leading-snug text-amber-800/80">

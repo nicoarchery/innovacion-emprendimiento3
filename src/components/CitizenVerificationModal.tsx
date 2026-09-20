@@ -79,33 +79,33 @@ export function CitizenVerificationModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg sm:max-w-xl">
         <DialogHeader>
-          <div className="flex items-center gap-2 text-emerald-700">
+          <div className="flex items-center gap-2 text-sello">
             <ShieldAlert className="h-5 w-5" />
             <span className="text-xs font-bold uppercase tracking-wider">
               Reporte ciudadano
             </span>
           </div>
-          <DialogTitle className="text-xl font-bold text-slate-900 leading-tight">
+          <DialogTitle className="text-xl font-bold text-tinta leading-tight">
             Cuéntanos cómo va la obra
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-600 line-clamp-2">
+          <DialogDescription className="text-sm text-tinta/65 line-clamp-2">
             {project.description}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           {/* Metadata contextual */}
-          <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 text-xs text-slate-700 grid grid-cols-2 gap-2">
+          <div className="rounded-[4px] bg-papel p-3 border border-tinta/20 text-xs text-tinta/75 grid grid-cols-2 gap-2">
             <div>
-              <span className="text-slate-500 block">Ubicación:</span>
+              <span className="text-tinta/55 block">Ubicación:</span>
               <span className="font-semibold flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5 text-emerald-600" />
+                <MapPin className="h-3.5 w-3.5 text-green-700" />
                 {project.municipality}, {project.department}
               </span>
             </div>
             <div>
-              <span className="text-slate-500 block">SECOP II registra:</span>
-              <span className="font-semibold text-indigo-700">
+              <span className="text-tinta/55 block">SECOP II registra:</span>
+              <span className="font-semibold text-sello">
                 {project.secopPct}% de avance
               </span>
             </div>
@@ -113,7 +113,7 @@ export function CitizenVerificationModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="reporterName" className="text-xs font-medium text-slate-700">
+              <Label htmlFor="reporterName" className="text-xs font-medium text-tinta/75">
                 Tu nombre o veeduría
               </Label>
               <Input
@@ -126,7 +126,7 @@ export function CitizenVerificationModal({
               />
             </div>
             <div>
-              <Label htmlFor="reporterContact" className="text-xs font-medium text-slate-700">
+              <Label htmlFor="reporterContact" className="text-xs font-medium text-tinta/75">
                 WhatsApp o correo
               </Label>
               <Input
@@ -142,10 +142,10 @@ export function CitizenVerificationModal({
 
           <div>
             <div className="flex justify-between items-center mb-1">
-              <Label htmlFor="pctRange" className="text-xs font-medium text-slate-700">
+              <Label htmlFor="pctRange" className="text-xs font-medium text-tinta/75">
                 Avance que ves en terreno
               </Label>
-              <span className="text-sm font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+              <span className="text-sm font-bold text-sello bg-green-50 px-2 py-0.5 rounded border border-green-700/30">
                 {observedPct}%
               </span>
             </div>
@@ -157,9 +157,9 @@ export function CitizenVerificationModal({
               step="5"
               value={observedPct}
               onChange={(e) => setObservedPct(parseInt(e.target.value, 10))}
-              className="w-full accent-emerald-600 cursor-pointer"
+              className="w-full accent-sello cursor-pointer"
             />
-            <div className="flex justify-between text-[11px] text-slate-400 mt-0.5">
+            <div className="flex justify-between text-[11px] text-tinta/40 mt-0.5">
               <span>0% (sin iniciar o detenida)</span>
               <span>50% (a mitad de camino)</span>
               <span>100% (entregada)</span>
@@ -167,7 +167,7 @@ export function CitizenVerificationModal({
           </div>
 
           <div>
-            <Label className="text-xs font-medium text-slate-700">
+            <Label className="text-xs font-medium text-tinta/75">
               Estado que ves en terreno
             </Label>
             <div className="grid grid-cols-3 gap-2 mt-1">
@@ -182,8 +182,8 @@ export function CitizenVerificationModal({
                   onClick={() => setStatusObservation(st.id)}
                   className={`py-1.5 text-xs rounded-md font-medium border text-center transition-colors ${
                     statusObservation === st.id
-                      ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
-                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                      ? "bg-sello text-white border-sello"
+                      : "bg-white text-tinta/75 border-tinta/20 hover:bg-papel"
                   }`}
                 >
                   {st.label}
@@ -193,7 +193,7 @@ export function CitizenVerificationModal({
           </div>
 
           <div>
-            <Label htmlFor="observation" className="text-xs font-medium text-slate-700">
+            <Label htmlFor="observation" className="text-xs font-medium text-tinta/75">
               Lo que viste (hechos concretos)
             </Label>
             <Textarea
@@ -207,16 +207,16 @@ export function CitizenVerificationModal({
           </div>
 
           {/* Fotografía y coordenadas */}
-          <div className="rounded-lg border border-dashed border-slate-300 p-3 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="rounded-[4px] border border-dashed border-tinta/25 p-3 bg-papel flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
+              <div className="h-9 w-9 rounded-[3px] bg-green-100 flex items-center justify-center text-sello shrink-0">
                 <Camera className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-800">
+                <p className="text-xs font-semibold text-tinta/85">
                   Foto con ubicación y fecha
                 </p>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-tinta/55">
                   Tomamos el GPS ({project.municipality}) y la fecha de la foto.
                 </p>
               </div>
@@ -226,11 +226,11 @@ export function CitizenVerificationModal({
               variant="outline"
               size="sm"
               onClick={() => setHasPhoto(!hasPhoto)}
-              className={`text-xs gap-1.5 ${hasPhoto ? "border-emerald-600 text-emerald-700 bg-emerald-50" : ""}`}
+              className={`text-xs gap-1.5 ${hasPhoto ? "border-sello text-sello bg-green-50" : ""}`}
             >
               {hasPhoto ? (
                 <>
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-green-700" />
                   Foto lista
                 </>
               ) : (
@@ -255,7 +255,7 @@ export function CitizenVerificationModal({
             <Button
               type="submit"
               size="sm"
-              className="bg-emerald-700 hover:bg-emerald-800 text-white"
+              className="bg-primary text-primary-foreground hover:bg-tinta/90"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Enviando..." : "Enviar reporte"}

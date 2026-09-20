@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   ArrowDown,
   BadgeCheck,
-  Building2,
   FileText,
   Loader2,
   Phone,
@@ -59,19 +58,19 @@ function RecognitionSteps() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="border-t-2 border-tinta/70">
       {steps.map((s, i) => (
-        <div key={s.title} className="flex gap-3">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-sm font-bold text-white">
-            {i + 1}
+        <div key={s.title} className="flex gap-4 border-b border-tinta/15 py-4">
+          <span className="font-mono text-sm font-bold tabular-nums text-sello">
+            {i + 1}.
           </span>
           <div>
-            <p className="text-sm font-semibold text-slate-800">{s.title}</p>
-            <p className="mt-0.5 text-sm text-muted-foreground">{s.text}</p>
+            <p className="text-[15px] font-semibold text-tinta">{s.title}</p>
+            <p className="mt-0.5 text-sm leading-relaxed text-tinta/65">{s.text}</p>
           </div>
         </div>
       ))}
-      <p className="text-xs text-muted-foreground">
+      <p className="pt-3 text-xs text-tinta/55">
         El sello se mantiene mientras la diferencia entre SECOP II y terreno
         no supere 15%.
       </p>
@@ -157,49 +156,46 @@ export function B2bLeadMagnet() {
   }
 
   return (
-    <section id="para-organizaciones" className="bg-white py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-700">
-            <Building2 className="h-4 w-4" />
-            Para entidades y contratistas
-          </span>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            El cumplimiento visible genera reconocimiento público
+    <section id="para-organizaciones" className="bg-ficha">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+        <div className="max-w-2xl">
+          <h2 className="font-display text-3xl font-semibold text-tinta sm:text-4xl">
+            La obra al día merece verse. La publicamos.
           </h2>
-          <p className="mt-4 text-muted-foreground">
-            Publicamos tu ficha con contrato, avance y reportes ciudadanos.
-            Las obras al día reciben sello visible en el mapa.
+          <p className="mt-3 text-lg text-tinta/70">
+            Publicamos la ficha de tu organización con contrato, avance y
+            reportes ciudadanos. Las obras al día llevan sello en el mapa.
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <BadgeCheck className="h-5 w-5 text-emerald-600" />
-                Cómo obtienes el reconocimiento
-              </CardTitle>
-              <CardDescription>
-                Tres pasos entre tu ficha publicada y el sello visible en el
-                mapa.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className="mt-12 grid grid-cols-1 items-start gap-10 lg:grid-cols-2">
+          <div>
+            <h3 className="flex items-center gap-2 text-base font-semibold text-tinta">
+              <BadgeCheck className="h-5 w-5 text-sello" />
+              Cómo obtienes el reconocimiento
+            </h3>
+            <p className="mt-1 text-sm text-tinta/60">
+              Tres pasos entre tu ficha publicada y el sello visible en el
+              mapa.
+            </p>
+            <div className="mt-4">
               <RecognitionSteps />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-slate-50">
-            <CardHeader>
-              <CardTitle className="text-lg">
-                Solicita tu ficha de reconocimiento
+          <Card>
+            <CardHeader className="border-b border-tinta/15">
+              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-tinta/50">
+                Formulario · Solicitud de ficha
+              </p>
+              <CardTitle className="pt-1 font-display text-xl">
+                Solicita la ficha de tu organización
               </CardTitle>
               <CardDescription>
-                Déjanos tus datos y recibe los requisitos por WhatsApp.
+                Déjanos tus datos y te enviamos los requisitos por WhatsApp.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="b2b-name">Nombre completo</Label>
@@ -210,7 +206,7 @@ export function B2bLeadMagnet() {
                     placeholder="Ana María López"
                   />
                   {errors.name && (
-                    <p className="text-xs font-medium text-red-600">
+                    <p className="text-xs font-medium text-red-700">
                       {errors.name}
                     </p>
                   )}
@@ -226,7 +222,7 @@ export function B2bLeadMagnet() {
                     placeholder="ana.lopez@empresa.com"
                   />
                   {errors.email && (
-                    <p className="text-xs font-medium text-red-600">
+                    <p className="text-xs font-medium text-red-700">
                       {errors.email}
                     </p>
                   )}
@@ -241,7 +237,7 @@ export function B2bLeadMagnet() {
                     placeholder="Alcaldía, empresa o contratista"
                   />
                   {errors.company && (
-                    <p className="text-xs font-medium text-red-600">
+                    <p className="text-xs font-medium text-red-700">
                       {errors.company}
                     </p>
                   )}
@@ -266,7 +262,7 @@ export function B2bLeadMagnet() {
                       ))}
                     </Select>
                     {errors.role && (
-                      <p className="text-xs font-medium text-red-600">
+                      <p className="text-xs font-medium text-red-700">
                         {errors.role}
                       </p>
                     )}
@@ -290,7 +286,7 @@ export function B2bLeadMagnet() {
                       ))}
                     </Select>
                     {errors.sector && (
-                      <p className="text-xs font-medium text-red-600">
+                      <p className="text-xs font-medium text-red-700">
                         {errors.sector}
                       </p>
                     )}
@@ -317,13 +313,13 @@ export function B2bLeadMagnet() {
           </Card>
         </div>
 
-        <div className="mt-12 flex justify-center">
+        <div className="mt-12">
           <a
             href="#como-funciona"
-            className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-emerald-700"
+            className="inline-flex items-center gap-2 text-sm font-medium text-tinta/60 underline-offset-4 transition-colors hover:text-sello hover:underline"
           >
-            <ArrowDown className="h-4 w-4 animate-bounce" />
-            Conoce cómo confirmamos el avance
+            <ArrowDown className="h-4 w-4" />
+            Cómo confirmamos el avance
           </a>
         </div>
       </div>

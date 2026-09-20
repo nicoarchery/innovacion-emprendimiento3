@@ -28,8 +28,8 @@ export function ColombiaMap({
     >
       <defs>
         <linearGradient id="colombia-shape" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#d1fae5" />
-          <stop offset="100%" stopColor="#f0fdf4" />
+          <stop offset="0%" stopColor="#eef1f7" />
+          <stop offset="100%" stopColor="#f7f5ef" />
         </linearGradient>
       </defs>
 
@@ -47,8 +47,9 @@ export function ColombiaMap({
            C 70 108, 78 86, 88 68
            C 96 52, 100 38, 108 28 Z"
         fill="url(#colombia-shape)"
-        stroke="#a7f3d0"
-        strokeWidth="2"
+        stroke="#1a2744"
+        strokeOpacity="0.35"
+        strokeWidth="1.5"
       />
 
       {municipalities.map((municipality) => {
@@ -61,24 +62,24 @@ export function ColombiaMap({
             onClick={() => onSelectMunicipality(municipality)}
           >
             {active && (
-              <circle
-                cx={x}
-                cy={y}
-                r="16"
-                fill="#047857"
-                opacity="0.18"
-                className="animate-ping"
-                style={{ transformOrigin: `${x}px ${y}px` }}
-              />
+              <circle cx={x} cy={y} r="14" fill="#1e40af" opacity="0.14" />
             )}
-            <circle cx={x} cy={y} r="14" fill="#ffffff" opacity="0.85" />
+            <circle
+              cx={x}
+              cy={y}
+              r="14"
+              fill="#ffffff"
+              opacity="0.85"
+              stroke={active ? "#1e40af" : "#1a2744"}
+              strokeOpacity={active ? 0.6 : 0.2}
+            />
             <MapPin
               x={x - 11}
               y={y - 11}
               size={22}
               className={cn(
                 "pointer-events-none",
-                active ? "text-emerald-700" : "text-slate-400"
+                active ? "text-sello" : "text-tinta/35"
               )}
             />
             <text
@@ -87,7 +88,8 @@ export function ColombiaMap({
               textAnchor="middle"
               fontSize="10"
               fontWeight="600"
-              fill={active ? "#065f46" : "#94a3b8"}
+              fill={active ? "#1e40af" : "#1a2744"}
+              opacity={active ? 1 : 0.45}
             >
               {municipality}
               {counts[municipality] ? ` · ${counts[municipality]}` : ""}

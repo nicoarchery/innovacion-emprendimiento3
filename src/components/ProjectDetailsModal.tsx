@@ -7,10 +7,10 @@ import {
   Download,
   ExternalLink,
   FileCheck2,
-  MapPin,
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Stamp } from "@/components/Stamp";
 import {
   Dialog,
   DialogContent,
@@ -54,29 +54,24 @@ export function ProjectDetailsModal({
       <DialogContent className="max-w-xl sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-200">
-              SECOP II · {project.contractType}
-            </span>
+            <Stamp tone="sello">SECOP II · {project.contractType}</Stamp>
             {project.bpin && (
-              <span className="bg-slate-100 text-slate-700 font-mono px-2 py-0.5 rounded border border-slate-200">
+              <span className="rounded-[2px] border border-tinta/20 bg-papel px-2 py-0.5 font-mono text-tinta/75">
                 BPIN: {project.bpin}
               </span>
             )}
-            <span
-              className={`ml-auto font-semibold px-2 py-0.5 rounded-full ${
-                project.atRisk
-                  ? "bg-amber-100 text-amber-800"
-                  : "bg-emerald-100 text-emerald-800"
-              }`}
+            <Stamp
+              tone={project.atRisk ? "revision" : "verificado"}
+              className="ml-auto"
             >
               {project.atRisk ? `Difiere ${project.gap}%` : "Al día"}
-            </span>
+            </Stamp>
           </div>
 
-          <DialogTitle className="text-xl font-bold text-slate-900 mt-2">
+          <DialogTitle className="mt-2 font-display text-xl text-tinta">
             {project.reference}
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-600">
+          <DialogDescription className="text-sm text-tinta/65">
             {project.description}
           </DialogDescription>
         </DialogHeader>
@@ -84,46 +79,46 @@ export function ProjectDetailsModal({
         <div className="space-y-4 pt-2">
           {/* Ficha del contrato */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-slate-200 p-3 bg-slate-50 space-y-2 text-xs">
-              <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                <Building2 className="h-4 w-4 text-indigo-600" />
+            <div className="rounded-[4px] border border-tinta/20 p-3 bg-papel space-y-2 text-xs">
+              <div className="flex items-center gap-1.5 font-bold text-tinta/85">
+                <Building2 className="h-4 w-4 text-sello" />
                 <span>Entidad y contratista</span>
               </div>
               <div>
-                <p className="text-slate-500">Entidad:</p>
-                <p className="font-semibold text-slate-900">{project.entityName}</p>
-                <p className="text-[11px] text-slate-500">NIT: {project.entityNit}</p>
+                <p className="text-tinta/55">Entidad:</p>
+                <p className="font-semibold text-tinta">{project.entityName}</p>
+                <p className="text-[11px] text-tinta/55">NIT: {project.entityNit}</p>
               </div>
-              <div className="pt-1 border-t border-slate-200">
-                <p className="text-slate-500">Contratista:</p>
-                <p className="font-semibold text-slate-900">{project.contractorName}</p>
-                <p className="text-[11px] text-slate-500">Doc: {project.contractorDoc}</p>
+              <div className="pt-1 border-t border-tinta/20">
+                <p className="text-tinta/55">Contratista:</p>
+                <p className="font-semibold text-tinta">{project.contractorName}</p>
+                <p className="text-[11px] text-tinta/55">Doc: {project.contractorDoc}</p>
               </div>
             </div>
 
-            <div className="rounded-lg border border-slate-200 p-3 bg-slate-50 space-y-2 text-xs">
-              <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                <DollarSign className="h-4 w-4 text-emerald-600" />
+            <div className="rounded-[4px] border border-tinta/20 p-3 bg-papel space-y-2 text-xs">
+              <div className="flex items-center gap-1.5 font-bold text-tinta/85">
+                <DollarSign className="h-4 w-4 text-green-700" />
                 <span>Valor y plazos</span>
               </div>
               <div>
-                <p className="text-slate-500">Valor adjudicado:</p>
-                <p className="text-base font-extrabold text-emerald-700">
+                <p className="text-tinta/55">Valor adjudicado:</p>
+                <p className="font-mono text-base font-bold tabular-nums text-tinta">
                   {formatCOP(project.contractValue)}
                 </p>
               </div>
-              <div className="pt-1 border-t border-slate-200 grid grid-cols-2 gap-2">
+              <div className="pt-1 border-t border-tinta/20 grid grid-cols-2 gap-2">
                 <div>
-                  <p className="text-slate-500">Firma:</p>
-                  <p className="font-medium text-slate-800 flex items-center gap-1">
-                    <Calendar className="h-3 w-3 text-slate-400" />
+                  <p className="text-tinta/55">Firma:</p>
+                  <p className="font-medium text-tinta/85 flex items-center gap-1">
+                    <Calendar className="h-3 w-3 text-tinta/40" />
                     {project.signDate}
                   </p>
                 </div>
                 <div>
-                  <p className="text-slate-500">Entrega prevista:</p>
-                  <p className="font-medium text-slate-800 flex items-center gap-1">
-                    <Calendar className="h-3 w-3 text-slate-400" />
+                  <p className="text-tinta/55">Entrega prevista:</p>
+                  <p className="font-medium text-tinta/85 flex items-center gap-1">
+                    <Calendar className="h-3 w-3 text-tinta/40" />
                     {project.endDate}
                   </p>
                 </div>
@@ -132,47 +127,47 @@ export function ProjectDetailsModal({
           </div>
 
           {/* Comparativa SECOP II frente a terreno */}
-          <div className="rounded-lg border border-slate-200 p-4 bg-white shadow-xs">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-1.5">
-              <FileCheck2 className="h-4 w-4 text-indigo-600" />
+          <div className="rounded-[4px] border border-tinta/20 p-4 bg-white">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-tinta/75 mb-3 flex items-center gap-1.5">
+              <FileCheck2 className="h-4 w-4 text-sello" />
               SECOP II frente a terreno
             </h4>
 
             <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="p-3 bg-indigo-50/60 rounded-lg border border-indigo-100">
-                <span className="text-xs text-indigo-800 font-medium block">
+              <div className="p-3 bg-accent/50 rounded-[4px] border border-sello/20">
+                <span className="text-xs text-sello font-medium block">
                   Registro SECOP II
                 </span>
-                <span className="text-2xl font-black text-indigo-700 mt-1 block">
+                <span className="mt-1 block font-mono text-2xl font-bold tabular-nums text-sello">
                   {project.secopPct}%
                 </span>
-                <span className="text-[11px] text-indigo-600">Avance contractual</span>
+                <span className="text-[11px] text-sello">Avance contractual</span>
               </div>
 
               <div
-                className={`p-3 rounded-lg border ${
+                className={`p-3 rounded-[4px] border ${
                   project.atRisk
                     ? "bg-amber-50/70 border-amber-200"
-                    : "bg-emerald-50/60 border-emerald-100"
+                    : "bg-green-50/60 border-green-700/20"
                 }`}
               >
                 <span
                   className={`text-xs font-medium block ${
-                    project.atRisk ? "text-amber-800" : "text-emerald-800"
+                    project.atRisk ? "text-amber-800" : "text-green-800"
                   }`}
                 >
                   Avance en terreno
                 </span>
                 <span
-                  className={`text-2xl font-black mt-1 block ${
-                    project.atRisk ? "text-amber-700" : "text-emerald-700"
+                  className={`mt-1 block font-mono text-2xl font-bold tabular-nums ${
+                    project.atRisk ? "text-amber-700" : "text-green-800"
                   }`}
                 >
                   {project.fieldPct}%
                 </span>
                 <span
                   className={`text-[11px] ${
-                    project.atRisk ? "text-amber-600" : "text-emerald-600"
+                    project.atRisk ? "text-amber-600" : "text-green-700"
                   }`}
                 >
                   {project.verifiedCount} reportes ciudadanos
@@ -181,11 +176,11 @@ export function ProjectDetailsModal({
             </div>
 
             {project.lastReportObservation && (
-              <div className="mt-3 text-xs bg-slate-50 p-2.5 rounded border border-slate-200">
-                <span className="font-semibold text-slate-800 block">
+              <div className="mt-3 text-xs bg-papel p-2.5 rounded border border-tinta/20">
+                <span className="font-semibold text-tinta/85 block">
                   Último reporte ciudadano ({project.lastReportDate || "reciente"}):
                 </span>
-                <p className="text-slate-600 italic mt-0.5">
+                <p className="text-tinta/65 italic mt-0.5">
                   &ldquo;{project.lastReportObservation}&rdquo;
                 </p>
               </div>
@@ -193,25 +188,25 @@ export function ProjectDetailsModal({
           </div>
 
           {/* Alcance estimado */}
-          <div className="rounded-lg border border-slate-200 p-3.5 bg-slate-50">
-            <h4 className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-              <Users className="h-4 w-4 text-emerald-600" />
+          <div className="rounded-[4px] border border-tinta/20 p-3.5 bg-papel">
+            <h4 className="text-xs font-bold text-tinta/85 mb-2 flex items-center gap-1.5">
+              <Users className="h-4 w-4 text-green-700" />
               Alcance estimado de la obra
             </h4>
             <div className="grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="bg-white p-2 rounded border border-slate-200">
-                <span className="text-[11px] text-slate-500 block">Cobertura aprox.</span>
-                <span className="font-bold text-slate-800">
+              <div className="bg-white p-2 rounded border border-tinta/20">
+                <span className="text-[11px] text-tinta/55 block">Cobertura aprox.</span>
+                <span className="font-bold text-tinta/85">
                   +{estimatedBeneficiaries.toLocaleString("es-CO")} hab.
                 </span>
               </div>
-              <div className="bg-white p-2 rounded border border-slate-200">
-                <span className="text-[11px] text-slate-500 block">Empleo aprox.</span>
-                <span className="font-bold text-slate-800">~{estimatedJobs} puestos</span>
+              <div className="bg-white p-2 rounded border border-tinta/20">
+                <span className="text-[11px] text-tinta/55 block">Empleo aprox.</span>
+                <span className="font-bold text-tinta/85">~{estimatedJobs} puestos</span>
               </div>
-              <div className="bg-white p-2 rounded border border-slate-200">
-                <span className="text-[11px] text-slate-500 block">Ubicación</span>
-                <span className="font-bold text-slate-800 truncate block">
+              <div className="bg-white p-2 rounded border border-tinta/20">
+                <span className="text-[11px] text-tinta/55 block">Ubicación</span>
+                <span className="font-bold text-tinta/85 truncate block">
                   {project.municipality}
                 </span>
               </div>
@@ -256,7 +251,7 @@ export function ProjectDetailsModal({
                 onClose();
                 onOpenVerify();
               }}
-              className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs"
+              className="bg-primary text-primary-foreground hover:bg-tinta/90 text-xs"
             >
               Reportar avance
             </Button>

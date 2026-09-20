@@ -13,10 +13,10 @@ export function Progress({ value, className, indicatorClassName }: ProgressProps
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={value}
-      className={cn("h-2 w-full overflow-hidden rounded-full bg-muted", className)}
+      className={cn("h-2 w-full overflow-hidden rounded-[2px] bg-muted", className)}
     >
       <div
-        className={cn("h-full rounded-full transition-all", indicatorClassName)}
+        className={cn("h-full rounded-[2px] transition-all", indicatorClassName)}
         style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
       />
     </div>

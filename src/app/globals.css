@@ -3,26 +3,33 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f5f4f0;
+  --foreground: #1a2744;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #1a2744;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #047857;
-  --primary-foreground: #f8fafc;
-  --secondary: #1e1b4b;
-  --secondary-foreground: #f8fafc;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #eef2ff;
-  --accent-foreground: #3730a3;
-  --destructive: #dc2626;
-  --destructive-foreground: #f8fafc;
-  --border: #e2e8f0;
-  --input: #cbd5e1;
-  --ring: #047857;
-  --radius: 0.625rem;
+  --popover-foreground: #1a2744;
+  --primary: #1a2744;
+  --primary-foreground: #f5f4f0;
+  --secondary: #1e40af;
+  --secondary-foreground: #ffffff;
+  --muted: #eae8e0;
+  --muted-foreground: #4a5878;
+  --accent: #e3e9f6;
+  --accent-foreground: #1e40af;
+  --destructive: #991b1b;
+  --destructive-foreground: #ffffff;
+  --border: #d9d6cb;
+  --input: #b7b3a5;
+  --ring: #1e40af;
+  --radius: 0.25rem;
+}
+
+@theme {
+  --color-papel: #f5f4f0;
+  --color-tinta: #1a2744;
+  --color-sello: #1e40af;
+  --color-ficha: #ffffff;
 }
 
 @theme inline {
@@ -45,12 +52,13 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: var(--font-plus-jakarta-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-libre-franklin);
+  --font-display: var(--font-spectral);
+  --font-mono: var(--font-courier-prime);
 }
 
 body {
@@ -59,8 +67,73 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+::selection {
+  background: var(--ring);
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+input,
+textarea,
+select {
+  caret-color: var(--ring);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--input);
+  border: 2px solid var(--background);
+  border-radius: 0;
+}
+
 .leaflet-container {
   width: 100%;
   height: 100%;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.leaflet-container .marker-cluster-small,
+.leaflet-container .marker-cluster-medium,
+.leaflet-container .marker-cluster-large {
+  background-color: rgba(26, 39, 68, 0.16);
+}
+
+.leaflet-container .marker-cluster-small div,
+.leaflet-container .marker-cluster-medium div,
+.leaflet-container .marker-cluster-large div {
+  background-color: rgba(30, 64, 175, 0.9);
+  color: #ffffff;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 700;
+}
+
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: scale(1.7) rotate(-7deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-7deg);
+  }
+}
+
+.stamp-press {
+  animation: stamp-in 280ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-press {
+    animation: none;
+  }
 }

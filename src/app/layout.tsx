@@ -1,14 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Courier_Prime, Libre_Franklin, Spectral } from "next/font/google";
 import Script from "next/script";
 
 import "./globals.css";
 
 import { PrototypeNotice } from "@/components/PrototypeNotice";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
+const spectral = Spectral({
+  variable: "--font-spectral",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const libreFranklin = Libre_Franklin({
+  variable: "--font-libre-franklin",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const courierPrime = Courier_Prime({
+  variable: "--font-courier-prime",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
@@ -38,7 +51,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#047857",
+  themeColor: "#f5f4f0",
 };
 
 export default function RootLayout({
@@ -50,7 +63,7 @@ export default function RootLayout({
     <html
       lang="es"
       data-scroll-behavior="smooth"
-      className={`${plusJakartaSans.variable} h-full antialiased`}
+      className={`${spectral.variable} ${libreFranklin.variable} ${courierPrime.variable} h-full antialiased`}
     >
       <head>
         {pixelId ? (

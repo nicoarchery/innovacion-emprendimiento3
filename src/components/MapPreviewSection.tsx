@@ -5,7 +5,7 @@ import { Bell, MapPinned, MessageCircle } from "lucide-react";
 
 import { ColombiaMap } from "@/components/ColombiaMap";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Stamp } from "@/components/Stamp";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,6 @@ import {
   type Project,
 } from "@/lib/data";
 import { openWhatsApp } from "@/lib/whatsapp";
-import { cn } from "@/lib/utils";
 
 const GAP_THRESHOLD = 15;
 
@@ -42,49 +41,29 @@ function ProjectGapBars({ project }: { project: Project }) {
     <div className="space-y-3">
       <div>
         <div className="mb-1 flex items-center justify-between text-xs">
-          <span className="font-medium text-muted-foreground">
-            Avance según SECOP II
-          </span>
-          <span className="font-semibold text-slate-700">
+          <span className="text-tinta/60">Avance según SECOP II</span>
+          <span className="font-mono font-bold tabular-nums text-tinta">
             {project.secopPct}%
           </span>
         </div>
-        <Progress
-          value={project.secopPct}
-          indicatorClassName="bg-indigo-600"
-        />
+        <Progress value={project.secopPct} indicatorClassName="bg-sello" />
       </div>
       <div>
         <div className="mb-1 flex items-center justify-between text-xs">
-          <span className="font-medium text-muted-foreground">
-            Avance confirmado en terreno
-          </span>
-          <span className="font-semibold text-slate-700">
+          <span className="text-tinta/60">Avance confirmado en terreno</span>
+          <span className="font-mono font-bold tabular-nums text-tinta">
             {project.fieldPct}%
           </span>
         </div>
         <Progress
           value={project.fieldPct}
-          indicatorClassName={needsReview ? "bg-amber-500" : "bg-emerald-600"}
+          indicatorClassName={needsReview ? "bg-amber-600" : "bg-green-700"}
         />
       </div>
-      <div
-        className={cn(
-          "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
-          needsReview
-            ? "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200"
-            : "bg-emerald-50 text-emerald-800 ring-1 ring-inset ring-emerald-200"
-        )}
-      >
-        {needsReview ? (
-          <>
-            <Bell className="h-3.5 w-3.5" />
-            Difiere {gap}% · Requiere revisión
-          </>
-        ) : (
-          <>Difiere {gap}% · Al día</>
-        )}
-      </div>
+      <Stamp tone={needsReview ? "revision" : "verificado"}>
+        {needsReview && <Bell className="h-3 w-3" />}
+        Difiere {gap}% · {needsReview ? "Requiere revisión" : "Al día"}
+      </Stamp>
     </div>
   );
 }
@@ -153,22 +132,19 @@ export function MapPreviewSection() {
   }
 
   return (
-    <section id="mapa-ciudadano" className="bg-slate-50 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-emerald-700">
-            Mapa ciudadano
-          </span>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Revisa las obras de tu municipio
+    <section id="mapa-ciudadano" className="bg-papel">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+        <div className="max-w-2xl">
+          <h2 className="font-display text-3xl font-semibold text-tinta sm:text-4xl">
+            Las obras de tu municipio, con el avance a la vista
           </h2>
-          <p className="mt-4 text-muted-foreground">
-            Filtra por municipio. Compara el avance que registra SECOP II con
-            lo que ves en terreno.
+          <p className="mt-3 text-lg text-tinta/70">
+            Elige un municipio y compara lo que registra SECOP II con lo
+            que la gente ve en terreno.
           </p>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+        <div className="mt-8 flex flex-wrap gap-2">
           <Button
             key="all"
             variant={selected === "Todos" ? "default" : "outline"}
@@ -189,68 +165,67 @@ export function MapPreviewSection() {
           ))}
         </div>
 
-        <div className="mt-10 grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
-          <Card className="p-4 sm:p-6">
+        <div className="mt-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-2">
+          <div className="border border-tinta/20 bg-ficha p-4 sm:p-6">
             <ColombiaMap
               selected={selected}
               counts={counts}
               onSelectMunicipality={handleSelectFromMap}
             />
-            <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
-              <MapPinned className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
+            <p className="mt-4 flex items-start gap-2 text-xs text-tinta/60">
+              <MapPinned className="mt-0.5 h-4 w-4 shrink-0 text-sello" />
               Elige un punto para comparar el registro SECOP II con el avance
               en terreno de cada obra.
             </p>
-          </Card>
+          </div>
 
-          <div className="space-y-4">
-            <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
-              <MapPinned className="h-5 w-5 text-emerald-700" />
+          <div>
+            <h3 className="flex items-baseline gap-3 font-display text-xl font-semibold text-tinta">
               Obras en {selected}
+              <span className="font-mono text-xs font-bold tabular-nums text-tinta/50">
+                {visibleProjects.length} en ficha
+              </span>
             </h3>
             {visibleProjects.length === 0 && (
-              <p className="text-sm text-muted-foreground">
+              <p className="mt-4 text-sm text-tinta/60">
                 Selecciona un municipio para ver sus proyectos.
               </p>
             )}
-            {visibleProjects.map((project) => {
-              const gap = getGap(project);
-              const needsReview = gap > GAP_THRESHOLD;
-              return (
-                <Card key={project.id}>
-                  <CardHeader className="pb-2">
+            <div className="mt-2 border-t-2 border-tinta/70">
+              {visibleProjects.map((project) => {
+                const gap = getGap(project);
+                const needsReview = gap > GAP_THRESHOLD;
+                return (
+                  <article
+                    key={project.id}
+                    className="border-b border-tinta/15 py-5"
+                  >
                     <div className="flex items-start justify-between gap-3">
-                      <CardTitle className="text-base">
+                      <h4 className="font-semibold leading-snug text-tinta">
                         {project.name}
-                      </CardTitle>
-                      <span
-                        className={cn(
-                          "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide",
-                          needsReview
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-emerald-100 text-emerald-800"
-                        )}
+                      </h4>
+                      <Stamp
+                        tone={needsReview ? "revision" : "verificado"}
                       >
                         {needsReview ? "Requiere revisión" : "Al día"}
-                      </span>
+                      </Stamp>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <ProjectGapBars project={project} />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-4"
+                    <div className="mt-3 max-w-md">
+                      <ProjectGapBars project={project} />
+                    </div>
+                    <button
+                      type="button"
                       onClick={() =>
                         openDialog(project.municipality as Municipality)
                       }
+                      className="mt-3 text-sm font-semibold text-sello underline-offset-4 hover:underline"
                     >
                       Ver ficha y seguir obra
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -258,21 +233,23 @@ export function MapPreviewSection() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Obras en {selectedForDialog}</DialogTitle>
+            <DialogTitle className="font-display text-2xl">
+              Obras en {selectedForDialog}
+            </DialogTitle>
             <DialogDescription>
               Compara el registro oficial con el reporte en terreno. Si una
               obra va al día, tu confirmación respalda su reconocimiento.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-5">
+          <div className="border-t-2 border-tinta/70">
             {dialogProjects.map((project) => (
               <div
                 key={project.id}
-                className="rounded-lg border bg-slate-50 p-4"
+                className="border-b border-tinta/15 bg-papel py-4"
               >
-                <p className="font-semibold text-foreground">{project.name}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="font-semibold text-tinta">{project.name}</p>
+                <p className="mt-1 text-sm text-tinta/65">
                   {project.description}
                 </p>
                 <div className="mt-3">
@@ -284,10 +261,10 @@ export function MapPreviewSection() {
 
           <form
             onSubmit={handleAlert}
-            className="space-y-3 rounded-lg border border-emerald-200 bg-emerald-50/50 p-4"
+            className="space-y-3 border border-sello/30 bg-accent/40 p-4"
           >
-            <div className="flex items-center gap-2 font-semibold text-emerald-900">
-              <Bell className="h-4 w-4" />
+            <div className="flex items-center gap-2 font-semibold text-tinta">
+              <Bell className="h-4 w-4 text-sello" />
               ¿Vives cerca? Confirma el avance y sigue estas obras
             </div>
             <div className="space-y-1.5">

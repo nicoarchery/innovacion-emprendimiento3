@@ -8,31 +8,38 @@ export function Footer() {
   );
 
   return (
-    <footer className="border-t bg-slate-900 py-10 text-slate-300">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 sm:flex-row sm:px-6">
-        <div className="text-center sm:text-left">
-          <p className="text-sm font-semibold text-white">
-            Obras a la Vista · Cali
-          </p>
-          <p className="mt-1 max-w-sm text-xs text-slate-400">
-            Consulta contratos SECOP II y reconoce a las entidades que cumplen.
-            Ubicaciones aproximadas.
-          </p>
+    <footer className="bg-tinta text-papel/75">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
+          <div>
+            <p className="font-display text-2xl font-bold text-papel">
+              Obras a la Vista
+            </p>
+            <p className="mt-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-papel/50">
+              Santiago de Cali · Consulta ciudadana
+            </p>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed">
+              Contratos SECOP II en un mapa. Reconocimiento para quien
+              cumple. Ubicaciones aproximadas.
+            </p>
+          </div>
+
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-[3px] bg-[#1faa53] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#188a43]"
+          >
+            <MessageCircle className="h-4 w-4" />
+            Escríbenos por WhatsApp
+          </a>
         </div>
 
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1eb958]"
-        >
-          <MessageCircle className="h-4 w-4" />
-          Escríbenos por WhatsApp
-        </a>
+        <div className="mt-10 flex flex-col gap-2 border-t border-papel/15 pt-5 font-mono text-[11px] uppercase tracking-[0.12em] text-papel/45 sm:flex-row sm:items-center sm:justify-between">
+          <span>© {new Date().getFullYear()} · Prototipo en validación</span>
+          <span>Fuente: SECOP II · datos.gov.co</span>
+        </div>
       </div>
-      <p className="mt-8 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} · Prototipo en validación
-      </p>
     </footer>
   );
 }

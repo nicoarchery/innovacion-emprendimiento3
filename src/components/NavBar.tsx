@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, ArrowDown } from "lucide-react";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { label: "Mapa de Cali", href: "/mapa" },
-  { label: "Explorador", href: "/explorador", isBadge: true },
+  { label: "Explorador", href: "/explorador", isNew: true },
   { label: "Cómo funciona", href: "/#como-funciona" },
   { label: "Para organizaciones", href: "/#para-organizaciones" },
 ];
@@ -17,38 +18,30 @@ export function NavBar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-slate-50/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b-4 border-double border-tinta/70 bg-papel/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <a href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700 text-emerald-50">
-            <ArrowDown className="h-5 w-5 -rotate-90" />
+        <Link href="/" className="flex items-baseline gap-3">
+          <span className="font-display text-xl font-bold leading-none text-tinta">
+            Obras a la Vista
           </span>
-          <span className="flex flex-col leading-tight">
-            <span className="text-sm font-bold text-slate-900">
-              Obras a la Vista
-            </span>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-emerald-700">
-              Consulta ciudadana · Cali
-            </span>
+          <span className="hidden font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-sello sm:inline">
+            Cali · Consulta ciudadana
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-emerald-700",
-                link.isBadge
-                  ? "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold"
-                  : "text-slate-600"
-              )}
+              className="text-sm font-medium text-tinta/80 underline-offset-4 transition-colors hover:text-sello hover:underline"
             >
-              {link.isBadge && (
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse" />
-              )}
               {link.label}
+              {link.isNew && (
+                <span className="ml-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-sello">
+                  Nuevo
+                </span>
+              )}
             </a>
           ))}
         </nav>
@@ -72,8 +65,8 @@ export function NavBar() {
 
       <div
         className={cn(
-          "md:hidden",
-          open ? "block border-t bg-slate-50" : "hidden"
+          "border-t border-tinta/15 md:hidden",
+          open ? "block bg-papel" : "hidden"
         )}
       >
         <nav className="flex flex-col gap-1 px-4 py-3">
@@ -82,7 +75,7 @@ export function NavBar() {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"
+              className="rounded-[3px] px-3 py-2 text-sm font-medium text-tinta/80 hover:bg-accent hover:text-sello"
             >
               {link.label}
             </a>

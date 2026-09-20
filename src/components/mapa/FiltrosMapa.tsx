@@ -23,10 +23,10 @@ export function FiltrosMapa({
   onLimpiar,
 }: FiltrosMapaProps) {
   return (
-    <div className="rounded-xl border bg-card p-3 shadow-sm">
+    <div className="rounded-[4px] border border-tinta/20 bg-ficha p-3">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
         <div className="space-y-1">
-          <Label htmlFor="filtro-estado" className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <Label htmlFor="filtro-estado" className="text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
             Estado
           </Label>
           <Select
@@ -44,7 +44,7 @@ export function FiltrosMapa({
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="filtro-entidad" className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <Label htmlFor="filtro-entidad" className="text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
             Entidad
           </Label>
           <Select
@@ -62,7 +62,7 @@ export function FiltrosMapa({
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="filtro-min" className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <Label htmlFor="filtro-min" className="text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
             Valor mín. (COP)
           </Label>
           <Input
@@ -76,7 +76,7 @@ export function FiltrosMapa({
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="filtro-max" className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <Label htmlFor="filtro-max" className="text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
             Valor máx. (COP)
           </Label>
           <Input
@@ -90,7 +90,7 @@ export function FiltrosMapa({
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="filtro-fecha" className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <Label htmlFor="filtro-fecha" className="text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
             Año de firma
           </Label>
           <Select

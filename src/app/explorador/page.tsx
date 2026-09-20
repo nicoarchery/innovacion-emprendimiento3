@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, MapPinned } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
 import { SecopExplorer } from "@/components/SecopExplorer";
 import { Footer } from "@/components/Footer";
@@ -14,36 +14,35 @@ export const metadata: Metadata = {
 
 export default function ExploradorPage() {
   return (
-    <main className="min-h-screen flex flex-col bg-slate-50/50">
+    <main className="min-h-screen flex flex-col bg-papel">
       <NavBar />
 
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Breadcrumb / Regreso */}
-        <div className="flex items-center gap-2 text-xs text-slate-500">
+        <div className="flex items-center gap-2 font-mono text-xs text-tinta/55">
           <Link
             href="/"
-            className="flex items-center gap-1 hover:text-slate-900 transition-colors"
+            className="flex items-center gap-1 underline-offset-4 hover:text-sello hover:underline transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Volver a la portada
           </Link>
           <span>/</span>
-          <span className="font-semibold text-slate-800">
+          <span className="font-bold text-tinta">
             Explorador
           </span>
         </div>
 
         {/* Encabezado del Dashboard */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-5">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b-2 border-tinta/70 pb-5">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 mb-2">
-              <MapPinned className="h-3.5 w-3.5" />
-              <span>Consulta SECOP II</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-sello">
+              SECOP II · Consulta
+            </p>
+            <h1 className="font-display text-2xl sm:text-3xl font-semibold text-tinta">
               Explorador de contratos de obra
             </h1>
-            <p className="text-sm text-slate-600 mt-1 max-w-2xl">
+            <p className="text-sm text-tinta/65 mt-1 max-w-2xl">
               Busca contratos por departamento, estado y contratista. Revisa
               valor, fechas y diferencia con el reporte en terreno.
             </p>
