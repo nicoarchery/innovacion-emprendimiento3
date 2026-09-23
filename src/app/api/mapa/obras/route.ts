@@ -3,6 +3,8 @@ import {
   entidadesDisponibles,
   estadosDisponibles,
   listObras,
+  listTodasObras,
+  resumenReportesMasivo,
   totalObras,
   ultimaSync,
 } from "@/lib/mapa/db";
@@ -15,14 +17,30 @@ export async function GET(request: NextRequest) {
     const minValor = params.get("minValor");
     const maxValor = params.get("maxValor");
     const fecha = params.get("fecha") || undefined;
+    const todas = params.get("todas") === "1";
+    const ubicacion = params.get("ubicacion") as
+      | "ubicadas"
+      | "sin_ubicar"
+      | undefined;
 
-    const obras = listObras({
-      estado,
-      entidad,
-      minValor: minValor ? parseInt(minValor, 10) : undefined,
-      maxValor: maxValor ? parseInt(maxValor, 10) : undefined,
-      fecha,
-    });
+    const obras = todas
+      ? listTodasObras({
+          estado,
+          entidad,
+          minValor: minValor ? parseInt(minValor, 10) : undefined,
+          maxValor: maxValor ? parseInt(maxValor, 10) : undefined,
+          fecha,
+          ubicacion: ubicacion === "ubicadas" || ubicacion === "sin_ubicar" ? ubicacion : undefined,
+        })
+      : listObras({
+          estado,
+          entidad,
+          minValor: minValor ? parseInt(minValor, 10) : undefined,
+          maxValor: maxValor ? parseInt(maxValor, 10) : undefined,
+          fecha,
+        });
+
+    const resumenes = todas ? resumenReportesMasivo() : {};
 
     const data = obras.map((o) => ({
       id: o.id_contrato,
@@ -42,7 +60,9 @@ export async function GET(request: NextRequest) {
       lon: o.lon,
       geoFuente: o.geo_fuente,
       geoConfianza: o.geo_confianza,
+      estadoUbicacion: o.estado_ubicacion,
       syncedAt: o.synced_at,
+      reportes: resumenes[o.id_contrato] ?? null,
     }));
 
     return NextResponse.json({

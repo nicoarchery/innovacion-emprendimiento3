@@ -45,6 +45,7 @@ sources:
 | Almacenamiento de leads | **NO** (solo log) |
 | Verificación ciudadana real | **NO** (simulada) |
 | Enlaces de contacto (correo/teléfono) | Implementados |
+| **Reporte ciudadano desde el mapa** | **SÍ, persiste** en `reportes_ciudadanos` (SQLite) — spec `018`, 2026-09-23. Ver `09` y `08` |
 
 ## Recomendación al trabajar aquí
 

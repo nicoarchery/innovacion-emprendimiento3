@@ -86,6 +86,25 @@ CREATE TABLE IF NOT EXISTS meta (
   clave TEXT PRIMARY KEY,
   valor TEXT
 );
+
+CREATE TABLE IF NOT EXISTS reportes_ciudadanos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id_contrato TEXT NOT NULL,
+  estado_terreno TEXT,
+  avance_observado INTEGER CHECK (avance_observado BETWEEN 0 AND 100),
+  calificacion INTEGER CHECK (calificacion BETWEEN 1 AND 5),
+  descripcion TEXT,
+  foto TEXT,
+  contacto TEXT,
+  lat REAL,
+  lon REAL,
+  gps_origen TEXT,
+  estado TEXT DEFAULT 'pendiente_moderacion',
+  created_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_reportes_contrato ON reportes_ciudadanos(id_contrato);
+CREATE INDEX IF NOT EXISTS idx_reportes_estado ON reportes_ciudadanos(estado);
 `;
 
 export function getDb(): Database.Database {
@@ -206,6 +225,82 @@ export function listObras(filtros?: {
   return database
     .prepare(`SELECT * FROM obras WHERE ${where.join(" AND ")} ORDER BY valor DESC`)
     .all(params) as ObraRow[];
+}
+
+export function listTodasObras(filtros?: {
+  estado?: string;
+  entidad?: string;
+  minValor?: number;
+  maxValor?: number;
+  fecha?: string;
+  ubicacion?: "ubicadas" | "sin_ubicar";
+}): ObraRow[] {
+  const database = getDb();
+  const where: string[] = ["is_obra = 1"];
+  const params: Record<string, unknown> = {};
+
+  if (filtros?.estado && filtros.estado !== "todos") {
+    where.push("estado = @estado");
+    params.estado = filtros.estado;
+  }
+  if (filtros?.entidad && filtros.entidad !== "todos") {
+    where.push("entidad_nombre = @entidad");
+    params.entidad = filtros.entidad;
+  }
+  if (filtros?.minValor) {
+    where.push("valor >= @minValor");
+    params.minValor = filtros.minValor;
+  }
+  if (filtros?.maxValor) {
+    where.push("valor <= @maxValor");
+    params.maxValor = filtros.maxValor;
+  }
+  if (filtros?.fecha && filtros.fecha !== "todos") {
+    where.push("fecha_firma IS NOT NULL");
+    where.push("(substr(fecha_firma,1,4) = @fecha AND fecha_firma <> '')");
+    params.fecha = filtros.fecha;
+  }
+  if (filtros?.ubicacion === "ubicadas") {
+    where.push("estado_ubicacion = 'resuelta'");
+  } else if (filtros?.ubicacion === "sin_ubicar") {
+    where.push("estado_ubicacion <> 'resuelta'");
+  }
+
+  return database
+    .prepare(`SELECT * FROM obras WHERE ${where.join(" AND ")} ORDER BY valor DESC`)
+    .all(params) as ObraRow[];
+}
+
+export function resumenReportesMasivo(): Record<string, ResumenReportesObra> {
+  const database = getDb();
+  const rows = database
+    .prepare(
+      `SELECT
+         id_contrato,
+         COUNT(*) AS total,
+         AVG(calificacion) AS promedio_calificacion,
+         SUM(CASE WHEN estado_terreno = 'retraso' THEN 1 ELSE 0 END) AS con_retraso,
+         SUM(CASE WHEN estado_terreno = 'paralizada' THEN 1 ELSE 0 END) AS paralizadas
+       FROM reportes_ciudadanos
+       GROUP BY id_contrato`
+    )
+    .all() as {
+    id_contrato: string;
+    total: number;
+    promedio_calificacion: number | null;
+    con_retraso: number;
+    paralizadas: number;
+  }[];
+  const mapa: Record<string, ResumenReportesObra> = {};
+  for (const r of rows) {
+    mapa[r.id_contrato] = {
+      total: r.total ?? 0,
+      promedio_calificacion: r.promedio_calificacion ?? null,
+      con_retraso: r.con_retraso ?? 0,
+      paralizadas: r.paralizadas ?? 0,
+    };
+  }
+  return mapa;
 }
 
 export function listObrasPendientesGeo(limit = 150): ObraRow[] {
@@ -382,6 +477,118 @@ export function obtenerObraPorId(idContrato: string): ObraRow | null {
     .prepare("SELECT * FROM obras WHERE id_contrato = ?")
     .get(idContrato) as ObraRow | undefined;
   return row ?? null;
+}
+
+export interface NuevoReporteCiudadano {
+  id_contrato: string;
+  estado_terreno?: string | null;
+  avance_observado?: number | null;
+  calificacion?: number | null;
+  descripcion?: string | null;
+  foto?: string | null;
+  contacto?: string | null;
+  lat?: number | null;
+  lon?: number | null;
+  gps_origen?: string | null;
+}
+
+export interface ReporteCiudadanoRow {
+  id: number;
+  id_contrato: string;
+  estado_terreno: string | null;
+  avance_observado: number | null;
+  calificacion: number | null;
+  descripcion: string | null;
+  foto: string | null;
+  contacto: string | null;
+  lat: number | null;
+  lon: number | null;
+  gps_origen: string | null;
+  estado: string;
+  created_at: string;
+}
+
+export interface ResumenReportesObra {
+  total: number;
+  promedio_calificacion: number | null;
+  con_retraso: number;
+  paralizadas: number;
+}
+
+export function insertarReporteCiudadano(reporte: NuevoReporteCiudadano): number {
+  const database = getDb();
+  const result = database
+    .prepare(
+      `INSERT INTO reportes_ciudadanos (
+        id_contrato, estado_terreno, avance_observado, calificacion,
+        descripcion, foto, contacto, lat, lon, gps_origen, estado, created_at
+      ) VALUES (
+        @id_contrato, @estado_terreno, @avance_observado, @calificacion,
+        @descripcion, @foto, @contacto, @lat, @lon, @gps_origen, 'pendiente_moderacion', @created_at
+      )`
+    )
+    .run({
+      id_contrato: reporte.id_contrato,
+      estado_terreno: reporte.estado_terreno ?? null,
+      avance_observado: reporte.avance_observado ?? null,
+      calificacion: reporte.calificacion ?? null,
+      descripcion: reporte.descripcion ?? null,
+      foto: reporte.foto ?? null,
+      contacto: reporte.contacto ?? null,
+      lat: reporte.lat ?? null,
+      lon: reporte.lon ?? null,
+      gps_origen: reporte.gps_origen ?? null,
+      created_at: new Date().toISOString(),
+    });
+  return Number(result.lastInsertRowid);
+}
+
+export function listarReportesPorObra(idContrato: string): ReporteCiudadanoRow[] {
+  const database = getDb();
+  return database
+    .prepare(
+      `SELECT * FROM reportes_ciudadanos
+       WHERE id_contrato = ?
+       ORDER BY id DESC LIMIT 50`
+    )
+    .all(idContrato) as ReporteCiudadanoRow[];
+}
+
+export function resumenReportesPorObra(idContrato: string): ResumenReportesObra {
+  const database = getDb();
+  const row = database
+    .prepare(
+      `SELECT
+         COUNT(*) AS total,
+         AVG(calificacion) AS promedio_calificacion,
+         SUM(CASE WHEN estado_terreno = 'retraso' THEN 1 ELSE 0 END) AS con_retraso,
+         SUM(CASE WHEN estado_terreno = 'paralizada' THEN 1 ELSE 0 END) AS paralizadas
+       FROM reportes_ciudadanos
+       WHERE id_contrato = ?`
+    )
+    .get(idContrato) as {
+    total: number;
+    promedio_calificacion: number | null;
+    con_retraso: number;
+    paralizadas: number;
+  };
+  return {
+    total: row.total ?? 0,
+    promedio_calificacion: row.promedio_calificacion ?? null,
+    con_retraso: row.con_retraso ?? 0,
+    paralizadas: row.paralizadas ?? 0,
+  };
+}
+
+export function contarReportesRecientesPorContacto(contacto: string, desde: string): number {
+  const database = getDb();
+  const row = database
+    .prepare(
+      `SELECT COUNT(*) AS n FROM reportes_ciudadanos
+       WHERE contacto = ? AND created_at >= ?`
+    )
+    .get(contacto, desde) as { n: number };
+  return row.n;
 }
 
 // Migración geo v2 (una sola vez): purga puntos fuera del bbox metro,

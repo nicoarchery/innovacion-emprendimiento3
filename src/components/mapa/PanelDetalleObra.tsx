@@ -1,7 +1,21 @@
-import { X, MapPin, FileText, Compass, ExternalLink } from "lucide-react";
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import {
+  MessageSquareText,
+  Star,
+  X,
+  MapPin,
+  FileText,
+  Compass,
+  ExternalLink,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCOP } from "@/lib/secop";
+import { ReportesObraModal } from "@/components/mapa/ReportesObraModal";
+import { ReportesButton } from "@/components/mapa/ReportesButton";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
+import type { ResumenReportes } from "@/components/mapa/reportes-comunes";
 
 interface PanelDetalleObraProps {
   obra: ObraMarcador;
@@ -26,6 +40,35 @@ function fuenteLabel(fuente: string | null): string {
 }
 
 export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
+  const [listadoAbierto, setListadoAbierto] = useState(false);
+  const [resumen, setResumen] = useState<ResumenReportes>(
+    obra.reportes ?? {
+      total: 0,
+      promedio_calificacion: null,
+      con_retraso: 0,
+      paralizadas: 0,
+    }
+  );
+
+  const cargarResumen = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/mapa/obras/${obra.id}/reportes`);
+      if (!res.ok) return;
+      const json = (await res.json()) as {
+        success: boolean;
+        meta?: { resumen?: ResumenReportes };
+      };
+      if (json.success && json.meta?.resumen) setResumen(json.meta.resumen);
+    } catch {
+      // El resumen es informativo; no bloquear el panel si falla.
+    }
+  }, [obra.id]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => void cargarResumen(), 0);
+    return () => clearTimeout(timer);
+  }, [cargarResumen, obra.id]);
+
   const coordenadas =
     obra.lat !== null && obra.lon !== null
       ? `${obra.lat.toFixed(5)}, ${obra.lon.toFixed(5)}`
@@ -99,6 +142,34 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
           ) : null}
         </section>
 
+        <section className="border border-green-800/25 bg-green-50/70 p-3">
+          <h4 className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-green-900">
+            <MessageSquareText className="h-3.5 w-3.5" /> Participación ciudadana
+          </h4>
+          <div className="flex flex-wrap items-center gap-1.5 text-xs">
+            <ReportesButton
+              total={resumen.total}
+              onClick={() => setListadoAbierto(true)}
+            />
+            {resumen.promedio_calificacion !== null ? (
+              <span className="inline-flex items-center gap-1 rounded border border-green-800/25 bg-white px-2 py-0.5 font-semibold text-green-900">
+                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                {resumen.promedio_calificacion.toFixed(1)}
+              </span>
+            ) : null}
+            {resumen.con_retraso > 0 ? (
+              <span className="rounded border border-amber-700/30 bg-amber-50 px-2 py-0.5 font-semibold text-amber-800">
+                {resumen.con_retraso} con retraso
+              </span>
+            ) : null}
+            {resumen.paralizadas > 0 ? (
+              <span className="rounded border border-rose-700/30 bg-rose-50 px-2 py-0.5 font-semibold text-rose-800">
+                {resumen.paralizadas} paralizadas
+              </span>
+            ) : null}
+          </div>
+        </section>
+
         <section className="border border-amber-700/30 bg-amber-50/70 p-3">
           <h4 className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-amber-800">
             <MapPin className="h-3.5 w-3.5" /> Ubicación calculada
@@ -138,6 +209,16 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
           </p>
         </section>
       </div>
+
+      {listadoAbierto && (
+        <ReportesObraModal
+          obra={obra}
+          onClose={() => {
+            setListadoAbierto(false);
+            void cargarResumen();
+          }}
+        />
+      )}
     </div>
   );
 }

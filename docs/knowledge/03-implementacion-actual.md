@@ -23,7 +23,7 @@ sources:
 | Ruta | Archivo | Contenido |
 |------|---------|-----------|
 | `/` | `src/app/page.tsx` | Landing pública (Hero, MapPreview, secciones, B2B lead, etc.) |
-| `/explorador` | `src/app/explorador/page.tsx` | Explorador SECOP (muestra) |
+| `/explorador` | `src/app/explorador/page.tsx` | Explorador de todas las obras reales de Cali |
 | `/mapa` | `src/app/mapa/page.tsx` | Mapa interactivo de obras de Cali |
 
 ## Layout y metadatos
@@ -36,20 +36,19 @@ sources:
 ### Generales / secciones de landing
 - `HeroSection`, `MapPreviewSection`, `NavBar`, `Footer`, `PrototypeNotice`, `Stamp`.
 - `B2bLeadMagnet` — formulario B2B (ver `10`).
-- `VerificationSection`, `CitizenVerificationModal` — modal de "verificar obra" (simulado, ver `10`).
-- `ProjectDetailsModal` — detalles de proyecto seleccionado en explorador.
+- `VerificationSection` — sección de verificación ciudadana (ver `10`); el modal simulado asociado (`CitizenVerificationModal`) fue eliminado en spec `020`.
 - `ColombiaMap` — mapa de Colombia (probablemente para sección territorial; consultar su uso).
 - `ui/` — primitivas shadcn/ui (toaster, etc.).
 
 ### Mapa (`src/components/mapa/`)
-- `MapaCali.tsx`, `MapaCaliDynamic.tsx` (SSR-safe wrapper), `FiltrosMapa.tsx`, `PanelDetalleObra.tsx`, `mapa-types.ts`.
+- `MapaCali.tsx`, `MapaCaliDynamic.tsx` (SSR-safe wrapper), `FiltrosMapa.tsx`, `PanelDetalleObra.tsx`, `ReporteCiudadanoModal.tsx` (reporte/calificación/opinión ciudadana), `ReportesObraModal.tsx` (ventana unificada ver+crear reportes), `ReportesButton.tsx`, `LineaTiempoObra.tsx`, `reportes-comunes.ts`, `mapa-types.ts`.
 
 ### Explorador (`/explorador`)
-- `SecopExplorer.tsx` — tabla/filtros sobre datos SECOP de muestra.
+- `SecopExplorer.tsx` — lista TODAS las obras reales de Cali (`/api/mapa/obras?todas=1`), con/sin ubicación, + filtros (búsqueda, estado, ubicación) y botón "Ver N reportes" compartido con el mapa.
 
 ## Servicios y lógica (src/lib)
 
-- `secop.ts` — fuente SECOP (helper + simulated projects).
+- `secop.ts` — solo `formatCOP` (formateador de COP). La fuente simulada fue eliminada (spec `020`).
 - `mapa/db.ts` — capa SQLite (obras, ubicaciones, sync_runs).
 - `mapa/syncService.ts` — sync incremental con SECOP (bucle paginado).
 - `mapa/secopFetcher.ts` — extracción/normalización SECOP II.
@@ -60,10 +59,11 @@ sources:
 
 ## APIs implementadas (src/app/api)
 
-- `/secop` (GET) — datos SECOP para explorador (usa helper `secop.ts`).
 - `/lead-b2b` (POST), `/lead-citizen` (POST) — registro de leads (ver `10`).
-- `/mapa/obras` (GET) — obras geolocalizadas.
+- `/mapa/obras` (GET) — obras geolocalizadas; `?todas=1` devuelve todas (con/sin ubicación, con `reportes` por obra).
 - `/mapa/actualizar` (POST) — dispara sync SECOP→SQLite (ver `06`).
+- `/mapa/obras/[id]/reportes` (GET/POST) — reportes ciudadanos por obra (persisten en SQLite, ver `09`).
+- El endpoint `/secop` fue **eliminado** (spec `020`).
 
 ## Estado de datos
 

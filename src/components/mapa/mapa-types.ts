@@ -16,7 +16,14 @@ export interface ObraMarcador {
   lon: number | null;
   geoFuente: string | null;
   geoConfianza: string | null;
+  estadoUbicacion: string | null;
   syncedAt: string | null;
+  reportes: {
+    total: number;
+    promedio_calificacion: number | null;
+    con_retraso: number;
+    paralizadas: number;
+  } | null;
 }
 
 export interface TotalesMapa {

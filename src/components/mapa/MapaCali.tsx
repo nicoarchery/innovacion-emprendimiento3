@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { formatCOP } from "@/lib/secop";
 import { FiltrosMapa } from "@/components/mapa/FiltrosMapa";
 import { PanelDetalleObra } from "@/components/mapa/PanelDetalleObra";
+import { LineaTiempoObra } from "@/components/mapa/LineaTiempoObra";
 import type {
   FiltrosMapaUI,
   ObraMarcador,
@@ -112,6 +113,7 @@ export function MapaCali() {
   const [meta, setMeta] = useState<RespuestaObras["meta"] | null>(null);
   const [filtros, setFiltros] = useState<FiltrosMapaUI>(FILTROS_INICIALES);
   const [seleccionada, setSeleccionada] = useState<ObraMarcador | null>(null);
+  const [lineaTiempoAbierta, setLineaTiempoAbierta] = useState(false);
   const [cargando, setCargando] = useState(true);
   const [sincronizando, setSincronizando] = useState(false);
 
@@ -131,6 +133,7 @@ export function MapaCali() {
       setObras(json.data);
       setMeta(json.meta);
       setSeleccionada(null);
+      setLineaTiempoAbierta(false);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -149,6 +152,7 @@ export function MapaCali() {
 
   const onSeleccionar = useCallback((obra: ObraMarcador) => {
     setSeleccionada(obra);
+    setLineaTiempoAbierta(false);
   }, []);
 
   const onAplicarFiltros = useCallback(() => {
@@ -304,6 +308,14 @@ export function MapaCali() {
 
           {seleccionada && (
             <PanelDetalleObra obra={seleccionada} onCerrar={() => setSeleccionada(null)} />
+          )}
+
+          {seleccionada && (
+            <LineaTiempoObra
+              obra={seleccionada}
+              abierta={lineaTiempoAbierta}
+              onAlternar={() => setLineaTiempoAbierta((v) => !v)}
+            />
           )}
         </div>
 

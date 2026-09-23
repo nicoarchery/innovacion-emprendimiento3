@@ -7,9 +7,9 @@ import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Explorador de contratos de obra | Consulta ciudadana",
+  title: "Explorador de obras de Cali | Consulta ciudadana",
   description:
-    "Busca contratos de obra desde SECOP II y compara el registro oficial con el reporte en terreno.",
+    "Todas las obras públicas de Santiago de Cali, tengan o no ubicación. Revisa datos SECOP II y participa con reportes ciudadanos.",
 };
 
 export default function ExploradorPage() {
@@ -37,14 +37,14 @@ export default function ExploradorPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b-2 border-tinta/70 pb-5">
           <div>
             <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-sello">
-              SECOP II · Consulta
+              SECOP II · Cali
             </p>
             <h1 className="font-display text-2xl sm:text-3xl font-semibold text-tinta">
-              Explorador de contratos de obra
+              Explorador de obras públicas
             </h1>
             <p className="text-sm text-tinta/65 mt-1 max-w-2xl">
-              Busca contratos por departamento, estado y contratista. Revisa
-              valor, fechas y diferencia con el reporte en terreno.
+              Todas las obras de Santiago de Cali con datos SECOP II, tengan o
+              no ubicación. Filtra por estado, búsqueda y reportes ciudadanos.
             </p>
           </div>
         </div>
