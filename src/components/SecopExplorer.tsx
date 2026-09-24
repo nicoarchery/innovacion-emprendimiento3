@@ -375,6 +375,9 @@ export function SecopExplorer() {
                     </p>
                   ) : null}
                   <div className="flex flex-wrap gap-1.5">
+                    {reportes && reportes.en_ejecucion > 0 ? (
+                      <Stamp tone="sello">En ejecución ×{reportes.en_ejecucion}</Stamp>
+                    ) : null}
                     {reportes && reportes.con_retraso > 0 ? (
                       <Stamp tone="revision">Con retraso ×{reportes.con_retraso}</Stamp>
                     ) : null}

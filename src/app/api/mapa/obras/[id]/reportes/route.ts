@@ -8,7 +8,8 @@ import {
 } from "@/lib/mapa/db";
 
 const MAX_FOTO_BYTES = 2_200_000;
-const MAX_REPORTES_HORA = 5;
+const MAX_REPORTES_CONTACTO_HORA = 10;
+const MAX_REPORTES_IP_HORA = 40;
 const VENTANA_HORA = 60 * 60 * 1000;
 
 const enviosPorClave = new Map<string, number[]>();
@@ -20,12 +21,16 @@ function claveCliente(contacto: string | null, request: NextRequest): string {
   return `ip:${ip ?? "desconocida"}`;
 }
 
+function importantePorClave(clave: string): number {
+  return clave.startsWith("c:") ? MAX_REPORTES_CONTACTO_HORA : MAX_REPORTES_IP_HORA;
+}
+
 function excedeLimite(clave: string): boolean {
   const ahora = Date.now();
   const ventana = (enviosPorClave.get(clave) ?? []).filter(
     (t) => ahora - t < VENTANA_HORA
   );
-  if (ventana.length >= MAX_REPORTES_HORA) {
+  if (ventana.length >= importantePorClave(clave)) {
     enviosPorClave.set(clave, ventana);
     return true;
   }

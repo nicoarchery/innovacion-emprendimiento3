@@ -4,8 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import {
   Clock,
   MessageSquareText,
+  Pencil,
   Plus,
   Star,
+  Trash2,
 } from "lucide-react";
 import {
   Dialog,
@@ -24,6 +26,7 @@ import {
   type ResumenReportes,
 } from "@/components/mapa/reportes-comunes";
 import { ReporteCiudadanoModal } from "@/components/mapa/ReporteCiudadanoModal";
+import { useToast } from "@/hooks/use-toast";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
 
 interface ReportesObraModalProps {
@@ -34,6 +37,7 @@ interface ReportesObraModalProps {
 const RESUMEN_VACIO: ResumenReportes = {
   total: 0,
   promedio_calificacion: null,
+  en_ejecucion: 0,
   con_retraso: 0,
   paralizadas: 0,
 };
@@ -62,10 +66,14 @@ function BarrasCalificacion({ value }: { value: number | null }) {
 }
 
 export function ReportesObraModal({ obra, onClose }: ReportesObraModalProps) {
+  const { toast } = useToast();
   const [reportes, setReportes] = useState<ReporteFila[]>([]);
   const [resumen, setResumen] = useState<ResumenReportes>(RESUMEN_VACIO);
   const [cargando, setCargando] = useState(true);
   const [crearAbierto, setCrearAbierto] = useState(false);
+  const [editando, setEditando] = useState<ReporteFila | null>(null);
+  const [confirmandoBorrado, setConfirmandoBorrado] = useState<number | null>(null);
+  const [borrando, setBorrando] = useState(false);
 
   const cargar = useCallback(async () => {
     try {
@@ -84,6 +92,28 @@ export function ReportesObraModal({ obra, onClose }: ReportesObraModalProps) {
       setCargando(false);
     }
   }, [obra.id]);
+
+  const eliminar = async (id: number) => {
+    setBorrando(true);
+    try {
+      const res = await fetch(`/api/mapa/reportes/${id}`, { method: "DELETE" });
+      const json = (await res.json()) as { success: boolean; error?: string };
+      if (!res.ok || !json.success) {
+        throw new Error(json.error ?? "Error desconocido");
+      }
+      toast({ title: "Reporte eliminado" });
+      setConfirmandoBorrado(null);
+      await cargar();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "No se pudo eliminar",
+        description: (error as Error).message,
+      });
+    } finally {
+      setBorrando(false);
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => void cargar(), 0);
@@ -104,7 +134,8 @@ export function ReportesObraModal({ obra, onClose }: ReportesObraModalProps) {
             {obra.nombre ?? obra.entidad ?? "Obra sin descripción"}
           </DialogTitle>
           <DialogDescription className="text-sm text-tinta/65">
-            Lo que ha registrado la comunidad sobre esta obra.
+            Lo que ha registrado la comunidad sobre esta obra. (Demo: puedes
+            editar o eliminar reportes.)
           </DialogDescription>
         </DialogHeader>
 
@@ -115,6 +146,9 @@ export function ReportesObraModal({ obra, onClose }: ReportesObraModalProps) {
               <Stamp tone="verificado">
                 {resumen.promedio_calificacion.toFixed(1)} / 5
               </Stamp>
+            ) : null}
+            {resumen.en_ejecucion > 0 ? (
+              <Stamp tone="sello">En ejecución ×{resumen.en_ejecucion}</Stamp>
             ) : null}
             {resumen.con_retraso > 0 ? (
               <Stamp tone="revision">Con retraso ×{resumen.con_retraso}</Stamp>
@@ -151,10 +185,55 @@ export function ReportesObraModal({ obra, onClose }: ReportesObraModalProps) {
                     <Clock className="h-3 w-3" />
                     {formatearFecha(r.fecha)}
                   </span>
-                  <Stamp tone={estadoTerrenoDato(r.estadoTerreno).tone}>
-                    {estadoTerrenoDato(r.estadoTerreno).label}
-                  </Stamp>
+                  <span className="inline-flex items-center gap-1">
+                    <Stamp tone={estadoTerrenoDato(r.estadoTerreno).tone}>
+                      {estadoTerrenoDato(r.estadoTerreno).label}
+                    </Stamp>
+                    <button
+                      type="button"
+                      onClick={() => setEditando(r)}
+                      aria-label="Editar reporte"
+                      title="Editar reporte"
+                      className="rounded p-1 text-tinta/45 transition-colors hover:bg-papel hover:text-tinta"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmandoBorrado(r.id)}
+                      aria-label="Eliminar reporte"
+                      title="Eliminar reporte"
+                      className="rounded p-1 text-tinta/45 transition-colors hover:bg-red-50 hover:text-red-600"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </span>
                 </div>
+                {confirmandoBorrado === r.id ? (
+                  <div className="mt-2 flex items-center justify-between gap-2 rounded-[4px] border border-red-200 bg-red-50 px-3 py-2">
+                    <span className="text-xs font-medium text-red-700">
+                      ¿Eliminar este reporte?
+                    </span>
+                    <span className="inline-flex gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setConfirmandoBorrado(null)}
+                        disabled={borrando}
+                        className="rounded border border-tinta/20 bg-white px-2 py-1 text-[11px] font-medium text-tinta/75 hover:bg-papel"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void eliminar(r.id)}
+                        disabled={borrando}
+                        className="rounded bg-red-600 px-2 py-1 text-[11px] font-semibold text-white hover:bg-red-700"
+                      >
+                        {borrando ? "Eliminando…" : "Sí, eliminar"}
+                      </button>
+                    </span>
+                  </div>
+                ) : null}
                 <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
                   <span className="text-tinta/60">
                     Avance observado:{" "}
@@ -207,6 +286,15 @@ export function ReportesObraModal({ obra, onClose }: ReportesObraModalProps) {
         <ReporteCiudadanoModal
           obra={obra}
           onClose={() => setCrearAbierto(false)}
+          onEnviado={() => void cargar()}
+        />
+      )}
+
+      {editando && (
+        <ReporteCiudadanoModal
+          obra={obra}
+          reporte={editando}
+          onClose={() => setEditando(null)}
           onEnviado={() => void cargar()}
         />
       )}

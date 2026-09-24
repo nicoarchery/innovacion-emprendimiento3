@@ -145,6 +145,10 @@ export async function syncMapa(): Promise<SyncResult> {
           cacheUbicacion(llaveCache, { lat: geo.lat, lon: geo.lon, comuna: geo.comuna, barrio: geo.barrio, displayName: geo.displayName, fuente: geo.fuente, confianza: geo.confianza });
         }
         geocodificadas++;
+      } else {
+        // Sin geo: contar el intento para que la obra salga de la cola hacia
+        // 'no_determinada' (a los 2 intentos) y no bloquee al resto.
+        marcarUbicacion(obra.id_contrato, null, "pendiente");
       }
     }
 

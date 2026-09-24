@@ -279,6 +279,7 @@ export function resumenReportesMasivo(): Record<string, ResumenReportesObra> {
          id_contrato,
          COUNT(*) AS total,
          AVG(calificacion) AS promedio_calificacion,
+         SUM(CASE WHEN estado_terreno = 'ejecucion' THEN 1 ELSE 0 END) AS en_ejecucion,
          SUM(CASE WHEN estado_terreno = 'retraso' THEN 1 ELSE 0 END) AS con_retraso,
          SUM(CASE WHEN estado_terreno = 'paralizada' THEN 1 ELSE 0 END) AS paralizadas
        FROM reportes_ciudadanos
@@ -288,6 +289,7 @@ export function resumenReportesMasivo(): Record<string, ResumenReportesObra> {
     id_contrato: string;
     total: number;
     promedio_calificacion: number | null;
+    en_ejecucion: number;
     con_retraso: number;
     paralizadas: number;
   }[];
@@ -296,6 +298,7 @@ export function resumenReportesMasivo(): Record<string, ResumenReportesObra> {
     mapa[r.id_contrato] = {
       total: r.total ?? 0,
       promedio_calificacion: r.promedio_calificacion ?? null,
+      en_ejecucion: r.en_ejecucion ?? 0,
       con_retraso: r.con_retraso ?? 0,
       paralizadas: r.paralizadas ?? 0,
     };
@@ -309,7 +312,12 @@ export function listObrasPendientesGeo(limit = 150): ObraRow[] {
     .prepare(
       `SELECT * FROM obras
        WHERE is_obra = 1 AND estado_ubicacion = 'pendiente'
-       ORDER BY geo_intentos ASC, synced_at ASC
+       ORDER BY
+         (CASE WHEN (fecha_fin IS NOT NULL AND fecha_fin <> '' AND substr(fecha_fin,1,10) >= date('now'))
+               OR estado IN ('En ejecución', 'Aprobado')
+           THEN 0 ELSE 1 END),
+         geo_intentos ASC,
+         synced_at ASC
        LIMIT ?`
     )
     .all(limit) as ObraRow[];
@@ -511,6 +519,7 @@ export interface ReporteCiudadanoRow {
 export interface ResumenReportesObra {
   total: number;
   promedio_calificacion: number | null;
+  en_ejecucion: number;
   con_retraso: number;
   paralizadas: number;
 }
@@ -543,6 +552,49 @@ export function insertarReporteCiudadano(reporte: NuevoReporteCiudadano): number
   return Number(result.lastInsertRowid);
 }
 
+export function obtenerReportePorId(id: number): ReporteCiudadanoRow | null {
+  const database = getDb();
+  return (database.prepare("SELECT * FROM reportes_ciudadanos WHERE id = ?").get(id) ??
+    null) as ReporteCiudadanoRow | null;
+}
+
+export function actualizarReporteCiudadano(
+  id: number,
+  campos: Omit<NuevoReporteCiudadano, "id_contrato">
+): void {
+  const database = getDb();
+  database
+    .prepare(
+      `UPDATE reportes_ciudadanos SET
+         estado_terreno = @estado_terreno,
+         avance_observado = @avance_observado,
+         calificacion = @calificacion,
+         descripcion = @descripcion,
+         foto = @foto,
+         lat = @lat,
+         lon = @lon,
+         gps_origen = @gps_origen
+       WHERE id = @id`
+    )
+    .run({
+      id,
+      estado_terreno: campos.estado_terreno ?? null,
+      avance_observado: campos.avance_observado ?? null,
+      calificacion: campos.calificacion ?? null,
+      descripcion: campos.descripcion ?? null,
+      foto: campos.foto ?? null,
+      lat: campos.lat ?? null,
+      lon: campos.lon ?? null,
+      gps_origen: campos.gps_origen ?? null,
+    });
+}
+
+export function eliminarReporteCiudadano(id: number): boolean {
+  const database = getDb();
+  const result = database.prepare("DELETE FROM reportes_ciudadanos WHERE id = ?").run(id);
+  return result.changes > 0;
+}
+
 export function listarReportesPorObra(idContrato: string): ReporteCiudadanoRow[] {
   const database = getDb();
   return database
@@ -561,6 +613,7 @@ export function resumenReportesPorObra(idContrato: string): ResumenReportesObra 
       `SELECT
          COUNT(*) AS total,
          AVG(calificacion) AS promedio_calificacion,
+         SUM(CASE WHEN estado_terreno = 'ejecucion' THEN 1 ELSE 0 END) AS en_ejecucion,
          SUM(CASE WHEN estado_terreno = 'retraso' THEN 1 ELSE 0 END) AS con_retraso,
          SUM(CASE WHEN estado_terreno = 'paralizada' THEN 1 ELSE 0 END) AS paralizadas
        FROM reportes_ciudadanos
@@ -569,12 +622,14 @@ export function resumenReportesPorObra(idContrato: string): ResumenReportesObra 
     .get(idContrato) as {
     total: number;
     promedio_calificacion: number | null;
+    en_ejecucion: number;
     con_retraso: number;
     paralizadas: number;
   };
   return {
     total: row.total ?? 0,
     promedio_calificacion: row.promedio_calificacion ?? null,
+    en_ejecucion: row.en_ejecucion ?? 0,
     con_retraso: row.con_retraso ?? 0,
     paralizadas: row.paralizadas ?? 0,
   };

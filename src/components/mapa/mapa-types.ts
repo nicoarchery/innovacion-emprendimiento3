@@ -21,6 +21,7 @@ export interface ObraMarcador {
   reportes: {
     total: number;
     promedio_calificacion: number | null;
+    en_ejecucion: number;
     con_retraso: number;
     paralizadas: number;
   } | null;

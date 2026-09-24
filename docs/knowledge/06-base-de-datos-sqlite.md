@@ -45,12 +45,12 @@ Base SQLite local, git-ignored (`/data/` en `.gitignore`), creada/actualizada po
 
 Fila tiene además `geo_intentos`, `geo_confianza` (alta/media/baja) y `geo_fuente` (nominatim, overpass-interseccion, photon, texto-contrato, barrio-objeto, etc.).
 
-## Datos verificados en vivo (2026-09-20)
+## Datos verificados en vivo (2026-09-23)
 
 - **Total obras**: 1434.
 - Por `tipo_contrato`: `Obra` 1430, `Asociación Público Privada` 3, `Concesión` 1.
-- `estado_ubicacion`: **`resuelta` 146**, `pendiente` 1288, `no_determinada` 0.
-- `sync_runs`: 6 corridas.
+- `estado_ubicacion`: **`resuelta` 364**, `pendiente` 1070, `no_determinada` 0. Cobertura real: 87 de 166 obras activas (`fecha_fin >= hoy`) y 190 de 288 "En ejecución/Aprobado" están geocodificadas (antes de la corrida del 2026-09-23 solo había resueltas de 2017-2021).
+- `sync_runs`: 6 corridas (más 3 de geocodificación manual el 2026-09-23).
 - `meta`: `geo_migracion_v2 = 2026-09-20T01:49:15.987Z` → indica que se aplicó la migración v2 del pipeline de geocodificación; los estados actuales son post-migración.
 
 ## Sincronización (`syncService.ts`)
@@ -58,6 +58,8 @@ Fila tiene además `geo_intentos`, `geo_confianza` (alta/media/baja) y `geo_fuen
 - Fetch paginado SECOP → normalizar (clasificar) → upsert en `obras` → geocodificar pendientes → escribir `sync_runs`.
 - Control de concurrencia: flag en memoria `estaSincronizando()` (respuesta 409 en API si ya corre → ver `09`).
 - Protecciones: `MAPA_GEO_CAP_CORRIDA` límite de geocodes por corrida (evita rate-limit), hash para detectar cambios, reintentos 429.
+- **Prioridad de geocodificación** (`listObrasPendientesGeo`): primero obras activas (`fecha_fin >= hoy` o estado `En ejecución`/`Aprobado`), luego por `geo_intentos`, luego `synced_at`.
+- **Fallo de geocodificación**: se llama `marcarUbicacion(null, "pendiente")` que incrementa `geo_intentos`; a los 2 intentos fallidos la obra pasa a `no_determinada` y sale de la cola — así las direcciones irreconocibles no reintentan por siempre bloqueando el resto (fix 2026-09-23).
 - Migraciones de esquema/pipeline: `meta.geo_migracion_v2` (una vez).
 
 ## Regla práctica

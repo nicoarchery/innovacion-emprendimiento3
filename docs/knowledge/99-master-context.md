@@ -198,7 +198,7 @@ La confianza es clave para ciudadanía (credibilidad), empresas/reputación (sel
 | Explorador territorial (/explorador)                        | CURRENT             | `SecopExplorer.tsx`                     | Datos**parcialmente simulados** (no es la DB real)                                                 |
 | Mapa de obras de Cali (/mapa)                               | CURRENT             | `src/app/mapa/*`, `MapaCali*`         | Datos reales desde SQLite; filtros; panel detalle                                                        |
 | Ingesta SECOP II (contratos Cali)                           | CURRENT             | `secopFetcher.ts`, `syncService.ts`   | Paginada, tolerante a 429, normaliza + clasifica                                                         |
-| Base SQLite local (`data/mapa.db`, git-ignored)           | CURRENT             | `db.ts`, query en vivo                  | 1434 obras; 146`resuelta`, 1288 `pendiente` (2026-09-20); 6 syncs                                    |
+| Base SQLite local (`data/mapa.db`, git-ignored)           | CURRENT             | `db.ts`, query en vivo                  | 1434 obras; 364`resuelta`, 1070 `pendiente` (2026-09-23); geocodificación priorizada (activas primero, `geo_intentos` al fallar)                                    |
 | Clasificador de obra (score)                                | CURRENT             | `clasificador.ts`                       | Heurístico por tipo/UNSPSC/keywords                                                                     |
 | Geocodificación (pipeline multi-fuente)                    | CURRENT             | `geocodeService.ts`, `direccionCO.ts` | Nominatim → Overpass → Photon → texto → barrio;`enCali` gate; migración v2 (`geo_migracion_v2`) |
 | APIs públicas (mapa/obras, mapa/actualizar, secop, lead-*) | CURRENT             | `src/app/api/**`                        | `/mapa/*` reales; `lead-*` solo log                                                                  |
@@ -347,7 +347,7 @@ Fuente: `12-hipotesis-y-validacion.md`, `docs/04-hipotesis-validacion.md`.
 | Punto                                   | Clasificación                                     | Detalle                                                                                |
 | --------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Datos SECOP II                          | **Resuelto**                                 | Ingesta funcional (pagínada, tolerante a 429)                                         |
-| Geocodificación Cali                   | **Resuelto** (parcial)                       | Pipeline multi-fuente; 146 de 1434 resueltas; migración v2 aplicada                   |
+| Geocodificación Cali                   | **Resuelto** (parcial)                       | Pipeline multi-fuente; 364 de 1434 resueltas (incluye obras activas 2024-2026); migración v2 aplicada                   |
 | Clasificación de obra                  | **Resuelto**                                 | Heurística funcional                                                                  |
 | Almacenamiento                          | **Resuelto** local; ROADMAP en nube (bucket) | SQLite local git-ignored; evidencias en bucket = spec 004                              |
 | Verificación/evidencia (EXIF/GPS, PWA) | **Implementable**                            | Spec 004 detallada; requiere PWA + API multipart + bucket                              |

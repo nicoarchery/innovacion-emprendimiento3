@@ -45,6 +45,7 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
     obra.reportes ?? {
       total: 0,
       promedio_calificacion: null,
+      en_ejecucion: 0,
       con_retraso: 0,
       paralizadas: 0,
     }
@@ -155,6 +156,11 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
               <span className="inline-flex items-center gap-1 rounded border border-green-800/25 bg-white px-2 py-0.5 font-semibold text-green-900">
                 <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                 {resumen.promedio_calificacion.toFixed(1)}
+              </span>
+            ) : null}
+            {resumen.en_ejecucion > 0 ? (
+              <span className="rounded border border-green-700/30 bg-green-50 px-2 py-0.5 font-semibold text-green-900">
+                {resumen.en_ejecucion} en ejecución
               </span>
             ) : null}
             {resumen.con_retraso > 0 ? (

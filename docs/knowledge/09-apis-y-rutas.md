@@ -25,7 +25,9 @@ Todas viven en `src/app/api/` (App Router route handlers).
 | GET | `/mapa/obras?todas=1` | Explorador | Devuelve **todas** las obras reales (`is_obra=1`, con o sin ubicación). Cada obra incluye `estadoUbicacion` y `reportes` (resumen). Acepta `ubicacion=ubicadas|sin_ubicar` |
 | POST | `/mapa/actualizar` | Trigger sync | Dispara `syncMapa()` → actualiza SQLite. Si ya corre, `409 {success:false,...}` |
 | GET | `/mapa/obras/[id]/reportes` | Reportes de una obra | Resumen (`total`, `promedio_calificacion`, `con_retraso`, `paralizadas`) + listado SIN contacto del ciudadano; cada item incluye `foto` (data URL) si el reporte la tiene |
-| POST | `/mapa/obras/[id]/reportes` | Enviar reporte ciudadano | Persiste en `reportes_ciudadanos` (estado `pendiente_moderacion`); valida contrato (404), campos (400), `foto` como `data:image/(jpeg\|png\|webp\|gif)` (400), anti-spam 5/hora por contacto/IP (429) |
+| POST | `/mapa/obras/[id]/reportes` | Enviar reporte ciudadano | Persiste en `reportes_ciudadanos` (estado `pendiente_moderacion`); valida contrato (404), campos (400), `foto` como `data:image/(jpeg\|png\|webp\|gif)` (400), anti-spam 10/hora por contacto y 40/hora por IP (429) |
+| PATCH | `/mapa/reportes/[id]` | Editar reporte ciudadano (demo) | Modifica `estado_terreno`, `avance_observado`, `calificacion`, `descripcion`, `foto` (permite `foto:null` para quitarla). Mismas validaciones del POST (400), 404 si no existe. Sin anti-spam (demo), no toca `contacto` |
+| DELETE | `/mapa/reportes/[id]` | Eliminar reporte ciudadano (demo) | Borra la fila de `reportes_ciudadanos`; 404 si no existe. Sin anti-spam (demo) |
 
 ## Comportamientos normalizados
 
