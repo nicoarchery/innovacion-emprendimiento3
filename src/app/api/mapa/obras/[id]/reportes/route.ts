@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   insertarReporteCiudadano,
   listarReportesPorObra,
+  listarRespuestasPorReporte,
   obtenerObraPorId,
   resumenReportesPorObra,
 } from "@/lib/mapa/db";
@@ -68,6 +69,14 @@ export async function GET(
       descripcion: r.descripcion,
       foto: r.foto,
       fecha: r.created_at,
+      respuestas: listarRespuestasPorReporte(r.id).map((res) => ({
+        id: res.id,
+        autor: res.autor,
+        texto: res.texto,
+        esOficial: res.es_oficial === 1,
+        fijada: res.fijada === 1,
+        fecha: res.created_at,
+      })),
     }));
     return NextResponse.json({
       success: true,

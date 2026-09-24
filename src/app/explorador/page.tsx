@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
 import { SecopExplorer } from "@/components/SecopExplorer";
+import { RankingContratistas } from "@/components/RankingContratistas";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -51,6 +52,9 @@ export default function ExploradorPage() {
 
         {/* Explorador Interactivo */}
         <SecopExplorer />
+
+        {/* Ranking de reputación de contratistas */}
+        <RankingContratistas />
       </div>
 
       <Footer />

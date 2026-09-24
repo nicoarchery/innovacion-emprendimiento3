@@ -15,6 +15,7 @@ import { formatCOP } from "@/lib/secop";
 import { ReportesObraModal } from "@/components/mapa/ReportesObraModal";
 import { ReportesButton } from "@/components/mapa/ReportesButton";
 import { AnalisisAvance } from "@/components/mapa/AnalisisAvance";
+import { NivelReputacionBadge } from "@/components/mapa/NivelReputacionBadge";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
 import type { ResumenReportes } from "@/components/mapa/reportes-comunes";
 
@@ -105,7 +106,12 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
             </div>
             <div>
               <dt className="text-[11px] text-tinta/50">Contratista</dt>
-              <dd className="text-tinta/80">{obra.contratista ?? "—"}</dd>
+              <dd className="flex items-center gap-2 text-tinta/80">
+                <span className="truncate">{obra.contratista ?? "—"}</span>
+                {obra.reputacion && obra.reputacion.nivel !== "sin_datos" ? (
+                  <NivelReputacionBadge nivel={obra.reputacion.nivel} />
+                ) : null}
+              </dd>
             </div>
             <div>
               <dt className="text-[11px] text-tinta/50">Valor</dt>

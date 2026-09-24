@@ -1,5 +1,13 @@
 export type EstadoBrecha = "sin_datos" | "normal" | "alerta";
 
+export type NivelReputacion = "confiable" | "observado" | "critico" | "sin_datos";
+
+export interface ReputacionContratista {
+  score: number | null;
+  nivel: NivelReputacion;
+  nReportes: number;
+}
+
 export interface ObraMarcador {
   id: string;
   referencia: string | null;
@@ -31,6 +39,7 @@ export interface ObraMarcador {
     con_retraso: number;
     paralizadas: number;
   } | null;
+  reputacion: ReputacionContratista | null;
 }
 
 export interface TotalesMapa {

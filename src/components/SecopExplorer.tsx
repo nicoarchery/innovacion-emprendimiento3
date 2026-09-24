@@ -21,6 +21,7 @@ import { ReportesButton } from "@/components/mapa/ReportesButton";
 import { ReportesObraModal } from "@/components/mapa/ReportesObraModal";
 import { AnalisisAvance } from "@/components/mapa/AnalisisAvance";
 import { AyudaEstados } from "@/components/mapa/AyudaEstados";
+import { NivelReputacionBadge } from "@/components/mapa/NivelReputacionBadge";
 import { formatCOP } from "@/lib/secop";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
 import { cn } from "@/lib/utils";
@@ -474,6 +475,12 @@ export function SecopExplorer() {
                     <p className="truncate">
                       <span className="font-semibold text-tinta/80">Contratista:</span>{" "}
                       {obra.contratista ?? "—"}
+                      {obra.reputacion && obra.reputacion.nivel !== "sin_datos" ? (
+                        <NivelReputacionBadge
+                          nivel={obra.reputacion.nivel}
+                          className="ml-2 align-middle"
+                        />
+                      ) : null}
                     </p>
                     <p>
                       <span className="font-semibold text-tinta/80">Valor:</span>{" "}

@@ -26,6 +26,7 @@ import {
   type ResumenReportes,
 } from "@/components/mapa/reportes-comunes";
 import { ReporteCiudadanoModal } from "@/components/mapa/ReporteCiudadanoModal";
+import { HiloRespuestas } from "@/components/mapa/HiloRespuestas";
 import { useToast } from "@/hooks/use-toast";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
 
@@ -255,6 +256,11 @@ export function ReportesObraModal({ obra, onClose }: ReportesObraModalProps) {
                     {r.descripcion}
                   </p>
                 ) : null}
+                <HiloRespuestas
+                  idReporte={r.id}
+                  respuestas={r.respuestas ?? []}
+                  onCambio={() => void cargar()}
+                />
               </article>
             ))
           )}

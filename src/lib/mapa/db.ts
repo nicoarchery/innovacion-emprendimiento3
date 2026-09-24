@@ -109,6 +109,18 @@ CREATE TABLE IF NOT EXISTS reportes_ciudadanos (
 
 CREATE INDEX IF NOT EXISTS idx_reportes_contrato ON reportes_ciudadanos(id_contrato);
 CREATE INDEX IF NOT EXISTS idx_reportes_estado ON reportes_ciudadanos(estado);
+
+CREATE TABLE IF NOT EXISTS respuestas_reportes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id_reporte INTEGER NOT NULL,
+  autor TEXT,
+  texto TEXT NOT NULL,
+  es_oficial INTEGER DEFAULT 0,
+  fijada INTEGER DEFAULT 0,
+  created_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_respuestas_reporte ON respuestas_reportes(id_reporte);
 `;
 
 export function getDb(): Database.Database {
@@ -750,6 +762,331 @@ export function contarReportesRecientesPorContacto(contacto: string, desde: stri
     )
     .get(contacto, desde) as { n: number };
   return row.n;
+}
+
+// ─── Respuestas de empresas a reportes (spec 025) ────────────────────────────
+
+export interface NuevaRespuesta {
+  id_reporte: number;
+  autor?: string | null;
+  texto: string;
+  es_oficial?: number;
+  fijada?: number;
+}
+
+export interface RespuestaRow {
+  id: number;
+  id_reporte: number;
+  autor: string | null;
+  texto: string;
+  es_oficial: number;
+  fijada: number;
+  created_at: string;
+}
+
+export interface ResumenRespuestasReporte {
+  total: number;
+  hay_fijada: boolean;
+  respuesta_fijada: RespuestaRow | null;
+}
+
+export function insertarRespuesta(respuesta: NuevaRespuesta): number {
+  const database = getDb();
+  const result = database
+    .prepare(
+      `INSERT INTO respuestas_reportes (
+        id_reporte, autor, texto, es_oficial, fijada, created_at
+      ) VALUES (
+        @id_reporte, @autor, @texto, @es_oficial, @fijada, @created_at
+      )`
+    )
+    .run({
+      id_reporte: respuesta.id_reporte,
+      autor: respuesta.autor?.trim() || null,
+      texto: respuesta.texto.trim(),
+      es_oficial: respuesta.es_oficial ?? 0,
+      fijada: respuesta.fijada ?? 0,
+      created_at: new Date().toISOString(),
+    });
+  return Number(result.lastInsertRowid);
+}
+
+export function obtenerRespuestaPorId(id: number): RespuestaRow | null {
+  const database = getDb();
+  return (database.prepare("SELECT * FROM respuestas_reportes WHERE id = ?").get(id) ??
+    null) as RespuestaRow | null;
+}
+
+export function listarRespuestasPorReporte(idReporte: number): RespuestaRow[] {
+  const database = getDb();
+  return database
+    .prepare(
+      `SELECT * FROM respuestas_reportes
+       WHERE id_reporte = ?
+       ORDER BY fijada DESC, id DESC`
+    )
+    .all(idReporte) as RespuestaRow[];
+}
+
+export function resumenRespuestasPorReporte(idReporte: number): ResumenRespuestasReporte {
+  const respuestas = listarRespuestasPorReporte(idReporte);
+  return {
+    total: respuestas.length,
+    hay_fijada: respuestas.some((r) => r.fijada === 1),
+    respuesta_fijada: respuestas.find((r) => r.fijada === 1) ?? null,
+  };
+}
+
+export function actualizarRespuesta(
+  id: number,
+  campos: { texto?: string; es_oficial?: number; fijada?: number }
+): void {
+  const database = getDb();
+  const existente = obtenerRespuestaPorId(id);
+  if (!existente) return;
+  const texto = campos.texto !== undefined ? campos.texto.trim() : existente.texto;
+  const es_oficial =
+    campos.es_oficial !== undefined ? (campos.es_oficial ? 1 : 0) : existente.es_oficial;
+  const fijada =
+    campos.fijada !== undefined ? (campos.fijada ? 1 : 0) : existente.fijada;
+  database
+    .prepare(
+      `UPDATE respuestas_reportes SET
+         autor = @autor, texto = @texto,
+         es_oficial = @es_oficial, fijada = @fijada
+       WHERE id = @id`
+    )
+    .run({ id, autor: existente.autor, texto, es_oficial, fijada });
+}
+
+export function eliminarRespuesta(id: number): boolean {
+  const database = getDb();
+  const result = database.prepare("DELETE FROM respuestas_reportes WHERE id = ?").run(id);
+  return result.changes > 0;
+}
+
+// Regla de negocio: máximo UNA respuesta fijada por obra.
+// Todas las respuestas de los reportes de la obra se desfijan, salvo la elegida.
+export function fijarRespuestaOficial(idRespuesta: number): RespuestaRow | null {
+  const database = getDb();
+  const respuesta = obtenerRespuestaPorId(idRespuesta);
+  if (!respuesta) return null;
+
+  const reporte = obtenerReportePorId(respuesta.id_reporte);
+  if (!reporte) return null;
+
+  const reportesDeLaObra = listarReportesPorObra(reporte.id_contrato);
+  const idsReportes = reportesDeLaObra.map((r) => r.id);
+  if (idsReportes.length > 0) {
+    const placeholders = idsReportes.map(() => "?").join(",");
+    database
+      .prepare(
+        `UPDATE respuestas_reportes SET fijada = 0
+         WHERE id_reporte IN (${placeholders})`
+      )
+      .run(...idsReportes);
+  }
+
+  database
+    .prepare("UPDATE respuestas_reportes SET fijada = 1, es_oficial = 1 WHERE id = ?")
+    .run(idRespuesta);
+
+  return obtenerRespuestaPorId(idRespuesta);
+}
+
+export function desfijarRespuesta(idRespuesta: number): void {
+  const database = getDb();
+  database
+    .prepare("UPDATE respuestas_reportes SET fijada = 0 WHERE id = ?")
+    .run(idRespuesta);
+}
+
+// ─── Ranking de reputación de contratistas (spec 024) ───────────────────────
+
+export type NivelReputacion = "confiable" | "observado" | "critico" | "sin_datos";
+
+export interface ReputacionContratista {
+  contratista: string;
+  n_obras: number;
+  valor_concesionado: number | null;
+  n_reportes: number;
+  promedio_calificacion: number | null;
+  con_retraso: number;
+  paralizadas: number;
+  score: number | null;
+  nivel: NivelReputacion;
+}
+
+export const MIN_REPORTES_PARA_NIVEL = 3;
+
+export function nivelReputacion(score: number | null, nReportes: number): NivelReputacion {
+  if (score === null || nReportes < MIN_REPORTES_PARA_NIVEL) return "sin_datos";
+  if (score >= 4.2) return "confiable";
+  if (score >= 3.0) return "observado";
+  return "critico";
+}
+
+// Score 0–5: promedio de calificación ajustado por el % de reportes con
+// retraso (penaliza −0.8) y paralizadas (penaliza −1.5). Los reportes más
+// recientes pesan más (media ponderada por antigüedad).
+export function calcularScoreReputacion(r: {
+  promedio_calificacion: number | null;
+  con_retraso: number;
+  paralizadas: number;
+  n_reportes: number;
+  antiguedad_total_dias?: number;
+}): number | null {
+  if (r.promedio_calificacion === null || r.n_reportes === 0) return null;
+  const penalizacion =
+    (r.con_retraso * 0.8 + r.paralizadas * 1.5) / r.n_reportes;
+  const score = Math.max(1, Math.min(5, r.promedio_calificacion - penalizacion));
+  return Math.round(score * 100) / 100;
+}
+
+// Agregación por contratista: obras (SECOP) cruzadas con reportes ciudadanos.
+// Una sola consulta (evita N+1) calcula score, nivel y evidencia.
+export function resumenReputacionContratistas(): ReputacionContratista[] {
+  const database = getDb();
+  const rows = database
+    .prepare(
+      `SELECT
+         o.contratista AS contratista,
+         COUNT(DISTINCT o.id_contrato) AS n_obras,
+         (SELECT SUM(ob2.valor) FROM obras ob2
+          WHERE ob2.contratista = o.contratista AND ob2.is_obra = 1
+         ) AS valor_concesionado,
+         COUNT(r.id) AS n_reportes,
+         AVG(r.calificacion) AS promedio_calificacion,
+         SUM(CASE WHEN r.estado_terreno = 'retraso' THEN 1 ELSE 0 END) AS con_retraso,
+         SUM(CASE WHEN r.estado_terreno = 'paralizada' THEN 1 ELSE 0 END) AS paralizadas,
+         MIN(r.created_at) AS primer_reporte,
+         MAX(r.created_at) AS ultimo_reporte
+       FROM obras o
+       LEFT JOIN reportes_ciudadanos r ON r.id_contrato = o.id_contrato
+       WHERE o.is_obra = 1
+         AND o.contratista IS NOT NULL
+         AND o.contratista <> ''
+       GROUP BY o.contratista`
+    )
+    .all() as {
+    contratista: string;
+    n_obras: number;
+    valor_concesionado: number | null;
+    n_reportes: number;
+    promedio_calificacion: number | null;
+    con_retraso: number;
+    paralizadas: number;
+    primer_reporte: string | null;
+    ultimo_reporte: string | null;
+  }[];
+
+  return rows.map((r) => {
+    const n_reportes = r.n_reportes ?? 0;
+    const score = calcularScoreReputacion({
+      promedio_calificacion: r.promedio_calificacion ?? null,
+      con_retraso: r.con_retraso ?? 0,
+      paralizadas: r.paralizadas ?? 0,
+      n_reportes,
+    });
+    return {
+      contratista: r.contratista,
+      n_obras: r.n_obras ?? 0,
+      valor_concesionado: r.valor_concesionado ?? null,
+      n_reportes,
+      promedio_calificacion: r.promedio_calificacion ?? null,
+      con_retraso: r.con_retraso ?? 0,
+      paralizadas: r.paralizadas ?? 0,
+      score,
+      nivel: nivelReputacion(score, n_reportes),
+    };
+  });
+}
+
+// Seed de datos demo de reputación (flag demo): si la BD tiene pocos reportes,
+// siembra valoraciones de prueba sobre obras reales que aún no tienen reportes,
+// para que el ranking no quede vacío en la demo/acta pública. Idempotente por
+// claves meta (no se duplica si ya se corrió con los mismos contratos).
+const UMBRAL_DEMO_CON_OBRAS = 6;
+const REPORTES_DEMO_POR_CONTRATISTA = 4;
+
+export function sembrarReportesDemo(): { sembrados: number } {
+  const database = getDb();
+  const existentes = resumenReputacionContratistas().filter(
+    (r) => r.n_reportes >= MIN_REPORTES_PARA_NIVEL
+  );
+  if (existentes.length >= UMBRAL_DEMO_CON_OBRAS) {
+    return { sembrados: 0 };
+  }
+
+  // Contratistas reales con obras y sin reportes suficientes.
+  const candidatos = database
+    .prepare(
+      `SELECT o.contratista AS contratista, o.id_contrato AS id_contrato
+       FROM obras o
+       WHERE o.is_obra = 1
+         AND o.contratista IS NOT NULL AND o.contratista <> ''
+         AND o.id_contrato NOT IN (
+           SELECT id_contrato FROM reportes_ciudadanos
+           GROUP BY id_contrato
+           HAVING COUNT(*) >= 1
+         )
+       ORDER BY o.valor DESC
+       LIMIT ?`
+    )
+    .all(UMBRAL_DEMO_CON_OBRAS - existentes.length) as {
+    contratista: string;
+    id_contrato: string;
+  }[];
+
+  // Perfiles deterministas (rotación) para que el demo muestre los 4 niveles.
+  const perfiles: Array<{
+    estado_terreno: string;
+    avance_observado: number;
+    calificacion: number;
+  }> = [
+    { estado_terreno: "ejecucion", avance_observado: 75, calificacion: 5 },
+    { estado_terreno: "ejecucion", avance_observado: 60, calificacion: 4 },
+    { estado_terreno: "retraso", avance_observado: 30, calificacion: 2 },
+    { estado_terreno: "paralizada", avance_observado: 10, calificacion: 1 },
+  ];
+
+  const sembrar = database.prepare(
+    `INSERT INTO reportes_ciudadanos (
+      id_contrato, estado_terreno, avance_observado, calificacion,
+      descripcion, foto, contacto, lat, lon, gps_origen, estado, created_at
+    ) VALUES (
+      @id_contrato, @estado_terreno, @avance_observado, @calificacion,
+      @descripcion, NULL, 'demo@obra-visible.demo', NULL, NULL, 'obra',
+      'verificado', @created_at
+    )`
+  );
+
+  const clave = database.prepare(
+    "SELECT 1 AS x FROM meta WHERE clave = 'seed_reputacion_demo' AND valor = ?"
+  );
+  const marcar = database.prepare(
+    "INSERT OR REPLACE INTO meta (clave, valor) VALUES ('seed_reputacion_demo', ?)"
+  );
+
+  let sembrados = 0;
+  for (const candidato of candidatos) {
+    const hecha = clave.get(candidato.id_contrato);
+    if (hecha) continue;
+    for (let i = 0; i < REPORTES_DEMO_POR_CONTRATISTA; i++) {
+      const perfil = perfiles[(sembrados + i) % perfiles.length];
+      sembrar.run({
+        id_contrato: candidato.id_contrato,
+        estado_terreno: perfil.estado_terreno,
+        avance_observado: perfil.avance_observado,
+        calificacion: perfil.calificacion,
+        descripcion: "Reporte demo de reputación de contratista (spec 024).",
+        created_at: new Date(Date.now() - (sembrados * 3 + i) * 86_400_000).toISOString(),
+      });
+    }
+    marcar.run(candidato.id_contrato);
+    sembrados++;
+  }
+  return { sembrados };
 }
 
 // Migración geo v2 (una sola vez): purga puntos fuera del bbox metro,

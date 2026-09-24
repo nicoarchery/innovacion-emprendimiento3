@@ -7,6 +7,7 @@ import {
   listObras,
   listTodasObras,
   resumenReportesMasivo,
+  resumenReputacionContratistas,
   totalObras,
   ultimaSync,
 } from "@/lib/mapa/db";
@@ -51,6 +52,13 @@ export async function GET(request: NextRequest) {
     const resumenes = todas ? resumenReportesMasivo() : {};
     const avances = avancesCampoPorObra();
 
+    const reputacionPorContratista = new Map(
+      resumenReputacionContratistas().map((r) => [
+        r.contratista,
+        { score: r.score, nivel: r.nivel, nReportes: r.n_reportes },
+      ])
+    );
+
     const data = obras.map((o) => {
       const brecha = evaluarBrecha(
         calcularN1(o.valor, o.valor_pendiente_ejecucion),
@@ -81,6 +89,9 @@ export async function GET(request: NextRequest) {
         brecha: brecha.gap,
         estadoBrecha: brecha.estado,
         reportes: resumenes[o.id_contrato] ?? null,
+        reputacion: o.contratista
+          ? (reputacionPorContratista.get(o.contratista) ?? null)
+          : null,
       };
     });
 
