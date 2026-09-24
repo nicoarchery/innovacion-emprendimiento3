@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   aniosFechasDisponibles,
+  avancesCampoPorObra,
   entidadesDisponibles,
   estadosDisponibles,
   listObras,
@@ -9,6 +10,10 @@ import {
   totalObras,
   ultimaSync,
 } from "@/lib/mapa/db";
+import {
+  calcularN1,
+  evaluarBrecha,
+} from "@/lib/mapa/brechas";
 
 export async function GET(request: NextRequest) {
   try {
@@ -44,29 +49,40 @@ export async function GET(request: NextRequest) {
       : listObras(comunes);
 
     const resumenes = todas ? resumenReportesMasivo() : {};
+    const avances = avancesCampoPorObra();
 
-    const data = obras.map((o) => ({
-      id: o.id_contrato,
-      referencia: o.referencia,
-      nombre: o.descripcion,
-      entidad: o.entidad_nombre,
-      contratista: o.contratista,
-      estado: o.estado,
-      valor: o.valor,
-      fechaInicio: o.fecha_inicio,
-      fechaFin: o.fecha_fin,
-      urlSecop: o.url_secop,
-      comuna: o.comuna,
-      barrio: o.barrio,
-      direccion: o.direccion_ejecucion,
-      lat: o.lat,
-      lon: o.lon,
-      geoFuente: o.geo_fuente,
-      geoConfianza: o.geo_confianza,
-      estadoUbicacion: o.estado_ubicacion,
-      syncedAt: o.synced_at,
-      reportes: resumenes[o.id_contrato] ?? null,
-    }));
+    const data = obras.map((o) => {
+      const brecha = evaluarBrecha(
+        calcularN1(o.valor, o.valor_pendiente_ejecucion),
+        avances[o.id_contrato] ?? null
+      );
+      return {
+        id: o.id_contrato,
+        referencia: o.referencia,
+        nombre: o.descripcion,
+        entidad: o.entidad_nombre,
+        contratista: o.contratista,
+        estado: o.estado,
+        valor: o.valor,
+        fechaInicio: o.fecha_inicio,
+        fechaFin: o.fecha_fin,
+        urlSecop: o.url_secop,
+        comuna: o.comuna,
+        barrio: o.barrio,
+        direccion: o.direccion_ejecucion,
+        lat: o.lat,
+        lon: o.lon,
+        geoFuente: o.geo_fuente,
+        geoConfianza: o.geo_confianza,
+        estadoUbicacion: o.estado_ubicacion,
+        syncedAt: o.synced_at,
+        avanceSecop: brecha.avanceSecop,
+        avanceCampo: brecha.avanceCampo,
+        brecha: brecha.gap,
+        estadoBrecha: brecha.estado,
+        reportes: resumenes[o.id_contrato] ?? null,
+      };
+    });
 
     const anios = aniosFechasDisponibles();
 

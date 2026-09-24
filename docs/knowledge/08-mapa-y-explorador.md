@@ -3,14 +3,14 @@ domain: mapa-y-explorador
 status: CURRENT
 confidence: VERY HIGH
 authority: implementation
-last_verified: 2026-09-20
+last_verified: 2026-09-24
 sources:
 - "src/components/mapa/**"
 - "src/components/SecopExplorer.tsx"
 - "src/components/ProjectDetailsModal.tsx"
 - "src/app/explorador/page.tsx"
 - "src/lib/data.ts"
-- "specs/011,012,013,015"
+- "specs/011,012,013,015,021,022,023"
 ---
 
 # 08 — Mapa y explorador (UI)
@@ -27,7 +27,8 @@ Componentes en `src/components/mapa/`:
 - `ReportesButton.tsx` — botón unificado **"Ver N reportes"** (mismo en `PanelDetalleObra` y en las filas del explorador).
 - `LineaTiempoObra.tsx` — hoja inferior del mapa (bottom sheet) alternada por una flecha en la parte inferior de la vista cuando hay una obra seleccionada; muestra en línea de tiempo (desc) los reportes **con foto**.
 - `reportes-comunes.ts` — tipos/helpers compartidos (`ReporteFila`, `ResumenReportes`, `formatearFecha`, `estadoTerrenoDato`).
-- `mapa-types.ts` — `ObraMarcador` (incluye `estadoUbicacion` y `reportes`), `TotalesMapa`, `RespuestaObras`, `RespuestaActualizar`, `FiltrosMapaUI` (`busqueda`, `estado`, `entidad`, `minValor`, `maxValor`, `fechaInicio`, `fechaFin`), `FILTROS_INICIALES`, `AyudaEstados`.
+- `mapa-types.ts` — `ObraMarcador` (incluye `estadoUbicacion`, `reportes` y campos de brecha: `avanceSecop`, `avanceCampo`, `brecha`, `estadoBrecha`), `TotalesMapa`, `RespuestaObras`, `RespuestaActualizar`, `FiltrosMapaUI` (`busqueda`, `estado`, `entidad`, `minValor`, `maxValor`, `fechaInicio`, `fechaFin`), `FILTROS_INICIALES`, `AyudaEstados`.
+- `AnalisisAvance.tsx` — bloque **"Análisis de avance"** (spec `023`) compartido mapa/explorador: dos barras de % (`SECOP` financiero vs `Campo` vecinos), etiqueta de estado (`sin_datos` / `normal` ≤15 pts / `alerta` >15 pts) y **guía de lectura** plegable que explica matices (plata ejecutada sin obra visible = señal de riesgo; obra avanzando sin plata = desfinanciamiento). Integrado en `PanelDetalleObra` (versión completa con guía) y en la tarjeta derecha de cada fila del explorador (`compact`, sin guía).
 - `AyudaEstados.tsx` — popup "?" compartido por mapa y explorador: explica cada estado SECOP (Modificado, terminado, En ejecución, Cancelado, Aprobado, Borrador, Cerrado, Suspendido, enviado Proveedor, En aprobación…).
 
 Origen de datos: **`/api/mapa/obras`** (real, desde `06`).
@@ -38,7 +39,7 @@ Origen de datos: **`/api/mapa/obras`** (real, desde `06`).
   - Muestra **todas las obras reales de Cali** (tengan o no ubicación) desde `/api/mapa/obras?todas=1`.
   - Filtros: búsqueda (obra/contratista/entidad/barrio/comuna), estado SECOP (con "?" de ayuda), entidad, valor mín/máx (COP), **año de inicio** y **año de fin** independientes, ubicación (todas / en el mapa / sin ubicar) y orden (valor / fecha / nº reportes). **Ya no hay filtros por departamento.**
   - **Filtros unificados** (spec `022`): mapa y explorador comparten las mismas capacidades (buscador, estado+ayuda, entidad, valores, año inicio/fin) con visualización distinta — el mapa filtra en servidor vía query params y el explorador en cliente sobre `todas=1`.
-  - Por fila: botón **"Ver N reportes"** (`ReportesButton`) que abre la misma `ReportesObraModal` que el mapa; la tarjeta derecha resume participación (reportes, calificación, retraso/paralizada).
+  - Por fila: botón **"Ver N reportes"** (`ReportesButton`) que abre la misma `ReportesObraModal` que el mapa; la tarjeta derecha resume participación (reportes, calificación, retraso/paralizada) y muestra el **Análisis de avance** compacto por fila.
   - Los datos simulados fueron eliminados (ver `00`): `ProjectDetailsModal`, `CitizenVerificationModal` y `/api/secop` se borraron; `src/lib/secop.ts` se redujo a `formatCOP`.
 
 ## Componentes usados en landing

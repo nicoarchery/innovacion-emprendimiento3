@@ -3,11 +3,12 @@ domain: apis-y-rutas
 status: CURRENT
 confidence: VERY HIGH
 authority: implementation
-last_verified: 2026-09-20
+last_verified: 2026-09-24
 sources:
 - "src/app/api/**"
 - "src/lib/mapa/db.ts"
 - "src/lib/secop.ts"
+- "src/lib/mapa/brechas.ts"
 - "package.json (script/servidor)"
 ---
 
@@ -22,7 +23,7 @@ Todas viven en `src/app/api/` (App Router route handlers).
 | POST | `/lead-b2b` | Lead B2B (empresa) | Registro lead (ver `10`) |
 | POST | `/lead-citizen` | Lead ciudadano/verificación | Registro lead (ver `10`) |
 | GET | `/mapa/obras` | Mapa | Devuelve obras reales (desde SQLite) + `totales`, `ultimaSync`, `filtros` (`entidades`, `estados`, `aniosInicio`, `aniosFin`) + metadata. Solo obras `estado_ubicacion='resuelta'`. Acepta `q` (búsqueda LIKE), `estado`, `entidad`, `minValor`, `maxValor`, `fechaInicio` (año de `fecha_inicio`), `fechaFin` (año de `fecha_fin`) — independientes entre sí |
-| GET | `/mapa/obras?todas=1` | Explorador | Devuelve **todas** las obras reales (`is_obra=1`, con o sin ubicación). Cada obra incluye `estadoUbicacion` y `reportes` (resumen). Acepta los mismos filtros que mapa + `ubicacion=ubicadas\|sin_ubicar` |
+| GET | `/mapa/obras?todas=1` | Explorador | Devuelve **todas** las obras reales (`is_obra=1`, con o sin ubicación). Cada obra incluye `estadoUbicacion`, `reportes` (resumen) y **análisis de brecha** (spec `023`): `avanceSecop` (N1 % financiero), `avanceCampo` (N3 % físico reportado), `brecha` (|N1−N3|), `estadoBrecha` (`sin_datos`\|`normal`\|`alerta`, umbral 15). Acepta los mismos filtros que mapa + `ubicacion=ubicadas\|sin_ubicar` |
 | POST | `/mapa/actualizar` | Trigger sync | Dispara `syncMapa()` → actualiza SQLite. Si ya corre, `409 {success:false,...}` |
 | GET | `/mapa/obras/[id]/reportes` | Reportes de una obra | Resumen (`total`, `promedio_calificacion`, `con_retraso`, `paralizadas`) + listado SIN contacto del ciudadano; cada item incluye `foto` (data URL) si el reporte la tiene |
 | POST | `/mapa/obras/[id]/reportes` | Enviar reporte ciudadano | Persiste en `reportes_ciudadanos` (estado `pendiente_moderacion`); valida contrato (404), campos (400), `foto` como `data:image/(jpeg\|png\|webp\|gif)` (400), anti-spam 10/hora por contacto y 40/hora por IP (429) |
@@ -58,3 +59,8 @@ Todas viven en `src/app/api/` (App Router route handlers).
 ## Nota (2026-09-23)
 
 - `reportes_ciudadanos` es la primera tabla de participación ciudadana **que persiste** en SQLite (a diferencia de `lead-b2b`/`lead-citizen`, que solo loguean — ver `10`). Antes del cierre de esta KB, el flujo de reporte ciudadano (spec `006`) era simulado.
+
+## Nota (2026-09-24) — brecha de avance (spec 023)
+
+- `/mapa/obras` (mapa y `?todas=1`) calcula por obra: `N1 = (1 − valor_pendiente_ejecucion / valor) × 100` (`null` si falta el financiero) y `N3 = AVG(avance_observado)` de `reportes_ciudadanos` (`null` si no hay). Estado: `sin_datos` si falta N1 o N3; `normal` si |gap| ≤ 15; `alerta` si > 15. Lógica pura en `src/lib/mapa/brechas.ts`.
+- Como el espejo `jbjy-vk9h` está truncado (ver `05`), actualmente N1 es `null` en toda la DB → `estadoBrecha` honesto `sin_datos` (sin falsas alertas). Al restaurarse el dataset, el sync actualizará las columnas financieras (`hash` incluye dos de ellas) y la brecha cobra vida.

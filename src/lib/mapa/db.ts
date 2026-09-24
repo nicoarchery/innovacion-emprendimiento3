@@ -32,6 +32,10 @@ CREATE TABLE IF NOT EXISTS obras (
   fecha_inicio TEXT,
   fecha_fin TEXT,
   valor INTEGER,
+  valor_pagado INTEGER,
+  valor_facturado INTEGER,
+  valor_pendiente_ejecucion INTEGER,
+  valor_pendiente_pago INTEGER,
   url_secop TEXT,
   direccion_ejecucion TEXT,
   localizacion TEXT,
@@ -113,8 +117,26 @@ export function getDb(): Database.Database {
     db = new Database(DB_PATH);
     db.pragma("journal_mode = WAL");
     db.exec(SCHEMA);
+    migrarColumnasAvance(db);
   }
   return db;
+}
+
+// Migración de avance financiero: bases creadas antes de spec 023 no tienen
+// estas columnas (CREATE TABLE IF NOT EXISTS no altera las existentes).
+function migrarColumnasAvance(database: Database.Database): void {
+  const columnas = database.prepare("PRAGMA table_info(obras)").all() as { name: string }[];
+  const existentes = new Set(columnas.map((c) => c.name));
+  for (const col of [
+    "valor_pagado",
+    "valor_facturado",
+    "valor_pendiente_ejecucion",
+    "valor_pendiente_pago",
+  ]) {
+    if (!existentes.has(col)) {
+      database.exec(`ALTER TABLE obras ADD COLUMN ${col} INTEGER`);
+    }
+  }
 }
 
 export function closeDb(): void {
@@ -140,14 +162,16 @@ export function upsertObra(obra: ObraRow): "insert" | "update" | "unchanged" {
         id_contrato, proceso_de_compra, referencia, entidad_nombre, entidad_nit,
         contratista, contratista_doc, departamento, municipio, descripcion,
         tipo_contrato, unspsc, estado, fecha_firma, fecha_inicio, fecha_fin,
-        valor, url_secop, direccion_ejecucion, localizacion, is_obra, obra_score,
+        valor, valor_pagado, valor_facturado, valor_pendiente_ejecucion, valor_pendiente_pago,
+        url_secop, direccion_ejecucion, localizacion, is_obra, obra_score,
         obra_razon, barrio, comuna, lat, lon, geo_fuente, geo_confianza,
         estado_ubicacion, geo_intentos, secop_updated_at, synced_at, hash, created_at
       ) VALUES (
         @id_contrato, @proceso_de_compra, @referencia, @entidad_nombre, @entidad_nit,
         @contratista, @contratista_doc, @departamento, @municipio, @descripcion,
         @tipo_contrato, @unspsc, @estado, @fecha_firma, @fecha_inicio, @fecha_fin,
-        @valor, @url_secop, @direccion_ejecucion, @localizacion, @is_obra, @obra_score,
+        @valor, @valor_pagado, @valor_facturado, @valor_pendiente_ejecucion, @valor_pendiente_pago,
+        @url_secop, @direccion_ejecucion, @localizacion, @is_obra, @obra_score,
         @obra_razon, @barrio, @comuna, @lat, @lon, @geo_fuente, @geo_confianza,
         @estado_ubicacion, @geo_intentos, @secop_updated_at, @synced_at, @hash, @created_at
       )
@@ -168,6 +192,10 @@ export function upsertObra(obra: ObraRow): "insert" | "update" | "unchanged" {
         fecha_inicio = excluded.fecha_inicio,
         fecha_fin = excluded.fecha_fin,
         valor = excluded.valor,
+        valor_pagado = excluded.valor_pagado,
+        valor_facturado = excluded.valor_facturado,
+        valor_pendiente_ejecucion = excluded.valor_pendiente_ejecucion,
+        valor_pendiente_pago = excluded.valor_pendiente_pago,
         url_secop = excluded.url_secop,
         direccion_ejecucion = excluded.direccion_ejecucion,
         localizacion = excluded.localizacion,
@@ -365,6 +393,22 @@ export function resumenReportesMasivo(): Record<string, ResumenReportesObra> {
       paralizadas: r.paralizadas ?? 0,
     };
   }
+  return mapa;
+}
+
+// N3 — avance físico promedio reportado por la gente, por obra (null = sin reportes con avance).
+export function avancesCampoPorObra(): Record<string, number | null> {
+  const database = getDb();
+  const rows = database
+    .prepare(
+      `SELECT id_contrato, ROUND(AVG(avance_observado), 1) AS prom
+       FROM reportes_ciudadanos
+       WHERE avance_observado IS NOT NULL
+       GROUP BY id_contrato`
+    )
+    .all() as { id_contrato: string; prom: number | null }[];
+  const mapa: Record<string, number | null> = {};
+  for (const r of rows) mapa[r.id_contrato] = r.prom ?? null;
   return mapa;
 }
 

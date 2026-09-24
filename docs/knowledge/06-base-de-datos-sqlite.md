@@ -3,7 +3,7 @@ domain: base-de-datos-sqlite
 status: CURRENT
 confidence: VERY HIGH
 authority: config-data
-last_verified: 2026-09-20
+last_verified: 2026-09-24
 sources:
 - "data/mapa.db (consultado con sqlite3)"
 - "src/lib/mapa/db.ts"
@@ -22,6 +22,7 @@ Base SQLite local, git-ignored (`/data/` en `.gitignore`), creada/actualizada po
 ### `obras` (registro maestro)
 - Clave primaria y campos de contrato SECOP: `id_contrato`, `proceso_de_compra`, `referencia`, `entidad_nombre`, `entidad_nit`, `contratista`, `contratista_doc`, `departamento`, `municipio`, `descripcion`, `tipo_contrato`, `unspsc`, `estado`.
 - Datos de consumo: `fecha_firma/inicio/fin`, `valor`, `url_secop`, `direccion_ejecucion`, `localizacion`.
+- **Avance financiero SECOP** (desde spec 023, 2026-09-24): `valor_pagado`, `valor_facturado`, `valor_pendiente_ejecucion`, `valor_pendiente_pago` (INTEGER, nullable; 0 = dato presente y totalmente ejecutado).
 - **Clasificación**: `is_obra` (1/0), `obra_score`, `obra_razon` (del `clasificador.ts`).
 - **Geocodificación**: `barrio`, `comuna`, `lat`, `lon`, `geo_fuente`, `geo_confianza`, `estado_ubicacion`, `geo_intentos`.
 - Timestamps de ingesta: `secop_updated_at`, `synced_at`, `hash` (integridad), `created_at`.
@@ -61,6 +62,8 @@ Fila tiene además `geo_intentos`, `geo_confianza` (alta/media/baja) y `geo_fuen
 - **Prioridad de geocodificación** (`listObrasPendientesGeo`): primero obras activas (`fecha_fin >= hoy` o estado `En ejecución`/`Aprobado`), luego por `geo_intentos`, luego `synced_at`.
 - **Fallo de geocodificación**: se llama `marcarUbicacion(null, "pendiente")` que incrementa `geo_intentos`; a los 2 intentos fallidos la obra pasa a `no_determinada` y sale de la cola — así las direcciones irreconocibles no reintentan por siempre bloqueando el resto (fix 2026-09-23).
 - Migraciones de esquema/pipeline: `meta.geo_migracion_v2` (una vez).
+- **Migración de columnas de avance (2026-09-24)**: `getDb()` llama `migrarColumnasAvance()` → `PRAGMA table_info(obras)` y, por cada columna ausente (`valor_pagado`, `valor_facturado`, `valor_pendiente_ejecucion`, `valor_pendiente_pago`), `ALTER TABLE obras ADD COLUMN`. Idempotente, corre con la DB existente (sin recrear tabla). Las columnas también están en `SCHEMA` para bases nuevas.
+- El hash de integridad (`hash` en `syncService.calcularHash`) ahora incluye `valor_pagado` y `valor_pendiente_ejecucion`, para que cambios financieros disparen el upsert y refresquen N1.
 
 ## Regla práctica
 

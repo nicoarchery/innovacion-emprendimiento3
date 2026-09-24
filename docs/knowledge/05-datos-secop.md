@@ -3,12 +3,13 @@ domain: datos-secop
 status: CURRENT
 confidence: VERY HIGH
 authority: implementation
-last_verified: 2026-09-20
+last_verified: 2026-09-24
 sources:
 - "src/lib/secop.ts"
 - "src/lib/mapa/secopFetcher.ts"
 - "src/lib/mapa/clasificador.ts"
 - "src/components/SecopExplorer.tsx"
+- "src/lib/mapa/brechas.ts"
 - "docs/03-prompt-tecnico-mvp.md"
 ---
 
@@ -41,3 +42,11 @@ Los contratos reales de Cali van a `data/mapa.db` (SQLite). Ver `06-base-de-dato
 
 - SECOP puede rate-limitar (429): el fetcher corta y continúa; el sync por página es tolerante (ver `06`).
 - Direcciones vienen en texto libre; requieren normalización + geocode (ver `07`).
+
+## ⚠️ Datos de avance financiero — dataset truncado (2026-09-23)
+
+> El espejo de contratos SECOP II (`jbjy-vk9h`, "SECOP II - Contratos Electrónicos") fue **re-publicado/rotado** y desde 2026-09-23T08:36Z contiene **exactamente 1000 filas** (offset 999 → 1 fila; offset 1000 → 0). El dataset ya NO contiene nuestros 1434 contratos históricos de obra de Cali: verificado el mismo día por `id_contrato` y por `referencia_del_contrato` únicos (0 coincidencias). No es fallo aislado de búsqueda; es el espejo el que cambió.
+- Implicaciones: la DB local es **el archivo histórico** y se conserva (sync upsert, nunca delete). El fetch de nuevas pasadas ahora trae 0 filas para Cali → el fetcher escribe un aviso `[EXTRACCION_SECOP_AVISO]` en logs y la DB queda intacta.
+- Campos de avance financiero existentes en la fuente: `valor_pagado`, `valor_facturado`, `valor_pendiente_de_ejecucion`, `valor_pendiente_de_pago`. **Miden ejecución económica, no física.**
+- `SECOP II - Procesos` (`p6dx-8zbt`) sigue completo (>1000 filas), pero es el dataset de procesos; `SECOP Integrado` (`rpmr-utcd`) NO trae campos de avance → **no usar como sustituto** de N1.
+- Consecuencia operativa: mientras el dataset no tenga nuestros contratos, `avanceSecop` (N1) queda `null` → estado `sin_datos` (nunca falsa alerta). Ver `09` (API) y `023-motor-brechas-avance-secop-campo`.

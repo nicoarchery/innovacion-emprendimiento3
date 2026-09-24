@@ -1,3 +1,5 @@
+export type EstadoBrecha = "sin_datos" | "normal" | "alerta";
+
 export interface ObraMarcador {
   id: string;
   referencia: string | null;
@@ -18,6 +20,10 @@ export interface ObraMarcador {
   geoConfianza: string | null;
   estadoUbicacion: string | null;
   syncedAt: string | null;
+  avanceSecop: number | null;
+  avanceCampo: number | null;
+  brecha: number | null;
+  estadoBrecha: EstadoBrecha;
   reportes: {
     total: number;
     promedio_calificacion: number | null;

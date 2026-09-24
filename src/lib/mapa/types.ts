@@ -17,6 +17,10 @@ export interface RawContratoSecop {
   fecha_de_inicio_del_contrato?: string;
   fecha_de_fin_del_contrato?: string;
   valor_del_contrato?: string | number;
+  valor_pagado?: string | number;
+  valor_facturado?: string | number;
+  valor_pendiente_de_ejecucion?: string | number;
+  valor_pendiente_de_pago?: string | number;
   urlproceso?: { url?: string } | string;
   direcci_n_de_ejecuci_n_del_contrato?: string;
   localizaci_n?: string;
@@ -44,6 +48,10 @@ export interface ObraRow {
   fecha_inicio: string | null;
   fecha_fin: string | null;
   valor: number | null;
+  valor_pagado: number | null;
+  valor_facturado: number | null;
+  valor_pendiente_ejecucion: number | null;
+  valor_pendiente_pago: number | null;
   url_secop: string | null;
   direccion_ejecucion: string | null;
   localizacion: string | null;
@@ -86,6 +94,10 @@ export interface ObraNormalizada {
   direccion_ejecucion: string;
   localizacion: string;
   secop_updated_at: string;
+  valor_pagado: number | null;
+  valor_facturado: number | null;
+  valor_pendiente_ejecucion: number | null;
+  valor_pendiente_pago: number | null;
 }
 
 export interface ClasificacionObra {

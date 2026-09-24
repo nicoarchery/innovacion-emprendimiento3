@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { formatCOP } from "@/lib/secop";
 import { ReportesObraModal } from "@/components/mapa/ReportesObraModal";
 import { ReportesButton } from "@/components/mapa/ReportesButton";
+import { AnalisisAvance } from "@/components/mapa/AnalisisAvance";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
 import type { ResumenReportes } from "@/components/mapa/reportes-comunes";
 
@@ -175,6 +176,8 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
             ) : null}
           </div>
         </section>
+
+        <AnalisisAvance obra={obra} />
 
         <section className="border border-amber-700/30 bg-amber-50/70 p-3">
           <h4 className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-amber-800">

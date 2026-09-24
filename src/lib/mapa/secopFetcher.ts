@@ -17,6 +17,12 @@ function limpiarValor(valor: string | number | undefined): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+// Distingue "0" (dato presente: totalmente ejecutado/pagado) de "sin dato".
+function limpiarValorOpcional(valor: string | number | undefined): number | null {
+  if (valor === undefined || valor === null) return null;
+  return limpiarValor(valor);
+}
+
 function limpiarFecha(fecha?: string): string {
   return (fecha ?? "").split("T")[0] || "";
 }
@@ -58,6 +64,10 @@ export function normalizarContrato(raw: RawContratoSecop): ObraNormalizada {
     fecha_inicio: limpiarFecha(raw.fecha_de_inicio_del_contrato),
     fecha_fin: limpiarFecha(raw.fecha_de_fin_del_contrato),
     valor: limpiarValor(raw.valor_del_contrato),
+    valor_pagado: limpiarValorOpcional(raw.valor_pagado),
+    valor_facturado: limpiarValorOpcional(raw.valor_facturado),
+    valor_pendiente_ejecucion: limpiarValorOpcional(raw.valor_pendiente_de_ejecucion),
+    valor_pendiente_pago: limpiarValorOpcional(raw.valor_pendiente_de_pago),
     url_secop: stringifyUrl(raw.urlproceso),
     direccion_ejecucion: normalizarDireccion(raw.direcci_n_de_ejecuci_n_del_contrato),
     localizacion: raw.localizaci_n?.trim() ?? "",
@@ -117,6 +127,14 @@ export async function extraerContratosCali(opts?: {
       console.error("[EXTRACCION_SECOP_ERROR]", (error as Error).message);
       break;
     }
+  }
+
+  if (resultados.length === 0) {
+    console.error(
+      "[EXTRACCION_SECOP_AVISO] El dataset " +
+        CONTRATOS_SECOP_II_CHILD +
+        " no devolvió filas para Cali (¿rotado/truncado?). Se conserva la base local; sin avance financiero para estas obras."
+    );
   }
 
   return resultados;

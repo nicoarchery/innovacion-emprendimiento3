@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Stamp } from "@/components/Stamp";
 import { ReportesButton } from "@/components/mapa/ReportesButton";
 import { ReportesObraModal } from "@/components/mapa/ReportesObraModal";
+import { AnalisisAvance } from "@/components/mapa/AnalisisAvance";
 import { AyudaEstados } from "@/components/mapa/AyudaEstados";
 import { formatCOP } from "@/lib/secop";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
@@ -534,6 +535,7 @@ export function SecopExplorer() {
                       <Stamp tone="riesgo">Paralizada ×{reportes.paralizadas}</Stamp>
                     ) : null}
                   </div>
+                  <AnalisisAvance obra={obra} compact />
                   <p className="pt-1 text-[11px] leading-snug text-tinta/55">
                     {ubicada
                       ? "Esta obra está sobre el mapa interactivo."

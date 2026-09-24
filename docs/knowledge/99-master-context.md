@@ -28,7 +28,7 @@ Hoy el producto es un **MVP prototipo** con tres caras públicas: una **landing*
 
 Los **usuarios actuales** son ciudadanos que consultan obras (mapa real). Los **clientes son conceptuales/objetivo**: empresas con licencia social para operar, fondos ESG y aseguradoras (documentados en docs, sin evidencia de clientes reales). El **modelo de negocio** (gratis para ciudadanía + SaaS por tiers + fee por proyecto + informes) es una propuesta, no está implementado ni validado.
 
-El **estado real** es un producto funcional de consulta; la visión B2B/ESG, el motor de brechas, la captura de campo y los perfiles de empresa permanecen como specs planificadas (ROADMAP). Ver §12 y §14.
+El **estado real** es un producto funcional de consulta con participación ciudadana básica (reportes persistentes) y un motor de brechas inicial (spec 023); la visión B2B/ESG, la captura de campo PWA, la moderación plena y los perfiles de empresa permanecen como specs planificadas (ROADMAP). Ver §12 y §14.
 
 ---
 
@@ -110,10 +110,10 @@ flowchart TD
     B --> C["SQLite local (data/mapa.db) — obras + geocoding + estados"]
     C --> D["Mapa interactivo de Cali y fichas (CURRENT)"]
     C --> E["Explorador territorial (muestra; datos parcialmente simulados) (CURRENT)"]
-    F["Ciudadanía/veedurías (observación)"] -.ROADMAP.-> G["Reportes foto+GPS (004/006)"]
+    F["Ciudadanía/veedurías (observación)"] --> G["Reportes ciudadanos directos: foto + % avance (CURRENT, specs 018-021)"]
     G -.ROADMAP.-> H["Moderación / revisión neutra (005/006)"]
-    H -.ROADMAP.-> I["Comparación → Brecha (N1 vs N3) (005)"]
-    I -.ROADMAP.-> J["Seguimiento / respuesta / alertas (005)"]
+    G --> I["Comparación → Brecha N1 vs N3 (CURRENT parcial, spec 023)"]
+    I -.ROADMAP.-> J["Seguimiento / respuesta / alertas plenas (005)"]
     B --> K["Clasificador: is_obra, score, razon (CURRENT)"]
     C --> L["Geocodificación pipeline (CURRENT)"]
 ```
@@ -134,9 +134,10 @@ Puntos clave: ingesta real de SECOP II (paginada, con app-token opcional); norma
 
 - `is_obra`, `obra_score`, `obra_razon` (clasificador); `estado_ubicacion` (pendiente/resuelta/no_determinada), `geo_confianza` (alta/media/baja), fuente de geocoding, hash de integridad.
 
-### De usuario (NO existe aún)
+### De usuario (CURRENT parcial)
 
-- Reportes/evidencia ciudadana (specs 004/006): **solo diseño**, no hay persistencia de reportes. El modal y los leads son simulados/log. Diseño 2026-09-20: reporte (texto/foto/GPS) subido **directo a la plataforma** (se retira WhatsApp del producto; ver `15-cumplimiento-legal-tos.md`).
+- **Reportes ciudadanos** (specs `018`-`021`, implementadas 2026-09-23): persisten en `reportes_ciudadanos` con estado `pendiente_moderacion`; anti-spam funcional (10/h por contacto, 40/h por IP); CRUD en modo demo (editar/eliminar con foto); GET nunca expone `contacto`. **Moderación/revisión neutra**: ROADMAP (nada aprueba/filtra todavía).
+- Captura foto+GPS de campo con EXIF/PWA (spec 004): solo diseño, sin persistencia de evidencias.
 
 ### Otras (ROADMAP/HYPOTHESIS)
 
@@ -150,22 +151,22 @@ Regla: una fuente solo aporta lo que realmente ofrece. SECOP da datos contractua
 
 ## 9. Verificación ciudadana
 
-- **Estado actual (CURRENT)**: NO existe verificación real. `CitizenVerificationModal` es una **simulación de cliente** (espera, estado "verificando", éxito) sin GPS/EXIF real ni persistencia. Los endpoints `/api/lead-*` solo **loguean**.
-- **Diseñado (SPEC 004/006, ROADMAP)**: captura de foto con EXIF (GPS+fecha saneados), offline-first (PWA + IndexedDB), cola de sincronización, deduplicación, validación del id_contrato, moderación, enmascaramiento del contacto del ciudadano ante empresas, confirmación en la plataforma (sesión/correo). [Decisión 2026-09-20: se retira WhatsApp del producto; el reporte se sube directo a la plataforma.]
+- **Estado actual (CURRENT)**: los reportes ciudadanos **persisten** en SQLite (`reportes_ciudadanos`, estado `pendiente_moderacion`) con foto y % de avance; existe CRUD demo (specs `018`-`021`) y anti-spam. **NO** hay moderación, revisión neutra ni protocolo de disputa (ROADMAP 005/006). El enmascaramiento de contacto ante empresas es nativo (GET nunca devuelve `contacto`). El **motor de brechas inicial** (spec `023`) cruza N1 (financiero SECOP) con N3 (reportes) en API y UI; hoy N1 es `null` en toda la DB (espejo truncado, ver `05`).
+- **Diseñado (SPEC 004/006, ROADMAP)**: captura de foto con EXIF (GPS+fecha saneados), offline-first (PWA + IndexedDB), cola de sincronización, deduplicación, validación del id_contrato, moderación, confirmación en la plataforma (sesión/correo). [Decisión 2026-09-20: se retira WhatsApp del producto; el reporte se sube directo a la plataforma.]
 - **Cómo se registra/georreferencia/fecha** (diseñado): formulario web / PWA (reporte directo en la plataforma); EXIF/GPS extraídos en cliente; timestamp del reporte.
 - **Interpretación**: un reporte ciudadano es una **observación/evidencia aportada por un usuario; NO implica automáticamente irregularidad, fraude o incumplimiento**. Requiere moderación y protocolo de disputa.
 
-Fuentes: `10-b2b-y-leads.md`, `specs/004-captura-evidencia-campo`, `specs/006-canal-comunitario-moderacion`.
+Fuentes: `10-b2b-y-leads.md`, `specs/004-captura-evidencia-campo`, `specs/006-canal-comunitario-moderacion`, `specs/018-021`, `specs/023-motor-brechas-avance-secop-campo`.
 
 ---
 
 ## 10. Concepto de brecha
 
-- **Definición (diseñada, no implementada — ROADMAP)**: Índice de Brecha = |% Ejecución SECOP II (N1) − % Avance Evidencia Campo (N3)|. Existe además un N2 (avance reportado por la empresa). Si gap > 15%, se activa Alerta de Riesgo Territorial (umbral = hipótesis inicial, debe parametrizarse). Fuente: `docs/02-estrategia-arquitectura.md` §6.3, `specs/005-gap-analysis-engine`.
+- **Definición (parcialmente implementada — CURRENT/ROADMAP)**: Índice de Brecha = |% Ejecución SECOP II (N1) − % Avance Evidencia Campo (N3)|. Existe además un N2 (avance reportado por la empresa). Si gap > 15%, se activa Alerta de Riesgo Territorial (umbral = hipótesis inicial, debe parametrizarse). Fuente: `docs/02-estrategia-arquitectura.md` §6.3, `specs/005-gap-analysis-engine`, `specs/023`.
 - **Cómo se genera**: N3 = evidencia de campo (reportes ciudadanos); promedio ponderado dando más peso a evidencias recientes/geolocalizadas.
 - **Interpretación responsable**: una brecha puede tener **explicación legítima** (desfase temporal, error de reporte oficial, medición distinta). **No es por sí sola evidencia de corrupción o incumplimiento**; requiere revisión neutra.
 - **Limitaciones**: depende de calidad de datos oficiales y de evidencia; umbral 15% es hipótesis; requiere protocolo de disputas (spec 006) y descargos (actas de interventoría).
-- **Estado hoy**: el explorador muestra celdas de avance/gap **simuladas**; NO hay motor real.
+- **Estado hoy**: motor **implementado** (spec `023`, 2026-09-24): `src/lib/mapa/brechas.ts` calcula N1 (financiero SECOP) y N3 (promedio de avance en reportes), expone `avanceSecop/avanceCampo/brecha/estadoBrecha` en `/mapa/obras` y bloque **"Análisis de avance"** en mapa y explorador (barras + alerta >15 pts + guía de lectura). ⚠ El espejo `jbjy-vk9h` está truncado a 1000 filas (2026-09-23, ver `05`): nuestros contratos no están en la fuente → **N1 es `null`** en toda la DB → estado honesto `sin_datos` (sin falsas alertas) hasta que el dataset vuelva a contenerlos.
 
 ---
 
@@ -205,9 +206,9 @@ La confianza es clave para ciudadanía (credibilidad), empresas/reputación (sel
 | Aviso de prototipo global                                   | CURRENT             | `PrototypeNotice.tsx`, `layout.tsx`   | spec 010 implementada                                                                                    |
 | Analítica (Meta Pixel/GA4 por env)                         | CURRENT             | `layout.tsx`                            | Solo si hay env vars                                                                                     |
 | Perfil público por empresa (008)                           | ROADMAP             | spec 008                                  | No existe código                                                                                        |
-| Motor de brechas / alertas (005)                            | ROADMAP             | spec 005                                  | No existe código                                                                                        |
+| Motor de brechas / alertas (005)                            | CURRENT (parcial)       | spec 023, `brechas.ts`     | Bloque "Análisis de avance" (N1 vs N3) en mapa/explorador + API; N1 `null` mientras el espejo esté truncado (ver `05`) |
 | Captura de evidencia campo / PWA (004)                      | ROADMAP             | spec 004                                  | No existe código                                                                                        |
-| Canal comunitario y moderación (006)              | ROADMAP             | spec 006                                  | No existe código; diseñado como reporte directo en la plataforma                                                |
+| Canal comunitario y moderación (006)              | CURRENT (parcial)             | spec 018-021, `reportes_ciudadanos` | Reportes persisten (`pendiente_moderacion`) + CRUD demo + anti-spam; falta panel de moderación, evidencia cruzada y disputas |
 | Reportes ESG / ART (007)                                    | ROADMAP             | spec 007                                  | No existe código                                                                                        |
 | Ingesta VITAL/ANLA (009)                                    | ROADMAP             | spec 009                                  | No existe código                                                                                        |
 | Cruce PDET/ZOMAC (003)                                      | ROADMAP             | spec 003                                  | No existe código                                                                                        |
@@ -219,16 +220,18 @@ La confianza es clave para ciudadanía (credibilidad), empresas/reputación (sel
 ## 13. Funcionalidades actuales (solo lo disponible)
 
 1. **Landing pública** informativa con aviso de prototipo.
-2. **Explorador territorial** de proyectos (muestra; incluye datos simulados).
-3. **Mapa interactivo de obras de Cali**: marcadores agrupados (Leaflet + markercluster), filtros (estado contrato, entidad, valor, año), panel de detalle por obra (contratista, entidad, fechas, valor, enlace SECOP), totales y última sync.
-4. **Sync de datos** SECOP → SQLite (manual vía `/api/mapa/actualizar` el dispara; con lock de concurrencia).
+2. **Explorador territorial** de proyectos (todas las obras reales de Cali; filtros unificados con el mapa).
+3. **Mapa interactivo de obras de Cali**: marcadores agrupados (Leaflet + markercluster), filtros (estado contrato, entidad, valor, años inicio/fin), panel de detalle por obra (contratista, entidad, fechas, valor, enlace SECOP), totales y última sync.
+4. **Sync de datos** SECOP → SQLite (manual vía `/api/mapa/actualizar` el dispara; con lock de concurrencia). Aviso si el dataset viene truncado (sin borrar nada).
 5. **Clasificación** automática contrato→"obra" (con score y razón).
 6. **Geocodificación** de direcciones en Cali con estados y confianza.
-7. **Formularios/leads** B2B y ciudadano (validación + log; sin almacenamiento).
-8. **Aviso de prototipo** global.
-9. **Analítica** condicionada a variables de entorno (Meta Pixel/GA4 configurable).
+7. **Reportes ciudadanos** (persistentes en SQLite, estado `pendiente_moderacion`): ver/crear/editar/eliminar (demo) con foto y % avance; anti-spam; GET sin contacto.
+8. **Análisis de avance (motor de brechas, spec 023)**: N1 (SECOP financiero) vs N3 (campo) con umbral 15, guía de lectura en mapa y explorador. N1 hoy `null` (espejo truncado).
+9. **Formularios/leads** B2B y ciudadano (validación + log; sin almacenamiento).
+10. **Aviso de prototipo** global.
+11. **Analítica** condicionada a variables de entorno (Meta Pixel/GA4 configurable).
 
-Nada más (no hay brechas, reportes, perfiles, ESG, moderación, VITAL, PDET).
+Nada más (no hay moderación, revisión neutra, PWA de campo, perfiles de empresa, ESG, VITAL, PDET).
 
 ---
 
@@ -353,7 +356,7 @@ Fuente: `12-hipotesis-y-validacion.md`, `docs/04-hipotesis-validacion.md`.
 | Verificación/evidencia (EXIF/GPS, PWA) | **Implementable**                            | Spec 004 detallada; requiere PWA + API multipart + bucket                              |
 | Captura de evidencia de campo (reporte directo) | **Implementable**                            | Formulario web/PWA + persistencia (specs 004/006)                                             |
 | Moderación                             | **Implementable**                            | Spec 006; cola + panel + anti-spam                                                     |
-| Motor de brechas                        | **Implementable**                            | Funciones puras (spec 005); requiere N1/N2/N3                                          |
+| Motor de brechas                        | **Implementado** (parcial)                            | `brechas.ts` (N1 vs N3, umbral 15, API + UI); N2 queda ROADMAP (008); N1 vivo cuando el espejo SECOP vuelva a completo |
 | Reportes ESG/PDF                        | **Implementable**                            | Spec 007; plantillas + cola de trabajos                                                |
 | Escalabilidad                           | **Riesgo / requiere diseño**                | SQLite local no escala a multi-usuario/escritura concurrente; ausencia de auth         |
 | Seguridad                               | **Riesgo**                                   | Sin auth; webhooks no firmados (spec 006 plantea firmas); privacy de EXIF aún ROADMAP |
@@ -460,7 +463,11 @@ MVP (landing + explorador + mapa Cali + aviso prototipo; specs 001-002, 010-017)
         ↓
 producto actual (mapa real + DB local + geocodificación; specs 011-017 complete)
         ↓
-roadmap (003-009: PDET, campo, brechas, comunidad, ESG/ART, perfil, VITAL)
+participación ciudadana (reportes persistentes con foto/avance + CRUD demo + anti-spam; specs 018-021; 2026-09-23)
+        ↓
+filtros unificados mapa/explorador (spec 022) y motor de brechas N1-vs-N3 (spec 023; N1 en espera de espejo SECOP completo; 2026-09-24)
+        ↓
+roadmap (003-009: PDET, campo PWA, gaps plenos, comunidad/moderación, ESG/ART, perfil, VITAL)
         ↓
 visión (inteligencia territorial / infraestructura de confianza)
 ```
@@ -545,10 +552,10 @@ Si las hipótesis se validan, Obra Visible podría convertirse en una **referenc
 | Término                                | Definición                                                                                      | Estado del término                |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------- |
 | **SECOP II**                      | Plataforma de contratación pública electrónica de Colombia (datos abiertos vía datos.gov.co) | CURRENT (fuente)                   |
-| **N1**                            | % de ejecución/pago según SECOP II (dato oficial)                                              | ROADMAP (motor gaps)               |
+| **N1**                            | % de ejecución/pago según SECOP II (dato oficial)                                              | CURRENT (parcial, spec 023) — `null` si el espejo no trae el dato  |
 | **N2**                            | % de avance reportado por la empresa/contratista                                                 | ROADMAP (008)                      |
-| **N3**                            | % de avance observado en campo / evidencia ciudadana                                             | ROADMAP (004/006)                  |
-| **Brecha (gap)**                  | \|N1 − N3\|; alerta si >15%                                                                     | ROADMAP (005) — umbral hipótesis |
+| **N3**                            | % de avance observado en campo / evidencia ciudadana                                             | CURRENT (parcial, spec 023) — promedio de `avance_observado` |
+| **Brecha (gap)**                  | \|N1 − N3\|; alerta si >15%                                                                     | CURRENT (parcial, spec 023) — umbral hipótesis |
 | **Evidencia cruzada**             | ≥3 reportes independientes <500 m o 5 días hábiles para confirmar alerta                      | ROADMAP (006)                      |
 | **Revisión neutra**              | Revisión imparcial de una alerta antes de publicarse como hallazgo                              | ROADMAP (005/006)                  |
 | **Sello LSO**                     | Distintivo de licencia social y territorio (brecha ≤15%)                                        | ROADMAP (007/008)                  |
@@ -570,8 +577,8 @@ Pendiente de definir: métricas de impacto, KPI de adopción, SLA del roadmap. `
 | Obra Visible es una plataforma web de consulta de obra pública                  | **VERDADERO** | `README`, app funcionando                                                              |
 | Existe un mapa de Cali con obras desde SECOP II                                  | **VERDADERO** | SQLite: 1434 obras; 146 georreferenciadas (2026-09-20)                                   |
 | Datos del mapa son confiables                                                    | **NO**        | Aviso de prototipo global; migración geo en curso                                       |
-| Los reportes ciudadanos están funcionando en la plataforma                      | **NO**        | Es ROADMAP (specs 004/006)                                                                        |
-| El motor de brechas existe y alerta                                              | **NO**        | ROADMAP (spec 005)                                                                       |
+| Los reportes ciudadanos están funcionando en la plataforma                      | **SÍ (parcial)**   | `reportes_ciudadanos` (specs 018-021): persisten con foto/avance, CRUD demo, anti-spam; sin moderación |
+| El motor de brechas existe y alerta                                              | **SÍ (parcial)**        | spec 023: N1 vs N3 con umbral 15; hoy N1 `null` (espejo truncado) → solo `sin_datos` |
 | Los perfiles de empresa existen                                                  | **NO**        | ROADMAP (spec 008)                                                                       |
 | Hay clientes B2B pagando                                                         | **NO**        | Sin evidencia (HYPOTHESIS)                                                               |
 | Hay ingresos para el proyecto                                                    | **NO**        | Sin evidencia (HYPOTHESIS)                                                               |
@@ -609,8 +616,8 @@ Regla de autoridad: **este documento es derivado; ante conflicto, manda la KB y 
 - `project`: obra-visible
 - `status`: current-snapshot
 - `authority`: derived
-- `based_on`: 18 docs de `docs/knowledge/`, especs 003–009 y 010–017, docs/02 y docs/04, códigos fuente y SQLite.
-- `last_verified`: 2026-09-20
+- `based_on`: 18 docs de `docs/knowledge/`, especs 003–009 y 010–023, docs/02 y docs/04, códigos fuente y SQLite.
+- `last_verified`: 2026-09-24
 - Propietario del documento: el encargado del conocimiento del proyecto (rollo Keeper); regla: no se altera sin re-verificación.
 
 ---
