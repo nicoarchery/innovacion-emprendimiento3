@@ -21,8 +21,8 @@ Todas viven en `src/app/api/` (App Router route handlers).
 |--------|------|-----|---------------------|
 | POST | `/lead-b2b` | Lead B2B (empresa) | Registro lead (ver `10`) |
 | POST | `/lead-citizen` | Lead ciudadano/verificación | Registro lead (ver `10`) |
-| GET | `/mapa/obras` | Mapa | Devuelve obras reales (desde SQLite) + `totales`, `ultimaSync`, `filtros` (`entidades`, `estados`) + metadata. Solo obras `estado_ubicacion='resuelta'` |
-| GET | `/mapa/obras?todas=1` | Explorador | Devuelve **todas** las obras reales (`is_obra=1`, con o sin ubicación). Cada obra incluye `estadoUbicacion` y `reportes` (resumen). Acepta `ubicacion=ubicadas|sin_ubicar` |
+| GET | `/mapa/obras` | Mapa | Devuelve obras reales (desde SQLite) + `totales`, `ultimaSync`, `filtros` (`entidades`, `estados`, `aniosInicio`, `aniosFin`) + metadata. Solo obras `estado_ubicacion='resuelta'`. Acepta `q` (búsqueda LIKE), `estado`, `entidad`, `minValor`, `maxValor`, `fechaInicio` (año de `fecha_inicio`), `fechaFin` (año de `fecha_fin`) — independientes entre sí |
+| GET | `/mapa/obras?todas=1` | Explorador | Devuelve **todas** las obras reales (`is_obra=1`, con o sin ubicación). Cada obra incluye `estadoUbicacion` y `reportes` (resumen). Acepta los mismos filtros que mapa + `ubicacion=ubicadas\|sin_ubicar` |
 | POST | `/mapa/actualizar` | Trigger sync | Dispara `syncMapa()` → actualiza SQLite. Si ya corre, `409 {success:false,...}` |
 | GET | `/mapa/obras/[id]/reportes` | Reportes de una obra | Resumen (`total`, `promedio_calificacion`, `con_retraso`, `paralizadas`) + listado SIN contacto del ciudadano; cada item incluye `foto` (data URL) si el reporte la tiene |
 | POST | `/mapa/obras/[id]/reportes` | Enviar reporte ciudadano | Persiste en `reportes_ciudadanos` (estado `pendiente_moderacion`); valida contrato (404), campos (400), `foto` como `data:image/(jpeg\|png\|webp\|gif)` (400), anti-spam 10/hora por contacto y 40/hora por IP (429) |

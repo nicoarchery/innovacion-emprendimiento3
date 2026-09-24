@@ -16,22 +16,15 @@ import { formatCOP } from "@/lib/secop";
 import { FiltrosMapa } from "@/components/mapa/FiltrosMapa";
 import { PanelDetalleObra } from "@/components/mapa/PanelDetalleObra";
 import { LineaTiempoObra } from "@/components/mapa/LineaTiempoObra";
-import type {
-  FiltrosMapaUI,
-  ObraMarcador,
-  RespuestaActualizar,
-  RespuestaObras,
+import {
+  FILTROS_INICIALES,
+  type FiltrosMapaUI,
+  type ObraMarcador,
+  type RespuestaActualizar,
+  type RespuestaObras,
 } from "@/components/mapa/mapa-types";
 
 const CENTRO_CALI: [number, number] = [3.4516, -76.532];
-
-const FILTROS_INICIALES: FiltrosMapaUI = {
-  estado: "todos",
-  entidad: "todos",
-  minValor: "",
-  maxValor: "",
-  fecha: "todos",
-};
 
 function colorEstado(estado: string | null): string {
   const e = (estado ?? "").toLowerCase();
@@ -121,11 +114,13 @@ export function MapaCali() {
     setCargando(true);
     try {
       const params = new URLSearchParams();
+      if (f.busqueda.trim()) params.set("q", f.busqueda.trim());
       if (f.estado && f.estado !== "todos") params.set("estado", f.estado);
       if (f.entidad && f.entidad !== "todos") params.set("entidad", f.entidad);
       if (f.minValor) params.set("minValor", f.minValor);
       if (f.maxValor) params.set("maxValor", f.maxValor);
-      if (f.fecha && f.fecha !== "todos") params.set("fecha", f.fecha);
+      if (f.fechaInicio && f.fechaInicio !== "todos") params.set("fechaInicio", f.fechaInicio);
+      if (f.fechaFin && f.fechaFin !== "todos") params.set("fechaFin", f.fechaFin);
 
       const res = await fetch(`/api/mapa/obras${params.toString() ? `?${params.toString()}` : ""}`);
       if (!res.ok) throw new Error("Respuesta no válida del servidor");
@@ -260,6 +255,8 @@ export function MapaCali() {
           filtros={filtros}
           estados={meta?.filtros.estados ?? []}
           entidades={meta?.filtros.entidades ?? []}
+          aniosInicio={meta?.filtros.aniosInicio ?? []}
+          aniosFin={meta?.filtros.aniosFin ?? []}
           onCambio={setFiltros}
           onAplicar={onAplicarFiltros}
           onLimpiar={onLimpiarFiltros}

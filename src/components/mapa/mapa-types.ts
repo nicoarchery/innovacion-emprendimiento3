@@ -49,7 +49,12 @@ export interface RespuestaObras {
   meta: {
     totales: TotalesMapa;
     ultimaSync: UlrimaSyncMapa | null;
-    filtros: { entidades: string[]; estados: string[] };
+    filtros: {
+      entidades: string[];
+      estados: string[];
+      aniosInicio: string[];
+      aniosFin: string[];
+    };
   };
 }
 
@@ -74,9 +79,21 @@ export interface RespuestaActualizar {
 }
 
 export interface FiltrosMapaUI {
+  busqueda: string;
   estado: string;
   entidad: string;
   minValor: string;
   maxValor: string;
-  fecha: string;
+  fechaInicio: string;
+  fechaFin: string;
 }
+
+export const FILTROS_INICIALES: FiltrosMapaUI = {
+  busqueda: "",
+  estado: "todos",
+  entidad: "todos",
+  minValor: "",
+  maxValor: "",
+  fechaInicio: "todos",
+  fechaFin: "todos",
+};

@@ -195,6 +195,9 @@ export function listObras(filtros?: {
   minValor?: number;
   maxValor?: number;
   fecha?: string;
+  q?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
 }): ObraRow[] {
   const database = getDb();
   const where: string[] = ["is_obra = 1", "estado_ubicacion = 'resuelta'"];
@@ -216,6 +219,23 @@ export function listObras(filtros?: {
     where.push("valor <= @maxValor");
     params.maxValor = filtros.maxValor;
   }
+  if (filtros?.q) {
+    where.push(
+      `(descripcion LIKE @q OR entidad_nombre LIKE @q OR contratista LIKE @q
+        OR referencia LIKE @q OR id_contrato LIKE @q OR barrio LIKE @q OR comuna LIKE @q OR estado LIKE @q)`
+    );
+    params.q = `%${filtros.q}%`;
+  }
+  if (filtros?.fechaInicio) {
+    where.push("fecha_inicio IS NOT NULL");
+    where.push("(substr(fecha_inicio,1,4) = @fechaInicio AND fecha_inicio <> '')");
+    params.fechaInicio = filtros.fechaInicio;
+  }
+  if (filtros?.fechaFin) {
+    where.push("fecha_fin IS NOT NULL");
+    where.push("(substr(fecha_fin,1,4) = @fechaFin AND fecha_fin <> '')");
+    params.fechaFin = filtros.fechaFin;
+  }
   if (filtros?.fecha && filtros.fecha !== "todos") {
     where.push("fecha_firma IS NOT NULL");
     where.push("(substr(fecha_firma,1,4) = @fecha AND fecha_firma <> '')");
@@ -233,6 +253,9 @@ export function listTodasObras(filtros?: {
   minValor?: number;
   maxValor?: number;
   fecha?: string;
+  q?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
   ubicacion?: "ubicadas" | "sin_ubicar";
 }): ObraRow[] {
   const database = getDb();
@@ -255,6 +278,23 @@ export function listTodasObras(filtros?: {
     where.push("valor <= @maxValor");
     params.maxValor = filtros.maxValor;
   }
+  if (filtros?.q) {
+    where.push(
+      `(descripcion LIKE @q OR entidad_nombre LIKE @q OR contratista LIKE @q
+        OR referencia LIKE @q OR id_contrato LIKE @q OR barrio LIKE @q OR comuna LIKE @q OR estado LIKE @q)`
+    );
+    params.q = `%${filtros.q}%`;
+  }
+  if (filtros?.fechaInicio) {
+    where.push("fecha_inicio IS NOT NULL");
+    where.push("(substr(fecha_inicio,1,4) = @fechaInicio AND fecha_inicio <> '')");
+    params.fechaInicio = filtros.fechaInicio;
+  }
+  if (filtros?.fechaFin) {
+    where.push("fecha_fin IS NOT NULL");
+    where.push("(substr(fecha_fin,1,4) = @fechaFin AND fecha_fin <> '')");
+    params.fechaFin = filtros.fechaFin;
+  }
   if (filtros?.fecha && filtros.fecha !== "todos") {
     where.push("fecha_firma IS NOT NULL");
     where.push("(substr(fecha_firma,1,4) = @fecha AND fecha_firma <> '')");
@@ -269,6 +309,28 @@ export function listTodasObras(filtros?: {
   return database
     .prepare(`SELECT * FROM obras WHERE ${where.join(" AND ")} ORDER BY valor DESC`)
     .all(params) as ObraRow[];
+}
+
+export function aniosFechasDisponibles(): { inicio: string[]; fin: string[] } {
+  const database = getDb();
+  const inicio = database
+    .prepare(
+      `SELECT DISTINCT substr(fecha_inicio,1,4) AS anio FROM obras
+       WHERE is_obra = 1 AND fecha_inicio IS NOT NULL AND fecha_inicio <> ''
+       ORDER BY anio DESC`
+    )
+    .all() as { anio: string }[];
+  const fin = database
+    .prepare(
+      `SELECT DISTINCT substr(fecha_fin,1,4) AS anio FROM obras
+       WHERE is_obra = 1 AND fecha_fin IS NOT NULL AND fecha_fin <> ''
+       ORDER BY anio DESC`
+    )
+    .all() as { anio: string }[];
+  return {
+    inicio: inicio.map((r) => r.anio),
+    fin: fin.map((r) => r.anio),
+  };
 }
 
 export function resumenReportesMasivo(): Record<string, ResumenReportesObra> {

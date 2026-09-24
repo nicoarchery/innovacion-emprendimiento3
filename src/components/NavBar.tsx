@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { label: "Mapa de Cali", href: "/mapa" },
-  { label: "Explorador", href: "/explorador", isNew: true },
+  { label: "Explorador", href: "/explorador" },
   { label: "Cómo funciona", href: "/#como-funciona" },
   { label: "Para organizaciones", href: "/#para-organizaciones" },
 ];
@@ -37,11 +37,6 @@ export function NavBar() {
               className="text-sm font-medium text-tinta/80 underline-offset-4 transition-colors hover:text-sello hover:underline"
             >
               {link.label}
-              {link.isNew && (
-                <span className="ml-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-sello">
-                  Nuevo
-                </span>
-              )}
             </a>
           ))}
         </nav>

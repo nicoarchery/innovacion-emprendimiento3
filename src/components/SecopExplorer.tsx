@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Stamp } from "@/components/Stamp";
 import { ReportesButton } from "@/components/mapa/ReportesButton";
 import { ReportesObraModal } from "@/components/mapa/ReportesObraModal";
+import { AyudaEstados } from "@/components/mapa/AyudaEstados";
 import { formatCOP } from "@/lib/secop";
 import type { ObraMarcador } from "@/components/mapa/mapa-types";
 import { cn } from "@/lib/utils";
@@ -42,6 +43,15 @@ export function SecopExplorer() {
   const [ubicacionFilter, setUbicacionFilter] = useState<UbicacionSeleccion>("todas");
   const [sortBy, setSortBy] = useState<"valor" | "fecha" | "reportes">("valor");
 
+  const [entidades, setEntidades] = useState<string[]>([]);
+  const [entidadFilter, setEntidadFilter] = useState<string>("todos");
+  const [minValor, setMinValor] = useState("");
+  const [maxValor, setMaxValor] = useState("");
+  const [aniosInicio, setAniosInicio] = useState<string[]>([]);
+  const [aniosFin, setAniosFin] = useState<string[]>([]);
+  const [fechaInicioFilter, setFechaInicioFilter] = useState("todos");
+  const [fechaFinFilter, setFechaFinFilter] = useState("todos");
+
   const [reportesModalObra, setReportesModalObra] = useState<ObraMarcador | null>(null);
 
   const cargar = async () => {
@@ -53,14 +63,26 @@ export function SecopExplorer() {
       const json = (await res.json()) as {
         success: boolean;
         data: ObraMarcador[];
-        meta?: { filtros?: { estados?: string[] } };
+        meta?: {
+          filtros?: {
+            estados?: string[];
+            entidades?: string[];
+            aniosInicio?: string[];
+            aniosFin?: string[];
+          };
+        };
         error?: string;
       };
       if (!json.success) throw new Error(json.error ?? "Error desconocido");
       setObras(json.data ?? []);
       const est = json.meta?.filtros?.estados ?? [];
+      const ent = json.meta?.filtros?.entidades ?? [];
       setEstados(est);
+      setEntidades(ent);
+      setAniosInicio(json.meta?.filtros?.aniosInicio ?? []);
+      setAniosFin(json.meta?.filtros?.aniosFin ?? []);
       setEstadoFilter((prev) => (est.includes(prev) ? prev : "todos"));
+      setEntidadFilter((prev) => (ent.includes(prev) ? prev : "todos"));
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -75,6 +97,8 @@ export function SecopExplorer() {
 
   const filtradas = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
+    const min = minValor ? Number(minValor) : null;
+    const max = maxValor ? Number(maxValor) : null;
     return obras
       .filter((o) => {
         if (ubicacionFilter === "ubicadas" && o.estadoUbicacion !== "resuelta") {
@@ -84,6 +108,27 @@ export function SecopExplorer() {
           return false;
         }
         if (estadoFilter !== "todos" && o.estado !== estadoFilter) {
+          return false;
+        }
+        if (entidadFilter !== "todos" && o.entidad !== entidadFilter) {
+          return false;
+        }
+        if (min !== null && min > 0 && (o.valor ?? 0) < min) {
+          return false;
+        }
+        if (max !== null && max > 0 && (o.valor ?? 0) > max) {
+          return false;
+        }
+        if (
+          fechaInicioFilter !== "todos" &&
+          (o.fechaInicio ?? "")?.slice(0, 4) !== fechaInicioFilter
+        ) {
+          return false;
+        }
+        if (
+          fechaFinFilter !== "todos" &&
+          (o.fechaFin ?? "")?.slice(0, 4) !== fechaFinFilter
+        ) {
           return false;
         }
         if (q) {
@@ -111,7 +156,18 @@ export function SecopExplorer() {
         }
         return (b.reportes?.total ?? 0) - (a.reportes?.total ?? 0);
       });
-  }, [obras, searchQuery, estadoFilter, ubicacionFilter, sortBy]);
+  }, [
+    obras,
+    searchQuery,
+    estadoFilter,
+    entidadFilter,
+    minValor,
+    maxValor,
+    fechaInicioFilter,
+    fechaFinFilter,
+    ubicacionFilter,
+    sortBy,
+  ]);
 
   const stats = useMemo(() => {
     const total = filtradas.length;
@@ -202,18 +258,21 @@ export function SecopExplorer() {
 
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             {/* Estado SECOP */}
-            <select
-              value={estadoFilter}
-              onChange={(e) => setEstadoFilter(e.target.value)}
-              className="rounded-[3px] border border-tinta/20 bg-papel px-2 py-1.5 text-xs font-medium text-tinta focus:ring-0 cursor-pointer"
-            >
-              <option value="todos">Estado: todos</option>
-              {estados.map((e) => (
-                <option key={e} value={e}>
-                  {e}
-                </option>
-              ))}
-            </select>
+            <span className="inline-flex items-center gap-1">
+              <select
+                value={estadoFilter}
+                onChange={(e) => setEstadoFilter(e.target.value)}
+                className="rounded-[3px] border border-tinta/20 bg-papel px-2 py-1.5 text-xs font-medium text-tinta focus:ring-0 cursor-pointer"
+              >
+                <option value="todos">Estado: todos</option>
+                {estados.map((e) => (
+                  <option key={e} value={e}>
+                    {e}
+                  </option>
+                ))}
+              </select>
+              <AyudaEstados estados={estados} />
+            </span>
 
             {/* Ubicación */}
             <div className="inline-flex rounded-[3px] border border-tinta/20 bg-papel p-0.5 text-xs">
@@ -248,6 +307,91 @@ export function SecopExplorer() {
             </div>
           </div>
         </div>
+
+        {/* Fila extra de filtros (mismas capacidades que el mapa) */}
+        <div className="flex flex-wrap items-end gap-2 border-t border-tinta/10 pt-3">
+          <div className="space-y-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
+              Entidad
+            </span>
+            <select
+              value={entidadFilter}
+              onChange={(e) => setEntidadFilter(e.target.value)}
+              className="rounded-[3px] border border-tinta/20 bg-papel px-2 py-1.5 text-xs font-medium text-tinta focus:ring-0 cursor-pointer"
+            >
+              <option value="todos">Todas</option>
+              {entidades.map((e) => (
+                <option key={e} value={e}>
+                  {e}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
+              Valor mín. (COP)
+            </span>
+            <Input
+              type="number"
+              min={0}
+              placeholder="0"
+              value={minValor}
+              onChange={(e) => setMinValor(e.target.value)}
+              className="w-28 text-xs"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
+              Valor máx. (COP)
+            </span>
+            <Input
+              type="number"
+              min={0}
+              placeholder="∞"
+              value={maxValor}
+              onChange={(e) => setMaxValor(e.target.value)}
+              className="w-28 text-xs"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
+              Año de inicio
+            </span>
+            <select
+              value={fechaInicioFilter}
+              onChange={(e) => setFechaInicioFilter(e.target.value)}
+              className="rounded-[3px] border border-tinta/20 bg-papel px-2 py-1.5 text-xs font-medium text-tinta focus:ring-0 cursor-pointer"
+            >
+              <option value="todos">Todos</option>
+              {aniosInicio.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-wide text-tinta/55">
+              Año de fin
+            </span>
+            <select
+              value={fechaFinFilter}
+              onChange={(e) => setFechaFinFilter(e.target.value)}
+              className="rounded-[3px] border border-tinta/20 bg-papel px-2 py-1.5 text-xs font-medium text-tinta focus:ring-0 cursor-pointer"
+            >
+              <option value="todos">Todos</option>
+              {aniosFin.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
 
       {error && (
@@ -278,6 +422,11 @@ export function SecopExplorer() {
               setSearchQuery("");
               setEstadoFilter("todos");
               setUbicacionFilter("todas");
+              setEntidadFilter("todos");
+              setMinValor("");
+              setMaxValor("");
+              setFechaInicioFilter("todos");
+              setFechaFinFilter("todos");
             }}
             className="mt-4 text-xs"
           >

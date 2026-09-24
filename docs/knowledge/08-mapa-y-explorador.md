@@ -20,14 +20,15 @@ sources:
 Componentes en `src/components/mapa/`:
 - `MapaCaliDynamic.tsx` — wrapper SSR-safe para `MapaCali.tsx` (Leaflet no corre en servidor).
 - `MapaCali.tsx` — mapa Leaflet (tiles OSM) + marker cluster de obras con `lat/lon`.
-- `FiltrosMapa.tsx` — filtros por `estado` (contrato), `entidad`, `minValor`, `maxValor`, `fecha` (UI). Dato procedente de `/api/mapa/obras`.
+- `FiltrosMapa.tsx` — filtros por buscador (`q`), `estado` (contrato, con "?" de ayuda), `entidad`, `minValor`, `maxValor`, y dos años independientes `Año de inicio` / `Año de fin` (reemplazan al viejo "Año de firma"). Dato procedente de `/api/mapa/obras`.
 - `PanelDetalleObra.tsx` — panel lateral con detalle de obra seleccionada (referencia, entidad, contratista, valor, fechas, link SECOP) + sección **Participación ciudadana**: un solo botón **"Ver N reportes"** (`ReportesButton`) que abre la ventana unificada de reportes. Muestra promedio de calificación y avisos de retraso/paralización.
 - `ReporteCiudadanoModal.tsx` — modal/formulario de reporte: estado en terreno, % avance observado, calificación 1–5 (opcional), opinión/descripción, foto opcional (≤1.5 MB), contacto opcional y GPS (navegador o coordenada de la obra). POSTea a `/api/mapa/obras/[id]/reportes`. Se abre desde `ReportesObraModal`.
 - `ReportesObraModal.tsx` — **ventana unificada de reportes** (ver + crear + **demo CRUD**): lista todos los reportes (fecha, sello de estado, avance, calificación, descripción y **foto si la tiene**) y un botón "Reportar esta obra" que abre `ReporteCiudadanoModal`; al enviar refresca el listado. Compartida entre mapa y explorador. **Modo demo (spec `021`)**: cada tarjeta tiene Editar (reabre el modal precargado en modo edición → `PATCH /api/mapa/reportes/[id]`) y Eliminar (confirmación inline → `DELETE /api/mapa/reportes/[id]`); al cambiar la foto se reemplaza y permite "Quitar foto".
 - `ReportesButton.tsx` — botón unificado **"Ver N reportes"** (mismo en `PanelDetalleObra` y en las filas del explorador).
 - `LineaTiempoObra.tsx` — hoja inferior del mapa (bottom sheet) alternada por una flecha en la parte inferior de la vista cuando hay una obra seleccionada; muestra en línea de tiempo (desc) los reportes **con foto**.
 - `reportes-comunes.ts` — tipos/helpers compartidos (`ReporteFila`, `ResumenReportes`, `formatearFecha`, `estadoTerrenoDato`).
-- `mapa-types.ts` — `ObraMarcador` (incluye `estadoUbicacion` y `reportes`), `TotalesMapa`, `RespuestaObras`, `RespuestaActualizar`, `FiltrosMapaUI`.
+- `mapa-types.ts` — `ObraMarcador` (incluye `estadoUbicacion` y `reportes`), `TotalesMapa`, `RespuestaObras`, `RespuestaActualizar`, `FiltrosMapaUI` (`busqueda`, `estado`, `entidad`, `minValor`, `maxValor`, `fechaInicio`, `fechaFin`), `FILTROS_INICIALES`, `AyudaEstados`.
+- `AyudaEstados.tsx` — popup "?" compartido por mapa y explorador: explica cada estado SECOP (Modificado, terminado, En ejecución, Cancelado, Aprobado, Borrador, Cerrado, Suspendido, enviado Proveedor, En aprobación…).
 
 Origen de datos: **`/api/mapa/obras`** (real, desde `06`).
 
@@ -35,7 +36,8 @@ Origen de datos: **`/api/mapa/obras`** (real, desde `06`).
 
 - `src/app/explorador/page.tsx` → `<SecopExplorer />`:
   - Muestra **todas las obras reales de Cali** (tengan o no ubicación) desde `/api/mapa/obras?todas=1`.
-  - Filtros: búsqueda (obra/contratista/entidad/barrio/comuna), estado SECOP, ubicación (todas / en el mapa / sin ubicar) y orden (valor / fecha / nº reportes). **Ya no hay filtros por departamento.**
+  - Filtros: búsqueda (obra/contratista/entidad/barrio/comuna), estado SECOP (con "?" de ayuda), entidad, valor mín/máx (COP), **año de inicio** y **año de fin** independientes, ubicación (todas / en el mapa / sin ubicar) y orden (valor / fecha / nº reportes). **Ya no hay filtros por departamento.**
+  - **Filtros unificados** (spec `022`): mapa y explorador comparten las mismas capacidades (buscador, estado+ayuda, entidad, valores, año inicio/fin) con visualización distinta — el mapa filtra en servidor vía query params y el explorador en cliente sobre `todas=1`.
   - Por fila: botón **"Ver N reportes"** (`ReportesButton`) que abre la misma `ReportesObraModal` que el mapa; la tarjeta derecha resume participación (reportes, calificación, retraso/paralizada).
   - Los datos simulados fueron eliminados (ver `00`): `ProjectDetailsModal`, `CitizenVerificationModal` y `/api/secop` se borraron; `src/lib/secop.ts` se redujo a `formatCOP`.
 

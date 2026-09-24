@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  aniosFechasDisponibles,
   entidadesDisponibles,
   estadosDisponibles,
   listObras,
@@ -16,29 +17,31 @@ export async function GET(request: NextRequest) {
     const entidad = params.get("entidad") || undefined;
     const minValor = params.get("minValor");
     const maxValor = params.get("maxValor");
-    const fecha = params.get("fecha") || undefined;
+    const fechaInicio = params.get("fechaInicio") || undefined;
+    const fechaFin = params.get("fechaFin") || undefined;
+    const q = params.get("q") || undefined;
     const todas = params.get("todas") === "1";
     const ubicacion = params.get("ubicacion") as
       | "ubicadas"
       | "sin_ubicar"
       | undefined;
 
+    const comunes = {
+      estado,
+      entidad,
+      minValor: minValor ? parseInt(minValor, 10) : undefined,
+      maxValor: maxValor ? parseInt(maxValor, 10) : undefined,
+      q,
+      fechaInicio,
+      fechaFin,
+    };
+
     const obras = todas
       ? listTodasObras({
-          estado,
-          entidad,
-          minValor: minValor ? parseInt(minValor, 10) : undefined,
-          maxValor: maxValor ? parseInt(maxValor, 10) : undefined,
-          fecha,
+          ...comunes,
           ubicacion: ubicacion === "ubicadas" || ubicacion === "sin_ubicar" ? ubicacion : undefined,
         })
-      : listObras({
-          estado,
-          entidad,
-          minValor: minValor ? parseInt(minValor, 10) : undefined,
-          maxValor: maxValor ? parseInt(maxValor, 10) : undefined,
-          fecha,
-        });
+      : listObras(comunes);
 
     const resumenes = todas ? resumenReportesMasivo() : {};
 
@@ -65,6 +68,8 @@ export async function GET(request: NextRequest) {
       reportes: resumenes[o.id_contrato] ?? null,
     }));
 
+    const anios = aniosFechasDisponibles();
+
     return NextResponse.json({
       success: true,
       data,
@@ -74,6 +79,8 @@ export async function GET(request: NextRequest) {
         filtros: {
           entidades: entidadesDisponibles(),
           estados: estadosDisponibles(),
+          aniosInicio: anios.inicio,
+          aniosFin: anios.fin,
         },
       },
     });
