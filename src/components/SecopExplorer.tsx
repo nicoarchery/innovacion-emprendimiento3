@@ -436,7 +436,7 @@ export function SecopExplorer() {
           </Button>
         </div>
       ) : (
-        <div className="border-t-2 border-tinta/70">
+        <div className="max-h-[2000px] overflow-y-auto rounded-b-[4px] border-t-2 border-tinta/70 lg:max-h-[2050px]">
           {filtradas.map((obra) => {
             const reportes = obra.reportes;
             const ubicada = obra.estadoUbicacion === "resuelta";
