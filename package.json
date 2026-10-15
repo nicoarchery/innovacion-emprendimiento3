@@ -37,5 +37,13 @@
     "eslint-config-next": "16.3.5",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "description": "> Prototipo en validación: consultas contratos de obra desde SECOP II en un mapa, confirmas el avance en terreno y otorgas reconocimiento público a las entidades que cumplen.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
