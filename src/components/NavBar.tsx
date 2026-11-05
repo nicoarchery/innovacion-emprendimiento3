@@ -22,7 +22,7 @@ export function NavBar() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-baseline gap-3">
           <span className="font-display text-xl font-bold leading-none text-tinta">
-            Obras a la Vista
+            Obra Visible
           </span>
           <span className="hidden font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-sello sm:inline">
             Cali · Consulta ciudadana

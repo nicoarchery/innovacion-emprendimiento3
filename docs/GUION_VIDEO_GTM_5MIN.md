@@ -1,7 +1,7 @@
 # Guión Video GTM — Obra Visible (máx. 5 min, solo relato)
 
 **Tono:** todo en futuro (lo que haríamos). Natural, para leer en voz alta.
-**Oferta ancla:** Informe de cumplimiento puntual $7M (de `docs/Plantilla_financiera_ObraVisible.xlsx`).
+**Oferta ancla:** Informe de cumplimiento puntual $7M (de `docs/Plantilla_financiera_ObraVisible.xlsx`)./
 **Producto:** mapa funcional donde el cliente puede buscar una obra, ver plazos y probar la experiencia.
 
 ---

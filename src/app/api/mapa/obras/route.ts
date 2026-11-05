@@ -1,115 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  aniosFechasDisponibles,
-  avancesCampoPorObra,
-  entidadesDisponibles,
-  estadosDisponibles,
-  listObras,
-  listTodasObras,
-  resumenReportesMasivo,
-  resumenReputacionContratistas,
-  totalObras,
-  ultimaSync,
-} from "@/lib/mapa/db";
-import {
-  calcularN1,
-  evaluarBrecha,
-} from "@/lib/mapa/brechas";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+const OBRAS_JSON = join(process.cwd(), "public", "obras.json");
+
+function cargarObras() {
+  const raw = readFileSync(OBRAS_JSON, "utf8");
+  return JSON.parse(raw);
+}
+
+function aplicarFiltros(obras: any[], params: URLSearchParams) {
+  const q = params.get("q")?.toLowerCase().trim() || "";
+  const estado = params.get("estado") || undefined;
+  const entidad = params.get("entidad") || undefined;
+  const minValor = params.get("minValor") ? parseInt(params.get("minValor")!, 10) : undefined;
+  const maxValor = params.get("maxValor") ? parseInt(params.get("maxValor")!, 10) : undefined;
+  const fechaInicio = params.get("fechaInicio") || undefined;
+  const fechaFin = params.get("fechaFin") || undefined;
+
+  return obras.filter((o) => {
+    if (q) {
+      const haystack = [
+        o.nombre, o.referencia, o.entidad, o.contratista, o.barrio, o.comuna, o.direccion, o.id,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    if (estado && estado !== "todos" && o.estado?.toLowerCase() !== estado.toLowerCase()) return false;
+    if (entidad && entidad !== "todos" && o.entidad?.toLowerCase() !== entidad.toLowerCase()) return false;
+    if (minValor !== undefined && (o.valor ?? 0) < minValor) return false;
+    if (maxValor !== undefined && (o.valor ?? 0) > maxValor) return false;
+    if (fechaInicio && fechaInicio !== "todos" && o.fechaInicio?.slice(0, 4) !== fechaInicio) return false;
+    if (fechaFin && fechaFin !== "todos" && o.fechaFin?.slice(0, 4) !== fechaFin) return false;
+    return true;
+  });
+}
 
 export async function GET(request: NextRequest) {
   try {
+    const { success, data: obrasTodas, meta } = cargarObras();
     const params = request.nextUrl.searchParams;
-    const estado = params.get("estado") || undefined;
-    const entidad = params.get("entidad") || undefined;
-    const minValor = params.get("minValor");
-    const maxValor = params.get("maxValor");
-    const fechaInicio = params.get("fechaInicio") || undefined;
-    const fechaFin = params.get("fechaFin") || undefined;
-    const q = params.get("q") || undefined;
-    const todas = params.get("todas") === "1";
-    const ubicacion = params.get("ubicacion") as
-      | "ubicadas"
-      | "sin_ubicar"
-      | undefined;
 
-    const comunes = {
-      estado,
-      entidad,
-      minValor: minValor ? parseInt(minValor, 10) : undefined,
-      maxValor: maxValor ? parseInt(maxValor, 10) : undefined,
-      q,
-      fechaInicio,
-      fechaFin,
-    };
-
-    const obras = todas
-      ? listTodasObras({
-          ...comunes,
-          ubicacion: ubicacion === "ubicadas" || ubicacion === "sin_ubicar" ? ubicacion : undefined,
-        })
-      : listObras(comunes);
-
-    const resumenes = todas ? resumenReportesMasivo() : {};
-    const avances = avancesCampoPorObra();
-
-    const reputacionPorContratista = new Map(
-      resumenReputacionContratistas().map((r) => [
-        r.contratista,
-        { score: r.score, nivel: r.nivel, nReportes: r.n_reportes },
-      ])
-    );
-
-    const data = obras.map((o) => {
-      const brecha = evaluarBrecha(
-        calcularN1(o.valor, o.valor_pendiente_ejecucion),
-        avances[o.id_contrato] ?? null
-      );
-      return {
-        id: o.id_contrato,
-        referencia: o.referencia,
-        nombre: o.descripcion,
-        entidad: o.entidad_nombre,
-        contratista: o.contratista,
-        estado: o.estado,
-        valor: o.valor,
-        fechaInicio: o.fecha_inicio,
-        fechaFin: o.fecha_fin,
-        urlSecop: o.url_secop,
-        comuna: o.comuna,
-        barrio: o.barrio,
-        direccion: o.direccion_ejecucion,
-        lat: o.lat,
-        lon: o.lon,
-        geoFuente: o.geo_fuente,
-        geoConfianza: o.geo_confianza,
-        estadoUbicacion: o.estado_ubicacion,
-        syncedAt: o.synced_at,
-        avanceSecop: brecha.avanceSecop,
-        avanceCampo: brecha.avanceCampo,
-        brecha: brecha.gap,
-        estadoBrecha: brecha.estado,
-        reportes: resumenes[o.id_contrato] ?? null,
-        reputacion: o.contratista
-          ? (reputacionPorContratista.get(o.contratista) ?? null)
-          : null,
-      };
-    });
-
-    const anios = aniosFechasDisponibles();
+    const obras = aplicarFiltros(obrasTodas, params);
 
     return NextResponse.json({
-      success: true,
-      data,
-      meta: {
-        totales: totalObras(),
-        ultimaSync: ultimaSync(),
-        filtros: {
-          entidades: entidadesDisponibles(),
-          estados: estadosDisponibles(),
-          aniosInicio: anios.inicio,
-          aniosFin: anios.fin,
-        },
-      },
+      success,
+      data: obras,
+      meta,
     });
   } catch (error) {
     console.error("[API_MAPA_OBRAS_ERROR]", error);

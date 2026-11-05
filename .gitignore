@@ -39,6 +39,9 @@ yarn-error.log*
 # local database (SQLite mapa)
 /data/
 
+# codegraph index (local, regenerable — no commitear)
+/.codegraph/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

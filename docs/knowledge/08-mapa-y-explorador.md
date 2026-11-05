@@ -52,3 +52,12 @@ Origen de datos: **`/api/mapa/obras`** (real, desde `06`).
 - El mapa es **consulta ciudadana** (read-only, sin login).
 - **Reportes unificados** (decisión 2026-09-23, spec `020`): mapa y explorador comparten un único botón "Ver N reportes" y la misma ventana de ver/crear. El mapa muestra la ubicación interactiva (solo obras `resuelta`); el explorador lista TODAS las obras, con o sin ubicación. Los reportes persisten en `reportes_ciudadanos` (ver `09`).
 - Leaflet por SSR: el `Dynamic` wrapper usa `next/dynamic`/`ssr:false`.
+
+## Obra de referencia para la demo (`CO1.PCCNTR.8373561`)
+
+Obra usada en la demo de ventas (guion GTM, ver `16`): vía Cañaspordas, Secretaría de Infraestructura del Valle, CONSORCIO AV CAÑASGORDAS, $252.928.590.550, estado "Modificado", plazo 2025-10-31 → 2027-10-24.
+
+- Está en la BD local (`data/mapa.db`, tabla `obras`) tras ejecutar `POST /api/mapa/actualizar`.
+- Se geocodificaron **50 obras** con ubicación en Cali usando el pipeline de geocodificación (`geocodeService.ts`: Nominatim simplificado). Las coordenadas vienen de las direcciones de SECOP, con fuentes `nominatim-simple` y confianza `media`.
+- La obra de referencia `CO1.PCCNTR.8373561` (vía Cañaspordas, $252.928.590.550) tiene un **marcador naranja** (`#d97706`) para diferenciarla del resto.
+- Se enlaza desde el panel de detalle a `/informe-cumplimiento/CO1.PCCNTR.8373561` (ver `16-gtm-y-ventas.md`).

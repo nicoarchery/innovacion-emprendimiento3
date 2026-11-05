@@ -55,6 +55,8 @@ Este es el registro de **fuentes primarias consultadas** para construir esta KB.
 | `docs/03-prompt-tecnico-mvp.md` | documented-decision | MVP descrito (diffiere de lo implementado) |
 | `docs/04-hipotesis-validacion.md` | documented-decision | Hipótesis del proyecto |
 | `docs/knowledge/15-cumplimiento-legal-tos.md` | documented-decision | Legalidad y TOS por fuente (verificado en web 2026-09-20); ajustes para producción |
+| `docs/GUION_VIDEO_GTM_5MIN.md` | documented-decision | Guion de video de venta/GTM (plan para primer cliente, oferta $7M, cero ventas a la fecha). Ver `16-gtm-y-ventas.md` |
+| `docs/knowledge/17-graphify-ponytail.md` | documented-decision | codegraph (instalado vía install.sh del README, proyecto indexado: 66 files, 1046 nodes, 2061 edges, 235ms) y ponytail de DietrichGebert (opencode-plugin instalado en opencode.json); graphify-opencode desinstalado |
 | `docs/explica-leanspec.md` | historical | Cómo funciona el manager de specs |
 | `docs/archive/*` (sustento, modelos, mejoras, obra visible contxt, session, SPEC_SECOP) | historical/hypothesis | Ideas B2B/ESG, sustento teorico, propuestas de monetización — **no vigentes como producto** |
 

@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
           <div>
             <p className="font-display text-2xl font-bold text-papel">
-              Obras a la Vista
+              Obra Visible
             </p>
             <p className="mt-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-papel/50">
               Santiago de Cali · Consulta ciudadana

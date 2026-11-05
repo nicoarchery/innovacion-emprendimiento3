@@ -121,6 +121,19 @@ CREATE TABLE IF NOT EXISTS respuestas_reportes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_respuestas_reporte ON respuestas_reportes(id_reporte);
+
+CREATE TABLE IF NOT EXISTS leads_b2b (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  company TEXT NOT NULL,
+  role TEXT,
+  sector TEXT,
+  interes_informe INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_leads_b2b_email ON leads_b2b(email);
 `;
 
 export function getDb(): Database.Database {
@@ -156,6 +169,37 @@ export function closeDb(): void {
     db.close();
     db = null;
   }
+}
+
+export function getObraPorId(id_contrato: string): ObraRow | undefined {
+  const database = getDb();
+  return database
+    .prepare("SELECT * FROM obras WHERE id_contrato = ?")
+    .get(id_contrato) as ObraRow | undefined;
+}
+
+export function guardarLeadB2b(lead: {
+  name: string;
+  email: string;
+  company: string;
+  role?: string;
+  sector?: string;
+  interes_informe?: number;
+}): void {
+  const database = getDb();
+  database
+    .prepare(
+      `INSERT INTO leads_b2b (name, email, company, role, sector, interes_informe)
+       VALUES (@name, @email, @company, @role, @sector, @interes_informe)`
+    )
+    .run({
+      name: lead.name.trim(),
+      email: lead.email.trim(),
+      company: lead.company.trim(),
+      role: lead.role?.trim() ?? null,
+      sector: lead.sector?.trim() ?? null,
+      interes_informe: lead.interes_informe ?? 0,
+    });
 }
 
 export function upsertObra(obra: ObraRow): "insert" | "update" | "unchanged" {

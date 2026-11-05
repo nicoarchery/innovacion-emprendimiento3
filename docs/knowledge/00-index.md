@@ -31,6 +31,8 @@ Mapa rápido de la KB. Regla de autoridad: el código manda sobre las specs comp
 | `13-decisiones-y-convenciones.md` | Convenciones del repo y decisiones detectadas | CURRENT | Al escribir código para respetar patrones |
 | `14-glosario.md` | Términos y siglas usados en el repo | CURRENT | Al leer specs o código |
 | `15-cumplimiento-legal-tos.md` | Legalidad y TOS por fuente de datos; ajustes para producción real | CURRENT | Al pasar a producción, monetizar o integrar nuevas fuentes |
+| `16-gtm-y-ventas.md` | Plan comercial / GTM: oferta, canales de venta, perfil de comprador y resultados actuales (cero ventas) | CURRENT | Al hablar de ventas, monetización B2B o primer cliente |
+| `17-graphify-ponytail.md` | Herramientas de asistente de código/conocimiento: Graphify (plugin MCP OpenCode) y evaluación de Ponytail (descartado) | CURRENT | Al instalar/evaluar herramientas de asistente de código o conocimiento |
 
 ## Notas críticas de sesgo
 

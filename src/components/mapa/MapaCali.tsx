@@ -26,7 +26,40 @@ import {
 
 const CENTRO_CALI: [number, number] = [3.4516, -76.532];
 
-function colorEstado(estado: string | null): string {
+// Obra de referencia para la demo: vía Cañaspordas (Valle del Cauca).
+// No tiene coordenadas en SECOP; se muestra con coordenadas aproximadas de Cali.
+const OBRA_DEMO: ObraMarcador = {
+  id: "CO1.PCCNTR.8373561",
+  referencia: "1.360.17.12- 16281",
+  nombre:
+    "EJECUTAR LAS OBRAS DE MEJORAMIENTO Y COMPLEMENTARIAS DE LA VÍA CAÑASGORDAS ENTRE EL PUENTE SOBRE EL RÍO PANCE Y LA GLORIETA DE ALFAGUARA",
+  entidad: "SECRETARIA DE INFRAESTRUCTURA - GOBERNACION DEL VALLE",
+  contratista: "CONSORCIO AV CAÑASGORDAS",
+  estado: "Modificado",
+  valor: 252928590550,
+  fechaInicio: "2025-10-31",
+  fechaFin: "2027-10-24",
+  urlSecop:
+    "https://community.secop.gov.co/Public/Tendering/OpportunityDetail/Index?noticeUID=CO1.NTC.8499863&isFromPublicArea=True&isModal=true&asPopupView=true",
+  direccion: "Carrera 6 Calle 9 y 10 - Piso 13, Cali",
+  comuna: null,
+  barrio: null,
+  lat: 3.4495,
+  lon: -76.5290,
+  geoFuente: "demo",
+  geoConfianza: "baja",
+  estadoUbicacion: "resuelta",
+  syncedAt: null,
+  avanceSecop: null,
+  avanceCampo: null,
+  brecha: null,
+  estadoBrecha: "sin_datos",
+  reportes: null,
+  reputacion: null,
+};
+
+function colorEstado(estado: string | null, id?: string): string {
+  if (id === OBRA_DEMO.id) return "#d97706"; // color especial obra demo
   const e = (estado ?? "").toLowerCase();
   if (e.includes("ejecuci") || e.includes("aprobado")) return "#1e40af";
   if (e.includes("terminado") || e.includes("liquidado")) return "#334155";
@@ -68,7 +101,7 @@ function CapaMarcadores({
       if (obra.lat === null || obra.lon === null) return [];
       const icono = L.divIcon({
         className: "",
-        html: pinHtml(colorEstado(obra.estado)),
+        html: pinHtml(colorEstado(obra.estado, obra.id)),
         iconSize: [22, 22],
         iconAnchor: [11, 11],
       });
@@ -300,7 +333,10 @@ export function MapaCali() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <CapaMarcadores obras={obras} onSeleccionar={onSeleccionar} />
+            <CapaMarcadores
+              obras={obras.find((o) => o.id === OBRA_DEMO.id) ? obras : [...obras, OBRA_DEMO]}
+              onSeleccionar={onSeleccionar}
+            />
           </MapContainer>
 
           {seleccionada && (

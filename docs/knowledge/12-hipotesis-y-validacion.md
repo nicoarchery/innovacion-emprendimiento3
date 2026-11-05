@@ -34,6 +34,7 @@ Según `docs/01-contexto-y-recursos.md`, `docs/archive/sustento.md`, `docs/archi
 - Empresas pagan por licencia social / ESG (B2B) — **sin evidencia de tracción**.
 - Verificación ciudadana aporta valor de transparencia — **sin datos de uso**.
 - Gap financiero-vs-campo con alertas (suma de `sustento`/`005`) — **no medido**.
+- El guion GTM (`docs/GUION_VIDEO_GTM_5MIN.md`, ver `16-gtm-y-ventas.md`) declara a la fecha **cero ventas, cero clientes, cero interesados contactados**; no hay lista armada ni correos enviados.
 
 ## Diseño de experimentos (docs y specs)
 

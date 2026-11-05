@@ -47,6 +47,10 @@ sources:
 | Enlaces de contacto (correo/teléfono) | Implementados |
 | **Reporte ciudadano desde el mapa** | **SÍ, persiste** en `reportes_ciudadanos` (SQLite) — spec `018`, 2026-09-23. Ver `09` y `08` |
 
+## Plan comercial / GTM
+
+El plan de venta para el primer cliente (oferta Informe de cumplimiento $7M, canales LinkedIn/correo/visita, perfil de comprador en Cali y resultados a la fecha: cero ventas) vive en `16-gtm-y-ventas.md`. Ese plan describe acciones **futuras no ejecutadas**; no confundir con el flujo de leads implementado en este doc (que solo loguea).
+
 ## Recomendación al trabajar aquí
 
 - Si el requisito futuro es persistir leads/verificaciones: crear tabla en SQLite (ver `06`) o servicio; el patrón de ruta ya está en `09`.

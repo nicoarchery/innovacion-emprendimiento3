@@ -148,6 +148,12 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
               Ver en SECOP <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}
+          <a
+            href={`/informe-cumplimiento/${obra.id}`}
+            className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-tinta underline-offset-4 hover:text-sello hover:underline border border-tinta/30 rounded px-2 py-1"
+          >
+            Ver informe de cumplimiento
+          </a>
         </section>
 
         <section className="border border-green-800/25 bg-green-50/70 p-3">

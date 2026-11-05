@@ -6,5 +6,6 @@
       "command": ["npx", "-y", "lean-spec", "mcp", "--specs-dir", "./specs", "--quiet"],
       "enabled": true
     }
-  }
+  },
+  "plugins": ["@dietrichgebert/ponytail@5.3.3"]
 }

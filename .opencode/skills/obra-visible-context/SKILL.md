@@ -13,6 +13,7 @@ Guía para cargar y usar el conocimiento del proyecto sin leer todo el repositor
 - Cuando se pregunte "¿qué existe?", "¿cómo funciona X?", "¿cuál es el estado de Y?" sobre el producto, datos, mapa, SECOP, specs, hipótesis o monetización.
 - Al evaluar specs planificadas (003-009) frente a lo implementado.
 - Al decidir si un dato es real vs. simulado.
+- Al instalar o evaluar herramientas de asistente de código/conocimiento (ver dominio 17).
 
 ## Paso 1 — Localiza la KB
 
@@ -23,6 +24,9 @@ Los archivos viven en `docs/knowledge/`:
 | `README.md` | Qué es la KB y cómo usarla |
 | `00-index.md` | Mapa de dominios → cuál leer según la tarea |
 | `01`…`14` | Conocimiento por dominio (ver `00-index.md`) |
+| `15-cumplimiento-legal-tos.md` | Legalidad y TOS por fuente de datos; ajustes para producción real |
+| `16-gtm-y-ventas.md` | Plan comercial / GTM: oferta, canales de venta, perfil de comprador, cero ventas |
+| `17-graphify-ponytail.md` | Herramientas de asistente de código/conocimiento: Graphify (plugin MCP OpenCode) y Ponytail (descartado) |
 | `99-source-registry.md` | Fuentes y niveles de autoridad |
 
 ## Paso 2 — Reglas de veracidad (nunca modificar)
@@ -40,6 +44,10 @@ Los archivos viven en `docs/knowledge/`:
 3. **Estado**: distingue `CURRENT` (existe hoy) de `DESIGNED`/`ROADMAP` (planes) y `HYPOTHESIS`/`HISTORICAL` (no vigente). No presentes planes como hechos.
 4. **Contradicciones**: si detectas una nueva discrepancia no documentada, menciónala y actualiza el doc correspondiente con una marca `⚠ Contradicción`.
 5. **No inventes**: si la KB no trae información, velo por el código antes de dar por hecho algo; marca `confidence: UNKNOWN` si no puedes verificarlo.
+
+## Herramientas de asistente evaluadas (dominio 17)
+
+Se instaló y evaluó: `codegraph@1.0.0` (intentó usarse, falló: paquete npm roto sin `dist`/`bin`, MODULE_NOT_FOUND — ver `docs/knowledge/17-graphify-ponytail.md`); `@dietrichgebert/ponytail@5.3.3` (opencode-plugin válido, instalado y registrado en `opencode.json`, modo lazy senior dev YAGNI — disponible como `/ponytail` en esta sesión); `graphify-opencode@1.1.1` (desinstalado, requería cuenta Graphify + OAuth, no se usó). Detalle completo en `docs/knowledge/17-graphify-ponytail.md`.
 
 ## Paso 4 — Salida
 

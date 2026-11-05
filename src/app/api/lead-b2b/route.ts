@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { guardarLeadB2b } from "@/lib/mapa/db";
 
 const BLOCKED_DOMAINS = [
   "gmail.com",
@@ -45,13 +46,12 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log("[LEAD B2B CAPTURADO]:", {
-      name: name.trim(),
-      email: email.trim(),
-      company: company.trim(),
+    guardarLeadB2b({
+      name,
+      email,
+      company,
       role,
       sector,
-      timestamp: new Date().toISOString(),
     });
 
     return NextResponse.json({
