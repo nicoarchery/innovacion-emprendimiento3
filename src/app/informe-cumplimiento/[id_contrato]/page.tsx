@@ -41,7 +41,7 @@ export default async function InformeCumplimientoPage({
   params: Promise<{ id_contrato: string }>;
 }) {
   const { id_contrato } = await params;
-  const obra = getObraPorId(id_contrato);
+  const obra = await getObraPorId(id_contrato);
   if (!obra) notFound();
 
   const valor = obra.valor ?? 0;
@@ -263,15 +263,12 @@ export default async function InformeCumplimientoPage({
               >
                 Buscar otra obra
               </a>
-              <Button
-                className="w-auto"
-                onClick={() => {
-                  const el = document.getElementById("para-organizaciones");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
+              <a
+                href="/#para-organizaciones"
+                className="inline-flex items-center gap-1.5 text-xs font-mono text-tinta/60 underline-offset-4 hover:text-sello hover:underline transition-colors"
               >
                 Solicitar informe piloto
-              </Button>
+              </a>
             </div>
           </CardContent>
         </Card>

@@ -105,7 +105,7 @@ export async function syncMapa(): Promise<SyncResult> {
   const inicio = Date.now();
 
   try {
-    migrarGeoV2();
+    await migrarGeoV2();
     const contratos = await extraerContratosCali();
     let nuevas = 0;
     let actualizadas = 0;
@@ -116,21 +116,21 @@ export async function syncMapa(): Promise<SyncResult> {
       const fila = construirFila(contrato);
       if (fila.is_obra !== 1) continue;
 
-      const resultado = upsertObra(fila);
+      const resultado = await upsertObra(fila);
       if (resultado === "insert") nuevas++;
       else if (resultado === "update") actualizadas++;
       else sinCambios++;
     }
 
-    const pendientes = listObrasPendientesGeo(CAP_GEOCODIFICACION_CORRIDA);
+    const pendientes = await listObrasPendientesGeo(CAP_GEOCODIFICACION_CORRIDA);
     let geocodificadas = 0;
 
     for (const obra of pendientes) {
       const llaveCache = canonizarDireccionCO(obra.direccion_ejecucion ?? "");
-      const cache = llaveCache ? buscarCacheUbicacion(llaveCache) : null;
+      const cache = llaveCache ? await buscarCacheUbicacion(llaveCache) : null;
 
       if (cache) {
-        marcarUbicacion(
+        await marcarUbicacion(
           obra.id_contrato,
           { lat: cache.lat, lon: cache.lon, comuna: cache.comuna ?? undefined, barrio: cache.barrio ?? undefined, fuente: "cache-ubicaciones", confianza: "media" },
           "resuelta"
@@ -140,25 +140,25 @@ export async function syncMapa(): Promise<SyncResult> {
       }
 
       if (obra.geo_intentos >= 2) {
-        marcarUbicacion(obra.id_contrato, null, "no_determinada");
+        await marcarUbicacion(obra.id_contrato, null, "no_determinada");
         continue;
       }
 
       const geo: GeoResult | null = await geocodificarObra(obra);
       if (geo) {
-        marcarUbicacion(obra.id_contrato, geo, "resuelta");
+        await marcarUbicacion(obra.id_contrato, geo, "resuelta");
         if (llaveCache) {
-          cacheUbicacion(llaveCache, { lat: geo.lat, lon: geo.lon, comuna: geo.comuna, barrio: geo.barrio, displayName: geo.displayName, fuente: geo.fuente, confianza: geo.confianza });
+          await cacheUbicacion(llaveCache, { lat: geo.lat, lon: geo.lon, comuna: geo.comuna, barrio: geo.barrio, displayName: geo.displayName, fuente: geo.fuente, confianza: geo.confianza });
         }
         geocodificadas++;
       } else {
         // Sin geo: contar el intento para que la obra salga de la cola hacia
         // 'no_determinada' (a los 2 intentos) y no bloquee al resto.
-        marcarUbicacion(obra.id_contrato, null, "pendiente");
+        await marcarUbicacion(obra.id_contrato, null, "pendiente");
       }
     }
 
-    const total = totalObras();
+    const total = await totalObras();
     const resultado: SyncResult = {
       procesados: contratos.length,
       nuevas,
@@ -170,7 +170,7 @@ export async function syncMapa(): Promise<SyncResult> {
       durSeg: Math.round((Date.now() - inicio) / 1000),
     };
 
-    registrarSyncRun({
+    await registrarSyncRun({
       procesados: resultado.procesados,
       nuevas: resultado.nuevas,
       actualizadas: resultado.actualizadas,
@@ -182,7 +182,7 @@ export async function syncMapa(): Promise<SyncResult> {
     return resultado;
   } catch (error) {
     const mensaje = (error as Error).message;
-    registrarSyncRun({
+    await registrarSyncRun({
       procesados: 0,
       nuevas: 0,
       actualizadas: 0,

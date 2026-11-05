@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   resumenReputacionContratistas,
   sembrarReportesDemo,
+  type ReputacionContratista,
 } from "@/lib/mapa/db";
 
 type OrdenRanking = "valor" | "reportes" | "score";
@@ -10,9 +11,9 @@ type OrdenRanking = "valor" | "reportes" | "score";
 const ORDENES_VALIDAS: OrdenRanking[] = ["valor", "reportes", "score"];
 
 function ordenarRanking(
-  data: ReturnType<typeof resumenReputacionContratistas>,
+  data: ReputacionContratista[],
   orden: OrdenRanking
-): ReturnType<typeof resumenReputacionContratistas> {
+): ReputacionContratista[] {
   const copia = [...data];
   if (orden === "valor") {
     copia.sort((a, b) => (b.valor_concesionado ?? 0) - (a.valor_concesionado ?? 0));
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
     const limitRaw = params.get("limit");
     const limit = limitRaw ? Math.min(50, Math.max(1, Number(limitRaw))) : 25;
 
-    const data = ordenarRanking(resumenReputacionContratistas(), orden);
+    const data = ordenarRanking(await resumenReputacionContratistas(), orden);
     const conNivel = data.filter((r) => r.nivel !== "sin_datos").length;
 
     return NextResponse.json({
@@ -66,7 +67,7 @@ export async function GET(request: NextRequest) {
 // POST /api/mapa/ranking?demo=1 → siembra reportes demo de reputación
 export async function POST() {
   try {
-    const { sembrados } = sembrarReportesDemo();
+    const { sembrados } = await sembrarReportesDemo();
     return NextResponse.json({ success: true, sembrados });
   } catch (error) {
     console.error("[API_RANKING_SEED_ERROR]", error);

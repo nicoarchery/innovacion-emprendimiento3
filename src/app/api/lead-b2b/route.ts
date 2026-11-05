@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       );
     }
 
-    guardarLeadB2b({
+    await guardarLeadB2b({
       name,
       email,
       company,

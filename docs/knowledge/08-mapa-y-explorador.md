@@ -31,7 +31,7 @@ Componentes en `src/components/mapa/`:
 - `AnalisisAvance.tsx` — bloque **"Análisis de avance"** (spec `023`) compartido mapa/explorador: dos barras de % (`SECOP` financiero vs `Campo` vecinos), etiqueta de estado (`sin_datos` / `normal` ≤15 pts / `alerta` >15 pts) y **guía de lectura** plegable que explica matices (plata ejecutada sin obra visible = señal de riesgo; obra avanzando sin plata = desfinanciamiento). Integrado en `PanelDetalleObra` (versión completa con guía) y en la tarjeta derecha de cada fila del explorador (`compact`, sin guía).
 - `AyudaEstados.tsx` — popup "?" compartido por mapa y explorador: explica cada estado SECOP (Modificado, terminado, En ejecución, Cancelado, Aprobado, Borrador, Cerrado, Suspendido, enviado Proveedor, En aprobación…).
 
-Origen de datos: **`/api/mapa/obras`** (real, desde `06`).
+Origen de datos: **`/api/mapa/obras`** (real, desde `06`, leído vía `@libsql/client` sobre `data/mapa.db`).
 
 ## Explorador (`/explorador`)
 
@@ -61,3 +61,4 @@ Obra usada en la demo de ventas (guion GTM, ver `16`): vía Cañaspordas, Secret
 - Se geocodificaron **50 obras** con ubicación en Cali usando el pipeline de geocodificación (`geocodeService.ts`: Nominatim simplificado). Las coordenadas vienen de las direcciones de SECOP, con fuentes `nominatim-simple` y confianza `media`.
 - La obra de referencia `CO1.PCCNTR.8373561` (vía Cañaspordas, $252.928.590.550) tiene un **marcador naranja** (`#d97706`) para diferenciarla del resto.
 - Se enlaza desde el panel de detalle a `/informe-cumplimiento/CO1.PCCNTR.8373561` (ver `16-gtm-y-ventas.md`).
+- La página de informe lee de `public/obras.json` (no de better-sqlite3, que no funciona en Server Components de Next.js con Bun).

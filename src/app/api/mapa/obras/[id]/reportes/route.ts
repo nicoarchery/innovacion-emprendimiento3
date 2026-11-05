@@ -54,14 +54,15 @@ export async function GET(
 ) {
   const { id } = await context.params;
   try {
-    const obra = obtenerObraPorId(id);
+    const obra = await obtenerObraPorId(id);
     if (!obra) {
       return NextResponse.json(
         { success: false, error: "Obra no encontrada" },
         { status: 404 }
       );
     }
-    const reportes = listarReportesPorObra(id).map((r) => ({
+    const reportesArray = await listarReportesPorObra(id);
+    const reportes = await Promise.all(reportesArray.map(async (r) => ({
       id: r.id,
       estadoTerreno: r.estado_terreno,
       avanceObservado: r.avance_observado,
@@ -69,7 +70,7 @@ export async function GET(
       descripcion: r.descripcion,
       foto: r.foto,
       fecha: r.created_at,
-      respuestas: listarRespuestasPorReporte(r.id).map((res) => ({
+      respuestas: (await listarRespuestasPorReporte(r.id)).map((res) => ({
         id: res.id,
         autor: res.autor,
         texto: res.texto,
@@ -77,11 +78,11 @@ export async function GET(
         fijada: res.fijada === 1,
         fecha: res.created_at,
       })),
-    }));
+    })));
     return NextResponse.json({
       success: true,
       data: reportes,
-      meta: { resumen: resumenReportesPorObra(id) },
+      meta: { resumen: await resumenReportesPorObra(id) },
     });
   } catch (error) {
     console.error("[API_REPORTES_ERROR]", error);
@@ -98,7 +99,7 @@ export async function POST(
 ) {
   const { id } = await context.params;
   try {
-    const obra = obtenerObraPorId(id);
+    const obra = await obtenerObraPorId(id);
     if (!obra) {
       return NextResponse.json(
         { success: false, error: "Obra no encontrada" },
@@ -191,7 +192,7 @@ export async function POST(
     const lat = body.lat ?? obra.lat ?? null;
     const lon = body.lon ?? obra.lon ?? null;
 
-    const idReporte = insertarReporteCiudadano({
+    const idReporte = await insertarReporteCiudadano({
       id_contrato: id,
       estado_terreno: estadoTerreno ?? null,
       avance_observado: avanceObservado,
@@ -207,7 +208,7 @@ export async function POST(
     return NextResponse.json({
       success: true,
       id: idReporte,
-      meta: { resumen: resumenReportesPorObra(id) },
+      meta: { resumen: await resumenReportesPorObra(id) },
       message: "Reporte recibido. Gracias por aportar.",
     });
   } catch (error) {

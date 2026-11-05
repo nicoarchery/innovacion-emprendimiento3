@@ -15,8 +15,8 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       resultado,
-      totales: totalObras(),
-      ultimaSync: ultimaSync(),
+      totales: await totalObras(),
+      ultimaSync: await ultimaSync(),
     });
   } catch (error) {
     console.error("[API_MAPA_ACTUALIZAR_ERROR]", (error as Error).message);

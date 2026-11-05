@@ -37,7 +37,7 @@ export async function POST(
   }
 
   try {
-    const reporte = obtenerReportePorId(idReporte);
+    const reporte = await obtenerReportePorId(idReporte);
     if (!reporte) {
       return NextResponse.json(
         { success: false, error: "Reporte no encontrado" },
@@ -76,8 +76,8 @@ export async function POST(
     }
 
     const fijar = body.fijar === true;
-    const hasRespuestas = resumenRespuestasPorReporte(idReporte).total > 0;
-    const id = insertarRespuesta({
+    const hasRespuestas = (await resumenRespuestasPorReporte(idReporte)).total > 0;
+    const id = await insertarRespuesta({
       id_reporte: idReporte,
       autor: body.autor?.trim() || null,
       texto,
@@ -88,12 +88,12 @@ export async function POST(
     // La primera respuesta se fija como oficial por defecto (demo); si el
     // autor pide fijar, la fija explícitamente (máx 1 por obra).
     const fijadaId =
-      fijar || !hasRespuestas ? (fijarRespuestaOficial(id)?.id ?? id) : id;
+      fijar || !hasRespuestas ? (await fijarRespuestaOficial(id))?.id ?? id : id;
 
-return NextResponse.json({
+  return NextResponse.json({
       success: true,
       id: fijadaId,
-      meta: { resumen: resumenRespuestasPorReporte(idReporte) },
+      meta: { resumen: await resumenRespuestasPorReporte(idReporte) },
       message: "Respuesta de la empresa registrada.",
     });
   } catch (error) {

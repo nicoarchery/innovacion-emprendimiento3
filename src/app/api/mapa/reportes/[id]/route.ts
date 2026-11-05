@@ -23,7 +23,7 @@ export async function PATCH(
     );
   }
 
-  const existente = obtenerReportePorId(id);
+  const existente = await obtenerReportePorId(id);
   if (!existente) {
     return NextResponse.json(
       { success: false, error: "Reporte no encontrado" },
@@ -90,7 +90,7 @@ export async function PATCH(
       );
     }
 
-    actualizarReporteCiudadano(id, {
+    await actualizarReporteCiudadano(id, {
       estado_terreno: estadoTerreno,
       avance_observado: avanceObservado,
       calificacion: calificacion,
@@ -120,13 +120,13 @@ export async function DELETE(
     );
   }
 
-  if (!obtenerReportePorId(id)) {
+  if (!(await obtenerReportePorId(id))) {
     return NextResponse.json(
       { success: false, error: "Reporte no encontrado" },
       { status: 404 }
     );
   }
 
-  eliminarReporteCiudadano(id);
+  await eliminarReporteCiudadano(id);
   return NextResponse.json({ success: true, id });
 }

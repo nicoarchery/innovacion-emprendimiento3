@@ -22,7 +22,7 @@ export async function PATCH(
   }
 
   try {
-    const existente = obtenerRespuestaPorId(id);
+    const existente = await obtenerRespuestaPorId(id);
     if (!existente) {
       return NextResponse.json(
         { success: false, error: "Respuesta no encontrada" },
@@ -50,21 +50,21 @@ export async function PATCH(
           { status: 400 }
         );
       }
-      actualizarRespuesta(id, { texto });
+      await actualizarRespuesta(id, { texto });
     }
 
     if (body.desfijar === true) {
-      desfijarRespuesta(id);
+      await desfijarRespuesta(id);
     } else if (body.fijar === true) {
-      fijarRespuestaOficial(id);
+      await fijarRespuestaOficial(id);
     }
 
-    const actualizada = obtenerRespuestaPorId(id);
+    const actualizada = await obtenerRespuestaPorId(id);
     return NextResponse.json({
       success: true,
       data: actualizada,
       meta: actualizada
-        ? { resumen: resumenRespuestasPorReporte(actualizada.id_reporte) }
+        ? { resumen: await resumenRespuestasPorReporte(actualizada.id_reporte) }
         : undefined,
     });
   } catch (error) {
@@ -88,7 +88,7 @@ export async function DELETE(
     );
   }
 
-  const existente = obtenerRespuestaPorId(id);
+  const existente = await obtenerRespuestaPorId(id);
   if (!existente) {
     return NextResponse.json(
       { success: false, error: "Respuesta no encontrada" },
@@ -96,10 +96,10 @@ export async function DELETE(
     );
   }
 
-  eliminarRespuesta(id);
+  await eliminarRespuesta(id);
   return NextResponse.json({
     success: true,
     id,
-    meta: { resumen: resumenRespuestasPorReporte(existente.id_reporte) },
+    meta: { resumen: await resumenRespuestasPorReporte(existente.id_reporte) },
   });
 }
