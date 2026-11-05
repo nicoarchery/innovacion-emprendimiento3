@@ -9,6 +9,7 @@ import {
   FileText,
   Compass,
   ExternalLink,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCOP } from "@/lib/secop";
@@ -197,13 +198,15 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
               Ver en SECOP <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}
-          <a
-            href={`/informe-cumplimiento/${obra.id}`}
-            className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-tinta underline-offset-4 hover:text-sello hover:underline border border-tinta/30 rounded px-2 py-1"
-          >
-            Ver informe de cumplimiento
-          </a>
         </section>
+
+        {obra.geoFuente === "demo" && (
+          <section className="border border-amber-700/30 bg-amber-50/70 p-3 mb-3">
+            <h4 className="mb-1 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-amber-800">
+              <AlertTriangle className="h-3.5 w-3.5" /> Datos de demostración
+            </h4>
+          </section>
+        )}
 
         <section className="border border-tinta/25 p-3">
           <h4 className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-tinta">

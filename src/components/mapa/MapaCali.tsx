@@ -28,7 +28,7 @@ const CENTRO_CALI: [number, number] = [3.4516, -76.532];
 
 // Obra de referencia para la demo: vía Cañaspordas (Valle del Cauca).
 // No tiene coordenadas en SECOP; se muestra con coordenadas aproximadas de Cali.
-const OBRA_DEMO: ObraMarcador = {
+export const OBRA_DEMO: ObraMarcador = {
   id: "CO1.PCCNTR.8373561",
   referencia: "1.360.17.12- 16281",
   nombre:
@@ -37,8 +37,10 @@ const OBRA_DEMO: ObraMarcador = {
   contratista: "CONSORCIO AV CAÑASGORDAS",
   estado: "Modificado",
   valor: 252928590550,
-  valorPagado: null,
-  valorFacturado: null,
+  // Dato de demo: SECOP no publica pagos para esta obra. Se inyecta 70% a
+  // efectos ilustrativos del guion GTM. No es información real de SECOP.
+  valorPagado: 177050013385,
+  valorFacturado: 177050013385,
   valorPendienteEjecucion: null,
   fechaInicio: "2025-10-31",
   fechaFin: "2027-10-24",

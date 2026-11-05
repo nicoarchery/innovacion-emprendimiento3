@@ -13,6 +13,17 @@ import {
 } from "@/lib/mapa/db";
 import { calcularN1, evaluarBrecha } from "@/lib/mapa/brechas";
 
+// Obra demo Cañas Gordas: datos de pagos inyectados para el guion GTM.
+// SECOP II no publica pagos para este contrato; el 70 % es inventado.
+const OBRA_DEMO_PAGOS = {
+  id: "CO1.PCCNTR.8373561",
+  valorPagado: 177050013385,
+  valorFacturado: 177050013385,
+  geoFuente: "demo",
+  // SECOP (financiero): dato de demo, 70 % de ejecución
+  avanceSecop: 70,
+} as const;
+
 export async function GET(request: NextRequest) {
   try {
     const params = request.nextUrl.searchParams;
@@ -56,7 +67,7 @@ export async function GET(request: NextRequest) {
       ])
     );
 
-    const data = obras.map((o) => {
+    let data = obras.map((o) => {
       const brecha = evaluarBrecha(
         calcularN1(o.valor, o.valor_pendiente_ejecucion),
         avances[o.id_contrato] ?? null
@@ -92,6 +103,25 @@ export async function GET(request: NextRequest) {
         reputacion: o.contratista
           ? (reputacionPorContratista.get(o.contratista) ?? null)
           : null,
+      };
+    });
+
+    // Sobrescribir la obra demo con los valores de OBRA_DEMO_PAGOS (70 % ejecución,
+    // dato inventado para el guion GTM, no de SECOP).
+    data = data.map((o) => {
+      if (o.id !== OBRA_DEMO_PAGOS.id) return o;
+      const nuevaBrecha = evaluarBrecha(
+        OBRA_DEMO_PAGOS.avanceSecop,
+        o.avanceCampo ?? null
+      );
+      return {
+        ...o,
+        valorPagado: OBRA_DEMO_PAGOS.valorPagado,
+        valorFacturado: OBRA_DEMO_PAGOS.valorFacturado,
+        geoFuente: OBRA_DEMO_PAGOS.geoFuente,
+        avanceSecop: OBRA_DEMO_PAGOS.avanceSecop,
+        brecha: nuevaBrecha.gap,
+        estadoBrecha: nuevaBrecha.estado,
       };
     });
 
