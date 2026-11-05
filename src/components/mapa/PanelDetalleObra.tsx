@@ -23,6 +23,7 @@ import type { ResumenReportes } from "@/components/mapa/reportes-comunes";
 interface PanelDetalleObraProps {
   obra: ObraMarcador;
   onCerrar: () => void;
+  onSeleccionarUbicacion?: (idContrato: string) => void;
 }
 
 function confianzaLabel(c: string | null): string {
@@ -50,7 +51,11 @@ function diasEntrePlazo(fechaFin: string): number {
   return Math.round((fin.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
+export function PanelDetalleObra({
+  obra,
+  onCerrar,
+  onSeleccionarUbicacion,
+}: PanelDetalleObraProps) {
   const [listadoAbierto, setListadoAbierto] = useState(false);
   const [resumen, setResumen] = useState<ResumenReportes>(
     obra.reportes ?? {
@@ -199,6 +204,17 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
             </a>
           ) : null}
         </section>
+
+        {obra.geoFuente !== "demo" && onSeleccionarUbicacion ? (
+          <Button
+            onClick={() => onSeleccionarUbicacion(obra.id)}
+            variant="outline"
+            size="sm"
+            className="mt-3 w-full text-[11px] flex items-center justify-center gap-1"
+          >
+            <MapPin className="h-3 w-3" /> Marcar ubicación real
+          </Button>
+        ) : null}
 
         {obra.geoFuente === "demo" && (
           <section className="border border-amber-700/30 bg-amber-50/70 p-3 mb-3">

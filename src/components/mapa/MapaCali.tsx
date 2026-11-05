@@ -7,7 +7,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.markercluster";
-import { RefreshCw, MapPinned, Database } from "lucide-react";
+import { RefreshCw, MapPinned, Database, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Stamp } from "@/components/Stamp";
@@ -23,6 +23,7 @@ import {
   type RespuestaActualizar,
   type RespuestaObras,
 } from "@/components/mapa/mapa-types";
+import { listarUbicacionesComunitarias } from "@/lib/mapa/db";
 
 const CENTRO_CALI: [number, number] = [3.4516, -76.532];
 
@@ -73,6 +74,12 @@ function colorEstado(estado: string | null, id?: string): string {
 
 function pinHtml(color: string): string {
   return `<div style="width:22px;height:22px;border-radius:9999px;background:${color};border:2.5px solid #ffffff;box-shadow:0 1px 5px rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center"><span style="width:5px;height:5px;border-radius:9999px;background:#ffffff"></span></div>`;
+}
+
+const COLOR_COMUNIDAD = "#7c3aed"; // púrpura para ubicaciones reportadas por la comunidad
+
+function pinHtmlComunidad(): string {
+  return `<div style="width:26px;height:26px;border-radius:9999px;background:${COLOR_COMUNIDAD};border:3px solid #ffffff;box-shadow:0 2px 8px rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;position:relative"><span style="width:7px;height:7px;border-radius:9999px;background:#ffffff"></span><div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid ${COLOR_COMUNIDAD}"></div></div>`;
 }
 
 function estadoSello(estado: string | null): {
@@ -128,6 +135,77 @@ function CapaMarcadores({
   return null;
 }
 
+function CapaMarcadoresComunitarios({
+  ubicaciones,
+  obrasPorId,
+  onSeleccionar,
+}: {
+  ubicaciones: { id: number; id_contrato: string; lat: number; lon: number }[];
+  obrasPorId: Record<string, ObraMarcador>;
+  onSeleccionar: (obra: ObraMarcador) => void;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    const marcadores: L.Marker[] = [];
+    for (const u of ubicaciones) {
+      const obra = obrasPorId[u.id_contrato];
+      if (!obra || u.lat === null || u.lon === null) continue;
+      const icono = L.divIcon({
+        className: "",
+        html: pinHtmlComunidad(),
+        iconSize: [26, 26],
+        iconAnchor: [13, 26],
+      });
+      const marcador = L.marker([u.lat, u.lon], { icon: icono });
+      marcador.bindTooltip(
+        `<strong>Ubicación reportada por la comunidad</strong><br/>${obra.entidad ?? "Obra"}`,
+        { direction: "top", opacity: 0.95 }
+      );
+      marcador.on("click", () => onSeleccionar(obra));
+      marcadores.push(marcador);
+    }
+    const grupo = L.layerGroup(marcadores);
+    map.addLayer(grupo);
+    return () => {
+      map.removeLayer(grupo);
+    };
+  }, [map, ubicaciones, obrasPorId, onSeleccionar]);
+
+  return null;
+}
+
+function CapaSeleccionUbicacion({
+  idContrato,
+  onGuardar,
+  onCancelar,
+}: {
+  idContrato: string;
+  onGuardar: (lat: number, lon: number) => void;
+  onCancelar: () => void;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    const onClick = (e: L.LeafletMouseEvent) => {
+      onGuardar(e.latlng.lat, e.latlng.lng);
+    };
+    map.on("click", onClick);
+    return () => {
+      void map.off("click", onClick);
+    };
+  }, [map, onGuardar]);
+
+  useEffect(() => {
+    map.getContainer().style.cursor = "crosshair";
+    return () => {
+      map.getContainer().style.cursor = "";
+    };
+  }, [map]);
+
+  return null;
+}
+
 function formatearFecha(iso: string | null): string {
   if (!iso) return "Nunca";
   return new Date(iso).toLocaleString("es-CO", {
@@ -147,6 +225,12 @@ export function MapaCali() {
   const [lineaTiempoAbierta, setLineaTiempoAbierta] = useState(false);
   const [cargando, setCargando] = useState(true);
   const [sincronizando, setSincronizando] = useState(false);
+  const [ubicacionesComunitarias, setUbicacionesComunitarias] = useState<
+    { id: number; id_contrato: string; lat: number; lon: number }[]
+  >([]);
+  const [seleccionandoUbicacion, setSeleccionandoUbicacion] = useState<
+    string | null
+  >(null); // id_contrato para el que se está señalando la ubicación real
 
   const cargar = useCallback(async (f: FiltrosMapaUI) => {
     setCargando(true);
@@ -167,6 +251,14 @@ export function MapaCali() {
       setMeta(json.meta);
       setSeleccionada(null);
       setLineaTiempoAbierta(false);
+
+      // Cargar ubicaciones reportadas por la comunidad
+      try {
+        const com = await listarUbicacionesComunitarias();
+        setUbicacionesComunitarias(com);
+      } catch {
+        // No bloquear la carga del mapa si fallan las comunitarias
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -196,6 +288,52 @@ export function MapaCali() {
     setFiltros(FILTROS_INICIALES);
     void cargar(FILTROS_INICIALES);
   }, [cargar]);
+
+  const obrasPorId = useCallback((): Record<string, ObraMarcador> => {
+    const m: Record<string, ObraMarcador> = {};
+    for (const o of obras) m[o.id] = o;
+    return m;
+  }, [obras]);
+
+  const onSeleccionarUbicacion = useCallback(
+    (idContrato: string) => {
+      setSeleccionandoUbicacion(idContrato);
+      setSeleccionada(null);
+      setLineaTiempoAbierta(false);
+      toast({
+        title: "Señala la ubicación real",
+        description: "Haz clic en el mapa donde está realmente la obra",
+      });
+    },
+    [toast]
+  );
+
+  const onGuardarUbicacionComunitaria = useCallback(
+    async (idContrato: string, lat: number, lon: number) => {
+      try {
+        const res = await fetch("/api/mapa/ubicacion-comunitaria", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id_contrato: idContrato, lat, lon }),
+        });
+        if (!res.ok) throw new Error("Error guardando ubicación");
+        const com = await listarUbicacionesComunitarias();
+        setUbicacionesComunitarias(com);
+        setSeleccionandoUbicacion(null);
+        toast({
+          title: "Ubicación reportada",
+          description: "Gracias por señalar la ubicación real de la obra",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "No se pudo guardar la ubicación",
+          description: (error as Error).message,
+        });
+      }
+    },
+    [toast]
+  );
 
   const actualizarMapa = useCallback(async () => {
     if (sincronizando) return;
@@ -342,10 +480,43 @@ export function MapaCali() {
               obras={obras.find((o) => o.id === OBRA_DEMO.id) ? obras : [...obras, OBRA_DEMO]}
               onSeleccionar={onSeleccionar}
             />
+            <CapaMarcadoresComunitarios
+              ubicaciones={ubicacionesComunitarias}
+              obrasPorId={obrasPorId()}
+              onSeleccionar={onSeleccionar}
+            />
+            {seleccionandoUbicacion && (
+              <CapaSeleccionUbicacion
+                idContrato={seleccionandoUbicacion}
+                onGuardar={(lat, lon) =>
+                  void onGuardarUbicacionComunitaria(
+                    seleccionandoUbicacion,
+                    lat,
+                    lon
+                  )
+                }
+                onCancelar={() => setSeleccionandoUbicacion(null)}
+              />
+            )}
           </MapContainer>
 
+          {seleccionandoUbicacion && (
+            <div className="absolute inset-0 z-[1200] flex items-end justify-center pb-4">
+              <div className="bg-amber-900/90 backdrop-blur border border-amber-500/30 px-4 py-2 rounded-[4px] shadow-lg">
+                <p className="font-mono text-xs font-bold text-amber-100 uppercase tracking-[0.12em]">
+                  Modo selección: haz clic en el mapa para marcar la ubicación real de{" "}
+                  <span className="italic">{seleccionandoUbicacion}</span>
+                </p>
+              </div>
+            </div>
+          )}
+
           {seleccionada && (
-            <PanelDetalleObra obra={seleccionada} onCerrar={() => setSeleccionada(null)} />
+            <PanelDetalleObra
+              obra={seleccionada}
+              onCerrar={() => setSeleccionada(null)}
+              onSeleccionarUbicacion={onSeleccionarUbicacion}
+            />
           )}
 
           {seleccionada && (
@@ -376,6 +547,13 @@ export function MapaCali() {
               </span>
             );
           })}
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className="h-3 w-3 rounded-full border-2 border-white shadow"
+              style={{ backgroundColor: COLOR_COMUNIDAD }}
+            />
+            <span className="font-mono text-[11px] text-tinta/55">Comunidad</span>
+          </span>
           <span className="ml-auto font-mono text-[11px] text-tinta/45">Base © OpenStreetMap · Ubicaciones aproximadas</span>
         </div>
       </div>

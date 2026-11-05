@@ -982,3 +982,53 @@ export async function migrarGeoV2(): Promise<{
     reabiertas,
   };
 }
+
+// ---- Ubicaciones reportadas por la comunidad ----
+
+async function asegurarTablaUbicacionesComunitarias(): Promise<void> {
+  await exec(`
+    CREATE TABLE IF NOT EXISTS ubicaciones_comunitarias (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id_contrato TEXT NOT NULL,
+      lat REAL NOT NULL,
+      lon REAL NOT NULL,
+      reportado_por TEXT DEFAULT 'anonimo',
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+  await exec(
+    "CREATE INDEX IF NOT EXISTS idx_ubicaciones_comunitarias_contrato ON ubicaciones_comunitarias(id_contrato)"
+  );
+}
+
+export async function guardarUbicacionComunitaria(params: {
+  id_contrato: string;
+  lat: number;
+  lon: number;
+  reportado_por?: string;
+}): Promise<void> {
+  await asegurarTablaUbicacionesComunitarias();
+  await exec(
+    `INSERT INTO ubicaciones_comunitarias (id_contrato, lat, lon, reportado_por)
+     VALUES (?, ?, ?, ?)`,
+    [params.id_contrato, params.lat, params.lon, params.reportado_por ?? "anonimo"]
+  );
+}
+
+export interface UbicacionComunitaria {
+  id: number;
+  id_contrato: string;
+  lat: number;
+  lon: number;
+  reportado_por: string;
+  created_at: string;
+}
+
+export async function listarUbicacionesComunitarias(): Promise<UbicacionComunitaria[]> {
+  await asegurarTablaUbicacionesComunitarias();
+  return (await query(
+    `SELECT id, id_contrato, lat, lon, reportado_por, created_at
+     FROM ubicaciones_comunitarias
+     ORDER BY created_at DESC`
+  )) as UbicacionComunitaria[];
+}
