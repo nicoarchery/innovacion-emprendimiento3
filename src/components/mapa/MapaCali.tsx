@@ -37,6 +37,9 @@ const OBRA_DEMO: ObraMarcador = {
   contratista: "CONSORCIO AV CAÑASGORDAS",
   estado: "Modificado",
   valor: 252928590550,
+  valorPagado: null,
+  valorFacturado: null,
+  valorPendienteEjecucion: null,
   fechaInicio: "2025-10-31",
   fechaFin: "2027-10-24",
   urlSecop:

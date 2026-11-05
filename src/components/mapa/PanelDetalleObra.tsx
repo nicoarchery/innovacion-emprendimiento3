@@ -41,6 +41,14 @@ function fuenteLabel(fuente: string | null): string {
   return fuente ?? "Sin dato";
 }
 
+function diasEntrePlazo(fechaFin: string): number {
+  const fin = new Date(fechaFin);
+  fin.setHours(0, 0, 0, 0);
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  return Math.round((fin.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
   const [listadoAbierto, setListadoAbierto] = useState(false);
   const [resumen, setResumen] = useState<ResumenReportes>(
@@ -76,6 +84,47 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
     obra.lat !== null && obra.lon !== null
       ? `${obra.lat.toFixed(5)}, ${obra.lon.toFixed(5)}`
       : "No determinadas";
+
+  // ---- Cálculo de cumplimiento (mismo criterio que el informe) ----
+  const valor = obra.valor ?? 0;
+  const pagado = obra.valorPagado ?? 0;
+  const facturado = obra.valorFacturado ?? 0;
+  const ejecucion = facturado > 0 ? facturado : pagado;
+  const pctEjecucion = valor > 0 ? Math.round((ejecucion / valor) * 100) : 0;
+
+  const fin = obra.fechaFin ? new Date(obra.fechaFin) : null;
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  if (fin) fin.setHours(0, 0, 0, 0);
+  const estadoFinalizado =
+    obra.estado &&
+    ["cerrado", "terminado"].includes(obra.estado.toLowerCase().trim());
+
+  let plazoText: string;
+  let plazoClass: string;
+  if (estadoFinalizado) {
+    plazoText = `Finalizada · fin previsto ${fin ? fin.toLocaleDateString("es-CO") : "—"}`;
+    plazoClass = "text-verde";
+  } else if (!fin) {
+    plazoText = "Sin fecha fin";
+    plazoClass = "text-tinta/50";
+  } else {
+    const dias = Math.round((fin!.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
+    if (dias < 0) {
+      plazoText = `Vencida · ${Math.abs(dias)} días retrasados`;
+      plazoClass = "text-alerta";
+    } else {
+      plazoText = `Al día · ${dias} días restantes`;
+      plazoClass = "text-verde";
+    }
+  }
+
+  const cumplePlazo = estadoFinalizado || !fin || diasEntrePlazo(obra.fechaFin ?? "") >= 0;
+  const cumplePresupuesto = pctEjecucion >= 80;
+  const cumple = cumplePlazo && cumplePresupuesto;
+  const conclusionClass = cumple
+    ? "bg-verde/10 text-verde border border-verde/20"
+    : "bg-alerta/10 text-alerta border border-alerta/20";
 
   return (
     <div className="absolute right-3 top-3 z-[1000] flex max-h-[calc(100%-1.5rem)] w-[22rem] max-w-[calc(100%-1.5rem)] flex-col overflow-hidden rounded-[4px] border border-tinta/25 bg-ficha shadow-xl">
@@ -154,6 +203,37 @@ export function PanelDetalleObra({ obra, onCerrar }: PanelDetalleObraProps) {
           >
             Ver informe de cumplimiento
           </a>
+        </section>
+
+        <section className="border border-tinta/25 p-3">
+          <h4 className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-tinta">
+            <FileText className="h-3.5 w-3.5" /> Cumplimiento de la obra
+          </h4>
+          <dl className="space-y-2 text-[13px]">
+            <div>
+              <dt className="text-[11px] text-tinta/50">Ejecución presupuestal</dt>
+              <dd className="flex items-baseline gap-1">
+                <span className="font-mono font-bold tabular-nums text-tinta">
+                  {valor > 0 ? `${pctEjecucion}%` : "—"}
+                </span>
+                <span className="text-xs text-tinta/50">
+                  de {valor > 0 ? formatCOP(valor) : "—"}
+                </span>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[11px] text-tinta/50">Plazo</dt>
+              <dd className={`flex items-baseline gap-1 text-xs font-bold ${plazoClass}`}>
+                {plazoText}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[11px] text-tinta/50">Conclusión</dt>
+              <dd className={`text-xs font-bold rounded border px-2 py-0.5 ${conclusionClass}`}>
+                {cumple ? "Cumple" : "No cumple"}
+              </dd>
+            </div>
+          </dl>
         </section>
 
         <section className="border border-green-800/25 bg-green-50/70 p-3">

@@ -16,6 +16,9 @@ export interface ObraMarcador {
   contratista: string | null;
   estado: string | null;
   valor: number | null;
+  valorPagado: number | null;
+  valorFacturado: number | null;
+  valorPendienteEjecucion: number | null;
   fechaInicio: string | null;
   fechaFin: string | null;
   urlSecop: string | null;

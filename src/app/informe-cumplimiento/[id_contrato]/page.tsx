@@ -21,16 +21,17 @@ function diasRestantes(fechaFin: string | null): { dias: number; vencido: boolea
   return { dias, vencido: dias < 0 };
 }
 
-function estadoBadge(cumple: boolean, textoOk: string, textoMal: string) {
+function estadoBadge(cumple: boolean | null, textoOk: string, textoMal: string) {
+  const ok = cumple === true;
   return (
     <span
       className={`px-3 py-1.5 text-[12px] font-bold rounded border ${
-        cumple
+        ok
           ? "bg-verde/10 text-verde border border-verde/20"
           : "bg-alerta/10 text-alerta border border-alerta/20"
       }`}
     >
-      {cumple ? textoOk : textoMal}
+      {ok ? textoOk : textoMal}
     </span>
   );
 }
@@ -46,17 +47,26 @@ export default async function InformeCumplimientoPage({
 
   const valor = obra.valor ?? 0;
   const pagado = obra.valor_pagado ?? 0;
+  const facturado = obra.valor_facturado ?? 0;
+  const ejecucion = facturado > 0 ? facturado : pagado;
   const pendienteEjecucion = obra.valor_pendiente_ejecucion ?? 0;
-  const pctPagado = valor > 0 ? Math.round((pagado / valor) * 100) : 0;
+  const pctPagado = valor > 0 ? Math.round((ejecucion / valor) * 100) : 0;
   const pctPendiente = valor > 0 ? Math.round((pendienteEjecucion / valor) * 100) : 0;
 
   const plazo = diasRestantes(obra.fecha_fin ?? "");
   const plazoVencido = plazo ? plazo.vencido : null;
   const plazoDias = plazo ? Math.abs(plazo.dias) : null;
 
-  const cumplePlazo = plazoVencido === false;
+  const estadoFinalizado = ["cerrado", "terminado"].includes(
+    (obra.estado ?? "").toLowerCase().trim()
+  );
+
+  // Una obra finalizada no tiene fecha real de terminación en la DB, solo la
+  // fecha_fin proyectada. No se puede calcular un retraso real, así que el plazo
+  // se deja indeterminado y no se penaliza el cumplimiento general por ello.
+  const cumplePlazo = estadoFinalizado ? null : plazoVencido === false;
   const cumplePresupuesto = pctPagado >= 80;
-  const cumple = cumplePlazo && cumplePresupuesto;
+  const cumple = cumplePlazo === null ? cumplePresupuesto : cumplePlazo && cumplePresupuesto;
 
   return (
     <main className="min-h-screen flex flex-col bg-papel">
@@ -168,11 +178,20 @@ export default async function InformeCumplimientoPage({
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm">Plazo de ejecución</CardTitle>
-                {estadoBadge(cumplePlazo, "Al día", plazoVencido === true ? "Vencido" : "Sin fecha")}
+                {estadoFinalizado ? (
+                  <span className="px-3 py-1.5 text-[12px] font-bold rounded border bg-verde/10 text-verde border border-verde/20">
+                    Finalizada
+                  </span>
+                ) : estadoBadge(cumplePlazo, "Al día", plazoVencido === true ? "Vencido" : "Sin fecha")}
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="space-y-3">
-                  {plazo && plazoDias !== null ? (
+                  {estadoFinalizado ? (
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold text-tinta">—</span>
+                      <span className="text-sm text-tinta/60">finalizada</span>
+                    </div>
+                  ) : plazo && plazoDias !== null ? (
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl font-bold text-tinta">
                         {plazoVencido === true ? "-" : ""}
@@ -212,9 +231,9 @@ export default async function InformeCumplimientoPage({
                         style: "currency",
                         currency: "COP",
                         minimumFractionDigits: 0,
-                      }).format(pagado)}
+                      }).format(ejecucion)}
                     </span>
-                    <span className="text-sello">pagado de</span>
+                    <span className="text-sello">ejecutado (facturado) de</span>
                     <span className="font-mono">
                       ${new Intl.NumberFormat("es-CO", {
                         style: "currency",
@@ -223,6 +242,18 @@ export default async function InformeCumplimientoPage({
                       }).format(valor)}
                     </span>
                   </div>
+                  {pagado > 0 && (
+                    <p className="text-xs text-tinta/50 flex items-center gap-1">
+                      <span className="font-mono">
+                        ${new Intl.NumberFormat("es-CO", {
+                          style: "currency",
+                          currency: "COP",
+                          minimumFractionDigits: 0,
+                        }).format(pagado)}
+                      </span>
+                      <span className="text-sello">efectivamente pagado</span>
+                    </p>
+                  )}
                   {pendienteEjecucion > 0 && (
                     <p className="text-xs text-alerta/70 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" />
